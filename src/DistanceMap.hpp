@@ -135,6 +135,11 @@ public:
         return { 0,0 };
     }
 
+    Grid2D<unsigned char> getDriections() const {
+        return m_directions;
+    }
+
+
     inline size_t width() const 
     { 
         return m_map ? m_map->width() : 0; 
