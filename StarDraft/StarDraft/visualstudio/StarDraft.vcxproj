@@ -67,14 +67,14 @@
     <LinkIncremental>true</LinkIncremental>
     <OutDir>../bin/</OutDir>
     <TargetName>$(ProjectName)_d</TargetName>
-    <LibraryPath>F:\StarDraft\SFML-2.5.1\lib;$(LibraryPath)</LibraryPath>
-    <IncludePath>F:\StarDraft\SFML-2.5.1\include;$(IncludePath)</IncludePath>
+    <LibraryPath>E:\SneakyBot\ualbertabot\StarDraft\SFML-2.5.1\lib;$(LibraryPath)</LibraryPath>
+    <IncludePath>E:\SneakyBot\ualbertabot\StarDraft\SFML-2.5.1\include;$(IncludePath)</IncludePath>
   </PropertyGroup>
   <PropertyGroup Condition="'$(Configuration)|$(Platform)'=='Release|Win32'">
     <LinkIncremental>false</LinkIncremental>
     <OutDir>../bin/</OutDir>
-    <LibraryPath>F:\StarDraft\SFML-2.5.1\lib;$(LibraryPath)</LibraryPath>
-    <IncludePath>F:\StarDraft\SFML-2.5.1\include;$(IncludePath)</IncludePath>
+    <LibraryPath>E:\SneakyBot\ualbertabot\StarDraft\SFML-2.5.1\lib;$(LibraryPath)</LibraryPath>
+    <IncludePath>E:\SneakyBot\ualbertabot\StarDraft\SFML-2.5.1\include;$(IncludePath)</IncludePath>
   </PropertyGroup>
   <ItemDefinitionGroup Condition="'$(Configuration)|$(Platform)'=='Debug|Win32'">
     <ClCompile>
