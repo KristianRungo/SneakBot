@@ -5,11 +5,11 @@
 #include "StarDraftMap.hpp"
 #include "DistanceMap.hpp"
 #include "BaseFinder.hpp"
-
 #include <SFML/Graphics.hpp>
 #include <SFML/Audio.hpp>
 #include <chrono>
 #include <iostream>
+#include "InfluenceMap.hpp"
 
 class GameState_Map : public GameState
 {   
@@ -33,6 +33,7 @@ class GameState_Map : public GameState
     StarDraftMap        m_map;            
     DistanceMap         m_field;
     BaseFinder          m_baseFinder;
+    //InfluenceMap        m_influenceMap;
 
     Vec2                m_drag = { -1, -1 };
     Vec2                m_mouseScreen;

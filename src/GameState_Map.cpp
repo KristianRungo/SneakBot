@@ -2,6 +2,7 @@
 #include "GameEngine.h"
 #include "WorldView.hpp"
 #include "StarDraftMap.hpp"
+#include "InfluenceMap.hpp"
 
 #include <fstream>
 #include <iostream>
@@ -29,6 +30,7 @@ GameState_Map::GameState_Map(GameEngine& game, const std::string & mapFile)
     setMapVertexArray();
 
     m_baseFinder.computeBases(m_map);
+    //m_influenceMap.compute(m_map);
 }
 
 void GameState_Map::init()
@@ -65,6 +67,7 @@ void GameState_Map::sUserInput()
                     m_game.popState();
                     break;
                 }
+                //case sf::Keyboard::N: break;//TODO
                 case sf::Keyboard::E: break;
                 case sf::Keyboard::W: m_view.zoom(0.8); break;
                 case sf::Keyboard::A: break;
