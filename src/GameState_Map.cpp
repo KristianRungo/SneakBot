@@ -30,7 +30,9 @@ GameState_Map::GameState_Map(GameEngine& game, const std::string & mapFile)
     setMapVertexArray();
 
     m_baseFinder.computeBases(m_map);
-    //m_influenceMap.compute(m_map);
+    m_bases = m_baseFinder.getBases();
+
+    m_influence = m_influenceMap.compute(m_map, m_bases);
 }
 
 void GameState_Map::init()
@@ -67,7 +69,8 @@ void GameState_Map::sUserInput()
                     m_game.popState();
                     break;
                 }
-                //case sf::Keyboard::N: break;//TODO
+                case sf::Keyboard::K: m_drawInfluenceNumbers = !m_drawInfluenceNumbers; break;
+                case sf::Keyboard::N: m_drawInfluenceTile = !m_drawInfluenceTile; break;
                 case sf::Keyboard::E: break;
                 case sf::Keyboard::W: m_view.zoom(0.8); break;
                 case sf::Keyboard::A: break;
@@ -244,6 +247,15 @@ void GameState_Map::setMapVertexArray()
 
 
 }
+float rounds(float var)
+{
+    // 37.66666 * 100 =3766.66
+    // 3766.66 + .5 =3767.16    for rounding off value
+    // then type cast to int so value is 3767
+    // then divided by 100 so the value converted into 37.67
+    float value = (int)(var * 100 + .5);
+    return (float)value / 100;
+}
 
 // renders the scene
 void GameState_Map::sRender()
@@ -302,6 +314,7 @@ void GameState_Map::sRender()
         }
     }
 
+
     for (const auto & base : m_baseFinder.getBases())
     {
         Tile tp = base.getDepotTile();
@@ -352,6 +365,23 @@ void GameState_Map::sRender()
         {
             for (size_t y=0; y < m_map.height(); y++)
             {
+                if (m_drawInfluenceTile && (m_influence.get(x, y) > 0)) {
+
+                    
+                    float influence = m_influence.get(x, y);
+                    if (influence > 1.1) tile.setFillColor(sf::Color((155), 0, 0));
+                    else tile.setFillColor(sf::Color((255),255 - (255 * influence), 255 - (255 * influence)));
+                    tile.setPosition((float)x * m_tileSize, (float)y * m_tileSize);
+                    m_game.window().draw(tile);
+                    
+                } 
+                if (m_drawInfluenceNumbers && (m_influence.get(x, y) > 0)) {
+                    float influence = rounds(m_influence.get(x, y));
+                    m_text.setString(std::to_string(influence));
+                    m_text.setPosition({ (float)x * m_tileSize + 3, (float)y * m_tileSize + 8 });
+                    m_game.window().draw(m_text);
+                }
+
                 if (m_drawDistance)
                 {
                     int dist = m_field.getDistance(x, y);
@@ -359,8 +389,8 @@ void GameState_Map::sRender()
                     m_text.setPosition({(float)x*m_tileSize + 8, (float)y*m_tileSize + 8});
                     m_game.window().draw(m_text);
                 }
-                else
-                {
+                
+                /*else {
                     // for each of the directions in the direction vector field
                     for (size_t d=0; d < m_field.getNumDirections(x,y); d++)
                     {
@@ -375,10 +405,20 @@ void GameState_Map::sRender()
                         // draw the direction vector
                         drawLine(cx, cy, dx, dy, sf::Color(0, 0, 0));
                     }
-                }
+                }*/
             }
         }
     }
+
+    tile.setFillColor(sf::Color(0, 100, 0));
+    ourDepot = m_influenceMap.getOurDepot();
+    if (ourDepot.x != 0 || ourDepot.y != 0) {
+        tile.setPosition((float)ourDepot.x * m_tileSize, (float)ourDepot.y * m_tileSize);
+        m_game.window().draw(tile);
+    }
+    
+
+
     
     m_game.window().draw(m_lineStrip);
 

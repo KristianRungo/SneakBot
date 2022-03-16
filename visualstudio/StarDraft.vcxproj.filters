@@ -58,7 +58,7 @@
     <ClInclude Include="..\src\BaseFinder.hpp">
       <Filter>stardraft</Filter>
     </ClInclude>
-    <ClInclude Include="InfluenceMap.hpp">
+    <ClInclude Include="..\src\InfluenceMap.hpp">
       <Filter>stardraft</Filter>
     </ClInclude>
   </ItemGroup>

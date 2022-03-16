@@ -26,13 +26,13 @@
     <ClInclude Include="..\src\GameState_Map.h" />
     <ClInclude Include="..\src\GameState_Menu.h" />
     <ClInclude Include="..\src\Grid2D.hpp" />
+    <ClInclude Include="..\src\InfluenceMap.hpp" />
     <ClInclude Include="..\src\StarDraft.h" />
     <ClInclude Include="..\src\StarDraftMap.hpp" />
     <ClInclude Include="..\src\Timer.hpp" />
     <ClInclude Include="..\src\Vec2.hpp" />
     <ClInclude Include="..\src\DistanceMap.hpp" />
     <ClInclude Include="..\src\WorldView.hpp" />
-    <ClInclude Include="InfluenceMap.hpp" />
   </ItemGroup>
   <PropertyGroup Label="Globals">
     <ProjectGuid>{08A10BC2-2DCF-4F95-A0B2-BA931971AEEA}</ProjectGuid>
@@ -68,14 +68,14 @@
     <LinkIncremental>true</LinkIncremental>
     <OutDir>../bin/</OutDir>
     <TargetName>$(ProjectName)_d</TargetName>
-    <LibraryPath>C:\Games\SFML-2.5.1\lib;$(LibraryPath)</LibraryPath>
-    <IncludePath>C:\Games\SFML-2.5.1\include;$(IncludePath)</IncludePath>
+    <LibraryPath>F:\StarDraft\SFML-2.5.1\lib;$(LibraryPath)</LibraryPath>
+    <IncludePath>F:\StarDraft\SFML-2.5.1\include;$(IncludePath)</IncludePath>
   </PropertyGroup>
   <PropertyGroup Condition="'$(Configuration)|$(Platform)'=='Release|Win32'">
     <LinkIncremental>false</LinkIncremental>
     <OutDir>../bin/</OutDir>
-    <LibraryPath>C:\Games\SFML-2.5.1\lib;$(LibraryPath)</LibraryPath>
-    <IncludePath>C:\Games\SFML-2.5.1\include;$(IncludePath)</IncludePath>
+    <LibraryPath>F:\StarDraft\SFML-2.5.1\lib;$(LibraryPath)</LibraryPath>
+    <IncludePath>F:\StarDraft\SFML-2.5.1\include;$(IncludePath)</IncludePath>
   </PropertyGroup>
   <ItemDefinitionGroup Condition="'$(Configuration)|$(Platform)'=='Debug|Win32'">
     <ClCompile>

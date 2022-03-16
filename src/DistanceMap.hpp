@@ -135,7 +135,7 @@ public:
         return { 0,0 };
     }
 
-    Grid2D<unsigned char> getDriections() const {
+    Grid2D<unsigned char> getDirections() const {
         return m_directions;
     }
 

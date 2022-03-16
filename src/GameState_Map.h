@@ -18,6 +18,8 @@ class GameState_Map : public GameState
 
     int  m_tileSize         = 32;       // size of tiles (keep 32)
     bool m_drawGrid         = true;     // draw the grid lines
+    bool m_drawInfluenceTile = true;    // Draw the influence
+    bool m_drawInfluenceNumbers = true; // Draw the influenceNumbers
     bool m_drawWalkTiles    = true;     // draw the walk tiles
     bool m_drawBuildTiles   = true;     // draw the build tiles
     bool m_drawField        = true;     // draw the distance map values?
@@ -33,7 +35,10 @@ class GameState_Map : public GameState
     StarDraftMap        m_map;            
     DistanceMap         m_field;
     BaseFinder          m_baseFinder;
-    //InfluenceMap        m_influenceMap;
+    std::vector<Base>   m_bases;
+    InfluenceMap        m_influenceMap;
+    Grid2D<float>       m_influence;
+    Tile                ourDepot;
 
     Vec2                m_drag = { -1, -1 };
     Vec2                m_mouseScreen;
