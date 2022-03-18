@@ -1,0 +1,73 @@
+﻿<?xml version="1.0" encoding="utf-8"?>
+<Project ToolsVersion="4.0" xmlns="http://schemas.microsoft.com/developer/msbuild/2003">
+  <ItemGroup>
+    <ClCompile Include="..\src\main.cpp" />
+    <ClCompile Include="..\src\Assets.cpp">
+      <Filter>ui</Filter>
+    </ClCompile>
+    <ClCompile Include="..\src\GameEngine.cpp">
+      <Filter>ui</Filter>
+    </ClCompile>
+    <ClCompile Include="..\src\GameState.cpp">
+      <Filter>ui</Filter>
+    </ClCompile>
+    <ClCompile Include="..\src\GameState_Map.cpp">
+      <Filter>ui</Filter>
+    </ClCompile>
+    <ClCompile Include="..\src\GameState_Menu.cpp">
+      <Filter>ui</Filter>
+    </ClCompile>
+  </ItemGroup>
+  <ItemGroup>
+    <ClInclude Include="..\src\Assets.h">
+      <Filter>ui</Filter>
+    </ClInclude>
+    <ClInclude Include="..\src\GameEngine.h">
+      <Filter>ui</Filter>
+    </ClInclude>
+    <ClInclude Include="..\src\GameState.h">
+      <Filter>ui</Filter>
+    </ClInclude>
+    <ClInclude Include="..\src\Vec2.hpp">
+      <Filter>ui</Filter>
+    </ClInclude>
+    <ClInclude Include="..\src\WorldView.hpp">
+      <Filter>ui</Filter>
+    </ClInclude>
+    <ClInclude Include="..\src\Timer.hpp">
+      <Filter>ui</Filter>
+    </ClInclude>
+    <ClInclude Include="..\src\GameState_Map.h">
+      <Filter>ui</Filter>
+    </ClInclude>
+    <ClInclude Include="..\src\GameState_Menu.h">
+      <Filter>ui</Filter>
+    </ClInclude>
+    <ClInclude Include="..\src\StarDraftMap.hpp">
+      <Filter>stardraft</Filter>
+    </ClInclude>
+    <ClInclude Include="..\src\DistanceMap.hpp">
+      <Filter>stardraft</Filter>
+    </ClInclude>
+    <ClInclude Include="..\src\StarDraft.h">
+      <Filter>stardraft</Filter>
+    </ClInclude>
+    <ClInclude Include="..\src\Grid2D.hpp">
+      <Filter>stardraft</Filter>
+    </ClInclude>
+    <ClInclude Include="..\src\BaseFinder.hpp">
+      <Filter>stardraft</Filter>
+    </ClInclude>
+    <ClInclude Include="..\src\InfluenceMap.hpp">
+      <Filter>stardraft</Filter>
+    </ClInclude>
+  </ItemGroup>
+  <ItemGroup>
+    <Filter Include="stardraft">
+      <UniqueIdentifier>{d0451f6f-2bbc-47a2-93db-f3802b69712a}</UniqueIdentifier>
+    </Filter>
+    <Filter Include="ui">
+      <UniqueIdentifier>{15c27b81-2e23-4db7-9b31-c271b05d7ca1}</UniqueIdentifier>
+    </Filter>
+  </ItemGroup>
+</Project>
