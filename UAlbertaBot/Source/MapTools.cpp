@@ -149,6 +149,11 @@ void MapTools::computeMap()
             m_map.setWalk(x, y, BWAPI::Broodwar->isWalkable(x,y));
         }
     }
+    DistanceMap distanceMap = DistanceMap();
+    distanceMap.computeDistanceMap(BWAPI::Broodwar->self()->getStartLocation());
+    m_influenceMap = InfluenceMap();
+    m_influenceMap.computeStartDepotInfluenceMap(distanceMap);
+    /*m_influenceMap.draw();*/
 }
 
 void MapTools::computeConnectivity()
@@ -409,7 +414,6 @@ BWAPI::TilePosition MapTools::getLeastRecentlySeenTile() const
     BWAPI::TilePosition leastSeen;
     const BaseLocation * baseLocation = Global::Bases().getPlayerStartingBaseLocation(BWAPI::Broodwar->self());
     UAB_ASSERT(baseLocation, "Null self baselocation is insanely bad");
-
     for (auto & tile : baseLocation->getClosestTiles())
     {
         UAB_ASSERT(isValidTile(tile), "How is this tile not valid?");
