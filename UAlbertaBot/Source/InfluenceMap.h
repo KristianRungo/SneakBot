@@ -23,7 +23,7 @@ public:
 
     InfluenceMap();
     //void computeInfluenceMap(const BWAPI::TilePosition& startTile);
-    void computeStartDepotInfluenceMap(DistanceMap distanceMap);
+    void computeStartDepotInfluenceMap();
 
     int getInfluence(int tileX, int tileY) const;
     int getInfluence(const BWAPI::TilePosition& pos) const;

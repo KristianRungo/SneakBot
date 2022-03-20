@@ -33,37 +33,40 @@ int InfluenceMap::getInfluence(const BWAPI::Position& pos) const
 {
     return getInfluence(BWAPI::TilePosition(pos));
 }
-
-void InfluenceMap::computeStartDepotInfluenceMap(DistanceMap distanceMap)
+void InfluenceMap::computeStartDepotInfluenceMap()
 {
-    auto& startLocation = BWAPI::Broodwar->self()->getStartLocation();
-    m_distanceMap = distanceMap;
+    const BaseLocation* baseLocation = Global::Bases().getPlayerStartingBaseLocation(BWAPI::Broodwar->self());
     m_width = BWAPI::Broodwar->mapWidth();
     m_height = BWAPI::Broodwar->mapHeight();
     m_influence = Grid<int>(m_width, m_height, 0);
     for (auto& startTilePos : BWAPI::Broodwar->getStartLocations()) // Iterates over all possible starting bases
     {
-        BWAPI::TilePosition pos = startTilePos;
+        const BWAPI::Position pos = BWAPI::Position(startTilePos.x,startTilePos.y);
         if (startTilePos.x == startLocation.x && startTilePos.y == startLocation.y) continue; //Continues if the base is ours
         else
         {
             while (pos.x != startLocation.x || pos.y != startLocation.y) // While you have not reached your own base
             {
+                
                 m_influence.set(pos.x, pos.y, m_maxInfluence);
-                int curDist = m_distanceMap.getDistance(pos);
+                int curDist = baseLocation->getGroundDistance(pos);
                 int nextDist = curDist;
                 for (size_t a = 0; a < LegalActions; ++a) //Check all tiles surrounding current tile 
                 {
-                    BWAPI::TilePosition nextTile(pos.x + actionX[a], pos.y + actionY[a]);
+                    BWAPI::Position nextTile = BWAPI::Position(pos.x + actionX[a], pos.y + actionY[a]);
                     if (BWAPI::Broodwar->isWalkable(nextTile.x, nextTile.y)) {
-                        nextDist = std::min(m_distanceMap.getDistance(nextTile), nextDist);
-                        if (nextDist < curDist) pos = nextTile;
+                        nextDist = std::min(baseLocation->getGroundDistance(pos), nextDist);
+                        if (nextDist < curDist) {
+                            const BWAPI::Position pos = BWAPI::Position(nextTile.x, nextTile.y);
+                        }
                     }
                 }
             }
         }
     }
 }
+
+
 
 /*
 // Computes m_dist[x][y] = ground distance from (startX, startY) to (x,y)

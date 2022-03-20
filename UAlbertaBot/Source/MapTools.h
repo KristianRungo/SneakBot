@@ -18,6 +18,8 @@ class MapTools
     int     m_width = 0;
     int     m_height = 0;
     int     m_frame = 0;
+
+
     
     // a cache of already computed distance maps, which is mutable since it only acts as a cache
     mutable std::map<std::pair<int,int>, DistanceMap> m_allMaps;   

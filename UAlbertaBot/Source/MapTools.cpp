@@ -149,11 +149,10 @@ void MapTools::computeMap()
             m_map.setWalk(x, y, BWAPI::Broodwar->isWalkable(x,y));
         }
     }
-    DistanceMap distanceMap = DistanceMap();
-    distanceMap.computeDistanceMap(BWAPI::Broodwar->self()->getStartLocation());
+    /*
     m_influenceMap = InfluenceMap();
-    m_influenceMap.computeStartDepotInfluenceMap(distanceMap);
-    /*m_influenceMap.draw();*/
+    m_influenceMap.computeStartDepotInfluenceMap();
+    m_influenceMap.draw();*/
 }
 
 void MapTools::computeConnectivity()
