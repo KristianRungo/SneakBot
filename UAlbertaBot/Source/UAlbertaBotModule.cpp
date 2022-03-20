@@ -18,6 +18,7 @@
 #include "Global.h"
 #include "StrategyManager.h"
 #include "MapTools.h"
+#include "InfluenceMap.h"
 
 using namespace UAlbertaBot;
 
@@ -61,7 +62,6 @@ void UAlbertaBotModule::onStart()
             Global::Strategy().setLearnedStrategy();
         }
 	}
-
     //Global::Map().saveMapToFile("map.txt");
 }
 

@@ -13,6 +13,7 @@ class InfluenceMap
     int                              m_height = 0;
     int                              m_maxInfluence = 1;
     DistanceMap                      m_distanceMap;
+    Grid<int>                        m_dist;
     Grid<int>                        m_influence;
     BWAPI::TilePosition              m_startTile;
     std::vector<BWAPI::TilePosition> m_sortedTiles;

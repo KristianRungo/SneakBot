@@ -51,25 +51,12 @@ void InfluenceMap::computeStartDepotInfluenceMap()
         {
             while (pos.x != baseLocation->getDepotPosition().x || pos.y != baseLocation->getDepotPosition().y) // While you have not reached your own base
             {
-                m_influence.set(pos.x, pos.y, m_maxInfluence);
-
-
                 
-
-            }
-        }
-    }
-}
-
-
-/*
-* 
-* 
-*               m_influence.set(pos.x, pos.y, m_maxInfluence);
+                m_influence.set(pos.x, pos.y, m_maxInfluence);
                 int curDist = m_dist.get(pos.x, pos.y);
                 int minDist = curDist;
                 const BWAPI::Position nextTile = BWAPI::Position(pos.x, pos.y);
-                const BWAPI::Position posNext = BWAPI::Position(pos.x, pos.y); 
+                const BWAPI::Position posNext = BWAPI::Position(pos.x, pos.y);
                 for (size_t a = 0; a < LegalActions; ++a) //Check all tiles surrounding current tile 
                 {
                     const BWAPI::Position nextTile = BWAPI::Position(pos.x + actionX[a], pos.y + actionY[a]);
@@ -84,8 +71,14 @@ void InfluenceMap::computeStartDepotInfluenceMap()
                 if (minDist < curDist) {
                     const BWAPI::Position pos = posNext;
                 }
-* 
-* 
+
+            }
+        }
+    }
+}
+
+
+/*
 // Computes m_dist[x][y] = ground distance from (startX, startY) to (x,y)
 // Uses BFS, since the map is quite large and DFS may cause a stack overflow
 void InfluenceMap::computeDistanceMap(const BWAPI::TilePosition& startTile)

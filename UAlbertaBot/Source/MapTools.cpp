@@ -79,6 +79,8 @@ void MapTools::onStart()
     // compute the map connectivity
     computeConnectivity();
     computeMap();
+
+
 }
 
 void MapTools::onFrame()
@@ -95,7 +97,10 @@ void MapTools::onFrame()
             }
         }
     }
-    
+
+    m_influenceMap = InfluenceMap();
+    m_influenceMap.computeStartDepotInfluenceMap();
+    /*m_influenceMap.draw();*/
     m_frame++;
     draw();
 }
@@ -149,10 +154,6 @@ void MapTools::computeMap()
             m_map.setWalk(x, y, BWAPI::Broodwar->isWalkable(x,y));
         }
     }
-    /*
-    m_influenceMap = InfluenceMap();
-    m_influenceMap.computeStartDepotInfluenceMap();
-    m_influenceMap.draw();*/
 }
 
 void MapTools::computeConnectivity()
