@@ -45,7 +45,7 @@ void InfluenceMap::computeStartDepotInfluenceMap()
     m_influence = Grid<int>(m_width, m_height, 0);
     for (auto& startTilePos : BWAPI::Broodwar->getStartLocations()) // Iterates over all possible starting bases
     {
-        const BWAPI::Position pos = BWAPI::Position(startTilePos.x,startTilePos.y);
+        BWAPI::Position pos = BWAPI::Position(startTilePos.x,startTilePos.y);
         if (startTilePos.x == baseLocation->getDepotPosition().x && startTilePos.y == baseLocation->getDepotPosition().y) continue; //Continues if the base is ours
         else
         {
@@ -53,8 +53,23 @@ void InfluenceMap::computeStartDepotInfluenceMap()
             {
                 m_influence.set(pos.x, pos.y, m_maxInfluence);
 
+                int currentDistance = m_dist.get(pos.x, pos.y);
+                int tempDistance = m_dist.get(pos.x, pos.y);
 
-                
+                int aa = -1;
+
+                for (size_t a = 0; a < LegalActions; ++a) //Check all tiles surrounding current tile 
+                {
+                    const BWAPI::Position nextTile = BWAPI::Position(pos.x + actionX[a], pos.y + actionY[a]);
+                    if (m_dist.get(nextTile.x, nextTile.y) != -1) {
+                        tempDistance = (std::min(m_dist.get(nextTile.x, nextTile.y), tempDistance));
+                    }
+
+                    if (tempDistance == m_dist.get(nextTile.x, nextTile.y)) {
+                        aa = a;
+                    }
+                }
+                pos = BWAPI::Position(pos.x + actionX[aa], pos.y + actionY[aa]);
 
             }
         }
@@ -63,6 +78,12 @@ void InfluenceMap::computeStartDepotInfluenceMap()
 
 
 /*
+* 
+*       if (nextTile.distance < tempDistance){
+            temp = nextTile
+        }
+* 
+* 
 * 
 * 
 *               m_influence.set(pos.x, pos.y, m_maxInfluence);
@@ -133,7 +154,9 @@ void InfluenceMap::draw() const
     const int tilesToDraw = 200;
     for (int x = 0; x < m_width; x++) {
         for (int y = 0; y < m_height; y++) {
-            Global::Map().drawTile(x, y, BWAPI::Color(255, 0, 0));
+            if (m_influence.get(x, y) == 1) {
+                Global::Map().drawTile(x, y, BWAPI::Color(255, 0, 0));
+            }
         }
     }
 }

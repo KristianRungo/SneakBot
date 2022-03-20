@@ -23,6 +23,7 @@ void MapTools::onStart()
 {
     PROFILE_FUNCTION();
 
+    
     m_width          = BWAPI::Broodwar->mapWidth();
     m_height         = BWAPI::Broodwar->mapHeight();
     m_walkable       = Grid<int>(m_width, m_height, 1);
@@ -30,7 +31,7 @@ void MapTools::onStart()
     m_depotBuildable = Grid<int>(m_width, m_height, 0);
     m_lastSeen       = Grid<int>(m_width, m_height, 0);
     m_sectorNumber   = Grid<int>(m_width, m_height, 0);
-
+    m_influenceMap   = InfluenceMap();
     // Set the boolean grid data from the Map
     for (int x(0); x < m_width; ++x)
     {
@@ -97,12 +98,13 @@ void MapTools::onFrame()
             }
         }
     }
-
-    m_influenceMap = InfluenceMap();
-    m_influenceMap.computeStartDepotInfluenceMap();
-    /*m_influenceMap.draw();*/
+    if (m_frame == 0) {
+        m_influenceMap.computeStartDepotInfluenceMap();
+    }
+    
     m_frame++;
     draw();
+    m_influenceMap.draw();
 }
 
 void MapTools::computeMap()

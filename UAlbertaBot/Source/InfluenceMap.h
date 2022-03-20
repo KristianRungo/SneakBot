@@ -17,7 +17,6 @@ class InfluenceMap
     Grid<int>                        m_influence;
     BWAPI::TilePosition              m_startTile;
     std::vector<BWAPI::TilePosition> m_sortedTiles;
-    BWAPI::TilePosition              startLocation;
     
 
 public:
