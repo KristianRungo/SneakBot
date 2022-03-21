@@ -11,10 +11,12 @@ class InfluenceMap
 {
     int                              m_width = 0;
     int                              m_height = 0;
-    int                              m_maxInfluence = 1;
+    int                              m_viewDistance = 8;
+    float                            m_maxInfluence = 1.0;
     DistanceMap                      m_distanceMap;
     Grid<int>                        m_dist;
-    Grid<int>                        m_influence;
+    Grid<float>                        m_influence;
+    Grid<float>                        m_influenced;
     BWAPI::TilePosition              m_startTile;
     std::vector<BWAPI::TilePosition> m_sortedTiles;
     
@@ -22,7 +24,6 @@ class InfluenceMap
 public:
 
     InfluenceMap();
-    //void computeInfluenceMap(const BWAPI::TilePosition& startTile);
     void computeStartDepotInfluenceMap();
 
     int getInfluence(int tileX, int tileY) const;
