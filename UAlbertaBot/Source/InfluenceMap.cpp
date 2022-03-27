@@ -4,6 +4,7 @@
 #include "BaseLocation.h"
 #include "BaseLocationManager.h"
 #include "DistanceMap.h"
+#include "InformationManager.h"
 
 
 using namespace UAlbertaBot;
@@ -45,10 +46,10 @@ float InfluenceMap::influence(float distance, float power) {
 
 float InfluenceMap::calcInfluence(int x, int y) {
     if (m_influence.get(x, y) == m_maxInfluence) return 0.0;
-    int minXi = std::max(x - m_viewDistance, 0);
-    int maxXi = std::min(x + m_viewDistance, m_width - 1);
-    int minYi = std::max(y - m_viewDistance, 0);
-    int maxYi = std::min(y + m_viewDistance, m_height - 1);
+    const int minXi = std::max(x - m_viewDistance, 0);
+    const int maxXi = std::min(x + m_viewDistance, m_width - 1);
+    const int minYi = std::max(y - m_viewDistance, 0);
+    const int maxYi = std::min(y + m_viewDistance, m_height - 1);
         
     float lowestDist = m_viewDistance + 1.0;
     for (int xi = minXi; xi < maxXi; xi++) {
@@ -81,7 +82,8 @@ void InfluenceMap::computeStartDepotInfluenceMap()
     m_influence = Grid<float>(m_width, m_height, 0);
     m_influenced = Grid<float>(m_width, m_height, 0);
     m_visionMap = Grid<float>(m_width, m_height, 0);
-    m_visionSourceMap = Grid<float>(m_width, m_height, 0);
+    m_airDamageMap = Grid<float>(m_width, m_height, 0);
+    m_groundDamageMap = Grid<float>(m_width, m_height, 0);
     for (auto& startTilePos : BWAPI::Broodwar->getStartLocations()) // Iterates over all possible starting bases
     {
         BWAPI::Position pos = BWAPI::Position(startTilePos.x,startTilePos.y);
@@ -92,7 +94,7 @@ void InfluenceMap::computeStartDepotInfluenceMap()
             {
                 m_influence.set(pos.x, pos.y, m_maxInfluence);
 
-                int currentDistance = m_dist.get(pos.x, pos.y);
+                const int currentDistance = m_dist.get(pos.x, pos.y);
                 int tempDistance = m_dist.get(pos.x, pos.y);
 
                 int aa = -1;
@@ -115,7 +117,7 @@ void InfluenceMap::computeStartDepotInfluenceMap()
     }
     for (int x = 0; x < m_width; x++) {
         for (int y = 0; y < m_height; y++) {
-            float influence = calcInfluence(x, y);
+            const float influence = calcInfluence(x, y);
             if (influence > 0.0) { 
                 m_influenced.set(x, y, influence); 
             }
@@ -128,25 +130,160 @@ void InfluenceMap::computeStartDepotInfluenceMap()
     }
 } 
 
-void InfluenceMap::calculateVisionMap() {
-    BWAPI::Player Enemy = BWAPI::Broodwar->enemy();
-    BWAPI::Unitset enemyUnits = Enemy->getUnits();
-    std::vector<BWAPI::Position> positions(enemyUnits.size());
-    for (BWAPI::Unit unit : enemyUnits){
-        BWAPI::Position unitPos = unit->getPosition();
-        m_visionSourceMap.set(unitPos.x,unitPos.y, m_maxInfluence);
+float InfluenceMap::variableRangeInfluence(float distance, int sightRange, float power) {
+    return (m_maxInfluence - std::pow((m_maxInfluence * (distance / sightRange)), power));
+}
+
+void InfluenceMap::computeVisionMap() {
+    BWAPI::Player enemy = BWAPI::Broodwar->enemy();
+    m_visionMap = Grid<float>(m_width, m_height, 0);
+    const UIMap enemyUnits = Global::Info().getUnitInfo(enemy);
+    if (enemyUnits.size() == 0) {
+        return;
     }
-    
+    int x = -1;
+    int y = -1;
+    int dist = 10000;
+    for (const auto& enemyUnit : enemyUnits) {
+        const int sightRange = (enemy->sightRange(enemyUnit.second.type)/32) +1;
+        x = enemyUnit.second.lastPosition.x/32;
+        y = enemyUnit.second.lastPosition.y/32;
+        m_visionMap.set(x, y, m_maxInfluence);
+
+        const int minXi = std::max(x - sightRange, 0);
+        const int maxXi = std::min(x + sightRange, m_width - 1);
+        const int minYi = std::max(y - sightRange, 0);
+        const int maxYi = std::min(y + sightRange, m_height - 1);
+
+        for (int xi = minXi; xi < maxXi; xi++) {
+            for (int yi = minYi; yi < maxYi; yi++) {
+                dist = distance(x, xi, y, yi);
+                if (dist <= sightRange) {
+                    m_visionMap.set(xi, yi, std::max(variableRangeInfluence(dist,sightRange, 0.9), m_visionMap.get(xi, yi)));
+                }
+            }
+        }
+    }
+}
+void InfluenceMap::computeAirDamageMap() {
+    BWAPI::Player enemy = BWAPI::Broodwar->enemy(); //TODO
+    m_airDamageMap = Grid<float>(m_width, m_height, 0);
+    const UIMap enemyUnits = Global::Info().getUnitInfo(enemy);
+    if (enemyUnits.size() == 0) {
+        return;
+    }
+    int dist = 10000;
+    for (const auto& enemyUnit : enemyUnits) {
+        const bool canAttack = enemyUnit.second.type.canAttack();
+        const bool canAttackAir = (enemyUnit.second.type.groundWeapon().targetsAir() ||enemyUnit.second.type.airWeapon().targetsAir());
+        if (!canAttack || !canAttackAir) continue;
+
+        int maxGroundRange = 0;
+        int maxAirRange = 0;
+        int maxRange = 0;
+
+        if (enemyUnit.second.type.groundWeapon().targetsAir()) maxGroundRange = enemyUnit.second.type.groundWeapon().maxRange();
+        if (enemyUnit.second.type.airWeapon().targetsAir()) maxAirRange = enemyUnit.second.type.airWeapon().maxRange();
+        maxRange = (std::max(std::max(maxGroundRange, maxAirRange)/32, 1))+1;
+
+
+        const int x = enemyUnit.second.lastPosition.x / 32;
+        const int y = enemyUnit.second.lastPosition.y / 32;
+        m_airDamageMap.set(x, y, m_maxInfluence);
+
+        const int minXi = std::max(x - maxRange, 0);
+        const int maxXi = std::min(x + maxRange, m_width - 1);
+        const int minYi = std::max(y - maxRange, 0);
+        const int maxYi = std::min(y + maxRange, m_height - 1);
+
+        for (int xi = minXi; xi < maxXi; xi++) {
+            for (int yi = minYi; yi < maxYi; yi++) {
+                dist = distance(x, xi, y, yi);
+                if (dist <= maxRange) {
+                    m_airDamageMap.set(xi, yi, std::max(variableRangeInfluence(dist, maxRange, 0.9), m_airDamageMap.get(xi, yi)));
+                }
+            }
+        }
+    }
+}
+void InfluenceMap::computeGroundDamageMap() {
+    BWAPI::Player enemy = BWAPI::Broodwar->enemy(); //TODO
+    m_groundDamageMap = Grid<float>(m_width, m_height, 0);
+    const UIMap enemyUnits = Global::Info().getUnitInfo(enemy);
+    if (enemyUnits.size() == 0) {
+        return;
+    }
+    int dist = 10000;
+    for (const auto& enemyUnit : enemyUnits) {
+
+        const bool canAttack = enemyUnit.second.type.canAttack();
+        const bool canAttackGround = (enemyUnit.second.type.groundWeapon().targetsGround() || enemyUnit.second.type.airWeapon().targetsGround());
+        if (!canAttack || !canAttackGround) continue;
+
+        int maxGroundRange = 0;
+        int maxAirRange = 0;
+        int maxRange = 0;
+
+        if (enemyUnit.second.type.groundWeapon().targetsGround()) maxGroundRange = enemyUnit.second.type.groundWeapon().maxRange();
+        if (enemyUnit.second.type.airWeapon().targetsGround()) maxAirRange = enemyUnit.second.type.airWeapon().maxRange();
+        maxRange = (std::max(std::max(maxGroundRange, maxAirRange) / 32, 1))+1;
+
+
+        const int x = enemyUnit.second.lastPosition.x / 32;
+        const int y = enemyUnit.second.lastPosition.y / 32;
+        m_groundDamageMap.set(x, y, m_maxInfluence);
+
+        const int minXi = std::max(x - maxRange, 0);
+        const int maxXi = std::min(x + maxRange, m_width - 1);
+        const int minYi = std::max(y - maxRange, 0);
+        const int maxYi = std::min(y + maxRange, m_height - 1);
+
+        for (int xi = minXi; xi < maxXi; xi++) {
+            for (int yi = minYi; yi < maxYi; yi++) {
+                dist = distance(x, xi, y, yi);
+                if (dist <= maxRange) {
+                    m_groundDamageMap.set(xi, yi, std::max(variableRangeInfluence(dist, maxRange, 0.9), m_groundDamageMap.get(xi, yi)));
+                }
+            }
+        }
+    }
 }
 void InfluenceMap::draw() const
 {
-    const int tilesToDraw = 200;
     for (int x = 0; x < m_width; x++) {
         for (int y = 0; y < m_height; y++) {
-            if (m_influence.get(x, y) > 0) {
-                Global::Map().drawTile(x, y, BWAPI::Color(255, 
-                                                          255 - (255 * (m_influence.get(x, y) / m_maxInfluence)), 
-                                                          255 - (255 * (m_influence.get(x, y) / m_maxInfluence))));
+            if (m_influence.get(x, y) > 2) { // remember to set back to 0
+                Global::Map().drawTile(x, y, BWAPI::Color(
+                    255, 
+                    255 - (255 * (m_influence.get(x, y) / m_maxInfluence)), 
+                    255 - (255 * (m_influence.get(x, y) / m_maxInfluence))));
+            }
+            if (m_visionMap.get(x, y) > 0) {// remember to set back to 0
+                /*Global::Map().drawTile(x, y, BWAPI::Color(
+                    255 - (255 * (m_visionMap.get(x, y) / m_maxInfluence)),
+                    255 - (255 * (m_visionMap.get(x, y) / m_maxInfluence)),
+                    255));
+                    */
+
+                    
+                Global::Map().drawTile(x, y, BWAPI::Color(
+                    255,
+                    0,
+                    0));
+                    
+                
+            }
+            if (m_groundDamageMap.get(x, y) > 0) {
+                Global::Map().drawTile(x, y, BWAPI::Color(
+                    0,
+                    255,
+                    0));
+            }
+            if (m_airDamageMap.get(x, y) > 0) {
+                Global::Map().drawTile(x, y, BWAPI::Color(
+                    0,
+                    0,
+                    255));
             }
         }
     }

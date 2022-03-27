@@ -88,9 +88,9 @@ void MapTools::onFrame()
 {
     PROFILE_FUNCTION();
 
-    for (int x=0; x<m_width; ++x)
+    for (int x = 0; x < m_width; ++x)
     {
-        for (int y=0; y<m_height; ++y)
+        for (int y = 0; y < m_height; ++y)
         {
             if (isVisible(x, y))
             {
@@ -101,10 +101,15 @@ void MapTools::onFrame()
     if (m_frame == 0) {
         m_influenceMap.computeStartDepotInfluenceMap();
     }
+
+
+    m_influenceMap.computeVisionMap();
+    m_influenceMap.computeAirDamageMap();
+    m_influenceMap.computeGroundDamageMap();
     
-    m_frame++;
     draw();
     m_influenceMap.draw();
+    m_frame++;
 }
 
 void MapTools::computeMap()

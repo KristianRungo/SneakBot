@@ -17,20 +17,24 @@ class InfluenceMap
     Grid<int>                        m_dist;
     Grid<float>                      m_influence;
     Grid<float>                      m_influenced;
-    Grid<float>                      m_visionSourceMap;
+    Grid<float>                      m_airDamageMap;
+    Grid<float>                      m_groundDamageMap;
     Grid<float>                      m_visionMap;
     BWAPI::TilePosition              m_startTile;
-    std::vector<BWAPI::TilePosition> m_sortedTiles;
+    BWAPI::Unitset                   m_enemyUnits;
     float distance(int x1, int x2, int y1, int y2);
     float influence(float distance, float power);
     float calcInfluence(int x, int y);
+    float variableRangeInfluence(float distance, int sightRange, float power);
 
 public:
 
     InfluenceMap();
 
     void computeStartDepotInfluenceMap();
-    void calculateVisionMap();
+    void computeVisionMap();
+    void computeAirDamageMap();
+    void computeGroundDamageMap();
 
     int getInfluence(int tileX, int tileY) const;
     int getInfluence(const BWAPI::TilePosition& pos) const;
