@@ -35,39 +35,35 @@ int InfluenceMap::getInfluence(const BWAPI::Position& pos) const
 }
 
 
-float distance(int x1, int x2, int y1, int y2) {
+float InfluenceMap::distance(int x1, int x2, int y1, int y2) {
     return std::sqrt(std::pow((x2 - x1), 2) + std::pow((y2 - y1) * 1.0, 2));
 }
 
-float influence(float maxInfluence,int maxDistance,float distance, float power) {
-    return (maxInfluence - std::pow((maxInfluence * (distance / maxDistance)), power));
-}                       //A lot of stupid input parameters because variables declared in .h not reachable from this method????
-float calcInfluence(int x, int y, int maxDistance, float maxInfluence, int width, int height,Grid<float> influence) {
-    /*  This dont work for some reason????
+float InfluenceMap::influence(float distance, float power) {
+    return (m_maxInfluence - std::pow((m_maxInfluence * (distance / m_viewDistance)), power));
+}                       
+
+float InfluenceMap::calcInfluence(int x, int y) {
+    if (m_influence.get(x, y) == m_maxInfluence) return 0.0;
     int minXi = std::max(x - m_viewDistance, 0);
-    int maxXi = std::min(x - m_viewDistance, m_width);
+    int maxXi = std::min(x + m_viewDistance, m_width - 1);
     int minYi = std::max(y - m_viewDistance, 0);
-    int maxYi = std::min(y - m_viewDistance, m_height);*/
-    if (influence.get(x, y) == maxInfluence) return 0.0;
-    int minXi = std::max(x - maxDistance, 0);
-    int maxXi = std::min(x + maxDistance, width-1);
-    int minYi = std::max(y - maxDistance, 0);
-    int maxYi = std::min(y + maxDistance, height-1);
-    
-    float lowestDist = maxDistance + 1.0;
+    int maxYi = std::min(y + m_viewDistance, m_height - 1);
+        
+    float lowestDist = m_viewDistance + 1.0;
     for (int xi = minXi; xi < maxXi; xi++) {
         for (int yi = minYi; yi < maxYi; yi++) {
             if (x == xi && y == yi) continue;
-            else if (influence.get(xi, yi) == maxInfluence) {
-                float dist = distance(x, xi, y, yi);
-                if (dist <= maxDistance) {
+            else if (m_influence.get(xi, yi) == m_maxInfluence) {
+                const float dist = distance(x, xi, y, yi);
+                if (dist <= m_viewDistance) {
                     lowestDist = std::min(dist, lowestDist);
                 }
             }
         }
     }
     if (lowestDist <= 8.0) {
-        return (maxInfluence - std::pow((maxInfluence * (lowestDist / maxDistance)), .9));
+        return (m_maxInfluence - std::pow((m_maxInfluence * (lowestDist / m_viewDistance)), .9));
         //return influence(maxInfluence, maxDistance, lowestDist, 2.0);
     }
     else return 0.0;
@@ -84,6 +80,8 @@ void InfluenceMap::computeStartDepotInfluenceMap()
     m_height = BWAPI::Broodwar->mapHeight();
     m_influence = Grid<float>(m_width, m_height, 0);
     m_influenced = Grid<float>(m_width, m_height, 0);
+    m_visionMap = Grid<float>(m_width, m_height, 0);
+    m_visionSourceMap = Grid<float>(m_width, m_height, 0);
     for (auto& startTilePos : BWAPI::Broodwar->getStartLocations()) // Iterates over all possible starting bases
     {
         BWAPI::Position pos = BWAPI::Position(startTilePos.x,startTilePos.y);
@@ -117,7 +115,7 @@ void InfluenceMap::computeStartDepotInfluenceMap()
     }
     for (int x = 0; x < m_width; x++) {
         for (int y = 0; y < m_height; y++) {
-            float influence = calcInfluence(x, y, m_viewDistance, m_maxInfluence, m_width, m_height, m_influence);
+            float influence = calcInfluence(x, y);
             if (influence > 0.0) { 
                 m_influenced.set(x, y, influence); 
             }
@@ -129,6 +127,17 @@ void InfluenceMap::computeStartDepotInfluenceMap()
         }
     }
 } 
+
+void InfluenceMap::calculateVisionMap() {
+    BWAPI::Player Enemy = BWAPI::Broodwar->enemy();
+    BWAPI::Unitset enemyUnits = Enemy->getUnits();
+    std::vector<BWAPI::Position> positions(enemyUnits.size());
+    for (BWAPI::Unit unit : enemyUnits){
+        BWAPI::Position unitPos = unit->getPosition();
+        m_visionSourceMap.set(unitPos.x,unitPos.y, m_maxInfluence);
+    }
+    
+}
 void InfluenceMap::draw() const
 {
     const int tilesToDraw = 200;
