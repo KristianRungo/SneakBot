@@ -166,7 +166,7 @@ void InfluenceMap::computeVisionMap() {
     }
 }
 void InfluenceMap::computeAirDamageMap() {
-    BWAPI::Player enemy = BWAPI::Broodwar->enemy(); //TODO
+    BWAPI::Player enemy = BWAPI::Broodwar->enemy(); 
     m_airDamageMap = Grid<float>(m_width, m_height, 0);
     const UIMap enemyUnits = Global::Info().getUnitInfo(enemy);
     if (enemyUnits.size() == 0) {
@@ -207,7 +207,7 @@ void InfluenceMap::computeAirDamageMap() {
     }
 }
 void InfluenceMap::computeGroundDamageMap() {
-    BWAPI::Player enemy = BWAPI::Broodwar->enemy(); //TODO
+    BWAPI::Player enemy = BWAPI::Broodwar->enemy(); 
     m_groundDamageMap = Grid<float>(m_width, m_height, 0);
     const UIMap enemyUnits = Global::Info().getUnitInfo(enemy);
     if (enemyUnits.size() == 0) {

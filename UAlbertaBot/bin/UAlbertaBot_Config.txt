@@ -87,10 +87,10 @@
         "ScoutGasSteal"             : false,
         "ScoutHarassEnemy"          : true,
         
-        "ReadDirectory"             : "bwapi-data/read/",
+        "ReadDirectory"             : "bwapi-data/write/",
         "WriteDirectory"            : "bwapi-data/write/",
                 
-        "UseEnemySpecificStrategy"  : true,
+        "UseEnemySpecificStrategy"  : false,
         "EnemySpecificStrategy"     :
         {
             "BotName1"              : { "Protoss" : "Protoss_ZealotRush", "Terran" : "Terran_VultureRush", "Zerg" : "Zerg_ZerglingRush" },
