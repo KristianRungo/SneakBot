@@ -3,6 +3,7 @@
 #include "Global.h"
 #include "Micro.h"
 #include "MapTools.h"
+#include "InformationManager.h"
 
 using namespace UAlbertaBot;
 
@@ -120,16 +121,81 @@ void TransportManager::update()
     {
         calculateMapEdgeVertices();
     }
-
+    if(!fullMarker){
+        loadTroops();
+    }
     moveTroops();
     moveTransport();
 
     drawTransportInformation();
 }
+void TransportManager::update(BWAPI::Unitset dropZealots)
+{
+    m_dropZealots = dropZealots;
+    if (!m_transportShip && getUnits().size() > 0)
+    {
+        m_transportShip = *getUnits().begin();
+    }
+
+    // calculate enemy region vertices if we haven't yet
+    if (m_mapEdgeVertices.empty())
+    {
+        calculateMapEdgeVertices();
+    }
+    if(m_transportShip){
+        if(m_transportShip->getLoadedUnits().size() == 4 && !fullMarker) fullMarker = true;
+    }
+    
+    if(!fullMarker){
+        loadTroops();
+    }
+    moveTroops();
+    moveTransport();
+
+
+}
+
+
+void TransportManager::loadTroops() {
+    if (m_dropZealots.size() == 0 ||!m_transportShip || !m_transportShip->exists() || !(m_transportShip->getHitPoints() > 0))
+    {
+        return;
+    }
+
+    for(auto & unit:m_dropZealots)
+    {
+        if ((unit->getType() == BWAPI::UnitTypes::Protoss_Shuttle)) continue;
+
+        m_transportShip->load(unit, true);
+    }
+    
+
+    
+}
+
+void TransportManager::unloadAtPosition(BWAPI::Position position){
+
+    if (!m_transportShip || !m_transportShip->exists() || !(m_transportShip->getHitPoints() > 0) || (m_transportShip->getLoadedUnits().size() < 4))
+    {
+        return;
+    }
+
+
+    BWAPI::UnitCommand currentCommand(m_transportShip->getLastCommand());
+    if ((currentCommand.getType() == BWAPI::UnitCommandTypes::Unload_All
+        || currentCommand.getType() == BWAPI::UnitCommandTypes::Unload_All_Position)
+        && m_transportShip->getLoadedUnits().size() > 0)
+    {
+        return;
+    }
+
+    m_transportShip->unloadAll(m_transportShip->getPosition());
+
+}
 
 void TransportManager::moveTransport()
 {
-    if (!m_transportShip || !m_transportShip->exists() || !(m_transportShip->getHitPoints() > 0))
+    if (!m_transportShip || !m_transportShip->exists() || !(m_transportShip->getHitPoints() > 0) || (m_transportShip->getLoadedUnits().size() < 4))
     {
         return;
     }
@@ -142,7 +208,9 @@ void TransportManager::moveTransport()
     {
         return;
     }
-
+    
+    /*
+    //Rest is debil
     if (m_to.isValid() && m_from.isValid())
     {
         followPerimeter(m_to, m_from);
@@ -151,6 +219,16 @@ void TransportManager::moveTransport()
     {
         followPerimeter();
     }
+
+    */
+    //Fly directly to opponent base
+    auto enemyBaseLocation = Global::Bases().getPlayerStartingBaseLocation(BWAPI::Broodwar->enemy());
+    
+    Micro::SmartMove(m_transportShip, enemyBaseLocation->getPosition());
+
+
+
+
 }
 
 void TransportManager::moveTroops()
@@ -163,24 +241,20 @@ void TransportManager::moveTroops()
     int transportHP = m_transportShip->getHitPoints() + m_transportShip->getShields();
 
     auto enemyBaseLocation = Global::Bases().getPlayerStartingBaseLocation(BWAPI::Broodwar->enemy());
+    bool closeEnough = m_transportShip->getDistance(enemyBaseLocation->getPosition()) < 300;
+    bool dying =  transportHP < 100;
+    bool canUnload = m_transportShip->canUnloadAtPosition(m_transportShip->getPosition());
 
-    if (enemyBaseLocation && (m_transportShip->getDistance(enemyBaseLocation->getPosition()) < 300 || transportHP < 100)
-        && m_transportShip->canUnloadAtPosition(m_transportShip->getPosition()))
+    if (enemyBaseLocation && (closeEnough || dying) && canUnload)
     {
         //unload troops 
         //and return? 
 
         // get the unit's current command
-        BWAPI::UnitCommand currentCommand(m_transportShip->getLastCommand());
 
-        // if we've already told this unit to unload, wait
-        if (currentCommand.getType() == BWAPI::UnitCommandTypes::Unload_All || currentCommand.getType() == BWAPI::UnitCommandTypes::Unload_All_Position)
-        {
-            return;
+        if (fullMarker) {
+            unloadAtPosition(m_transportShip->getPosition());
         }
-
-        //else unload
-        m_transportShip->unloadAll(m_transportShip->getPosition());
     }
 
 }

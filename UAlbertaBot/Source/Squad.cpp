@@ -68,7 +68,8 @@ void Squad::update()
         m_rangedManager.execute(m_order);
         m_tankManager.execute(m_order);
         m_medicManager.execute(m_order);
-        m_transportManager.update();
+        if(m_name == "Drop"){m_transportManager.update(m_units);}
+        //m_transportManager.update();
 
         m_detectorManager.setUnitClosestToEnemy(unitClosestToEnemy());
         m_detectorManager.execute(m_order);

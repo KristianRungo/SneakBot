@@ -69,6 +69,7 @@ void CombatCommander::update(const BWAPI::Unitset & combatUnits)
 
     m_combatUnits = combatUnits;
 
+    
 
     if (isSquadUpdateFrame())
     {
@@ -173,8 +174,8 @@ void CombatCommander::updateDropSquads()
     // otherwise the drop squad is full, so execute the order
     else
     {
-        SquadOrder dropOrder(SquadOrderTypes::Drop, getMainAttackLocation(), 800, "Attack Enemy Base");
-        dropSquad.setSquadOrder(dropOrder);
+       SquadOrder dropOrder(SquadOrderTypes::Drop, getMainAttackLocation(), 800, "Attack Enemy Base");
+       dropSquad.setSquadOrder(dropOrder);
     }
 }
 

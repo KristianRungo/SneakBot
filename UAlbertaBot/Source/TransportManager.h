@@ -9,6 +9,8 @@ class MicroManager;
 
 class TransportManager : public MicroManager
 {
+    bool                            fullMarker                   = false;
+    BWAPI::Unitset                  m_dropZealots;
     BWAPI::UnitInterface*           m_transportShip              = nullptr;
     BWAPI::Position					m_minCorner                  = {-1, -1};
     BWAPI::Position					m_maxCorner                  = {-1, -1};
@@ -22,6 +24,7 @@ class TransportManager : public MicroManager
     void drawTransportInformation(int x, int y);
     void moveTransport();
     void moveTroops();
+    void loadTroops();
     void followPerimeter(int clockwise=1);
     void followPerimeter(BWAPI::Position to, BWAPI::Position from);
 
@@ -29,6 +32,7 @@ class TransportManager : public MicroManager
     int getClosestVertexIndex(BWAPI::Position p);
     BWAPI::Position getFleePosition(int clockwise=1);
     std::pair<int, int> findSafePath(BWAPI::Position from, BWAPI::Position to);
+    void unloadAtPosition(BWAPI::Position positon);
 
 public:
 
@@ -36,6 +40,7 @@ public:
 
     void executeMicro(const BWAPI::Unitset & targets);
     void update();
+    void update(BWAPI::Unitset);
     void setTransportShip(BWAPI::UnitInterface * unit);
     void setFrom(BWAPI::Position from);
     void setTo(BWAPI::Position to);
