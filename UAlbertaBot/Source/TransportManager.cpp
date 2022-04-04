@@ -108,29 +108,37 @@ void TransportManager::drawTransportInformation(int x = 0, int y = 0)
         BWAPI::Broodwar->drawTextMap(m_mapEdgeVertices[i], "%d", i);
     }
 }
-
-void TransportManager::update()
-{
-    if (!m_transportShip && getUnits().size() > 0)
+bool TransportManager::isUnloading() {
+    if (m_dropZealots.size() == 0 || !m_transportShip || !m_transportShip->exists() || !(m_transportShip->getHitPoints() > 0))
     {
-        m_transportShip = *getUnits().begin();
+        return false;
     }
 
-    // calculate enemy region vertices if we haven't yet
-    if (m_mapEdgeVertices.empty())
+
+    const BWAPI::UnitCommand currentCommand(m_transportShip->getLastCommand());
+    if ((currentCommand.getType() == BWAPI::UnitCommandTypes::Unload_All
+        || currentCommand.getType() == BWAPI::UnitCommandTypes::Unload_All_Position)
+        && m_transportShip->getLoadedUnits().size() > 0)
     {
-        calculateMapEdgeVertices();
+        return true;
     }
-    if(!fullMarker){
-        loadTroops();
+    else return false;
+}
+void TransportManager::handleUnload() {
+    if (isUnloading()) return;
+    if (m_transportShip->canUnloadAll() && m_transportShip->getLastCommand().getType() == BWAPI::UnitCommandTypes::Stop && isSlowEnough()) {
+        m_transportShip->unloadAll();
+        unloading == true;
     }
-    moveTroops();
-    moveTransport();
-
-    drawTransportInformation();
+}
+bool TransportManager::isSlowEnough() {
+    const float velocity = std::sqrt(std::pow(m_transportShip->getVelocityX(),2) + std::pow(m_transportShip->getVelocityY(),2));
+    if (velocity < transportShipTopSpeed * percentageCutOff) return true;
+    else return false;
 }
 void TransportManager::update(BWAPI::Unitset dropZealots)
 {
+
     m_dropZealots = dropZealots;
     if (!m_transportShip && getUnits().size() > 0)
     {
@@ -142,26 +150,30 @@ void TransportManager::update(BWAPI::Unitset dropZealots)
     {
         calculateMapEdgeVertices();
     }
-    if(m_transportShip){
-        if(m_transportShip->getLoadedUnits().size() == 4 && !fullMarker) fullMarker = true;
+    if (unload) {
+        handleUnload();
+    }
+    if (!isUnloading() && unloading) { //When done unloading go home
+        Micro::SmartMove(m_transportShip, BWAPI::Broodwar->getClosestUnit(Global::Bases().getPlayerStartingBaseLocation(BWAPI::Broodwar->enemy())->getPosition())->getPosition());
+    }
+    if (!unload) {
+        loadTroops();
+        moveTroops();
+        moveTransport();
+
     }
     
-    if(!fullMarker){
-        loadTroops();
-    }
-    moveTroops();
-    moveTransport();
+
 
 
 }
-
 
 void TransportManager::loadTroops() {
     if (m_dropZealots.size() == 0 ||!m_transportShip || !m_transportShip->exists() || !(m_transportShip->getHitPoints() > 0))
     {
         return;
     }
-
+    if (isUnloading() || unload) return;
     for(auto & unit:m_dropZealots)
     {
         if ((unit->getType() == BWAPI::UnitTypes::Protoss_Shuttle)) continue;
@@ -181,15 +193,12 @@ void TransportManager::unloadAtPosition(BWAPI::Position position){
     }
 
 
-    BWAPI::UnitCommand currentCommand(m_transportShip->getLastCommand());
-    if ((currentCommand.getType() == BWAPI::UnitCommandTypes::Unload_All
-        || currentCommand.getType() == BWAPI::UnitCommandTypes::Unload_All_Position)
-        && m_transportShip->getLoadedUnits().size() > 0)
-    {
-        return;
+    if (isUnloading()) return;
+    if (!unload) {
+        m_transportShip->stop();
+        unload = true;
     }
-
-    m_transportShip->unloadAll(m_transportShip->getPosition());
+    
 
 }
 
@@ -201,30 +210,12 @@ void TransportManager::moveTransport()
     }
 
     // If I didn't finish unloading the troops, wait
-    BWAPI::UnitCommand currentCommand(m_transportShip->getLastCommand());
-    if ((currentCommand.getType() == BWAPI::UnitCommandTypes::Unload_All
-        || currentCommand.getType() == BWAPI::UnitCommandTypes::Unload_All_Position)
-        && m_transportShip->getLoadedUnits().size() > 0)
-    {
-        return;
-    }
+    if (isUnloading() || unload) return;
     
-    /*
-    //Rest is debil
-    if (m_to.isValid() && m_from.isValid())
-    {
-        followPerimeter(m_to, m_from);
-    }
-    else
-    {
-        followPerimeter();
-    }
-
-    */
-    //Fly directly to opponent base
-    auto enemyBaseLocation = Global::Bases().getPlayerStartingBaseLocation(BWAPI::Broodwar->enemy());
     
-    Micro::SmartMove(m_transportShip, enemyBaseLocation->getPosition());
+    const auto enemyBaseLocation = Global::Bases().getPlayerStartingBaseLocation(BWAPI::Broodwar->enemy());
+    
+    m_transportShip->move(enemyBaseLocation->getPosition());
 
 
 
@@ -237,13 +228,14 @@ void TransportManager::moveTroops()
     {
         return;
     }
+    if (isUnloading()) return;
     //unload zealots if close enough or dying
-    int transportHP = m_transportShip->getHitPoints() + m_transportShip->getShields();
+    const int transportHP = m_transportShip->getHitPoints() + m_transportShip->getShields();
 
-    auto enemyBaseLocation = Global::Bases().getPlayerStartingBaseLocation(BWAPI::Broodwar->enemy());
-    bool closeEnough = m_transportShip->getDistance(enemyBaseLocation->getPosition()) < 300;
-    bool dying =  transportHP < 100;
-    bool canUnload = m_transportShip->canUnloadAtPosition(m_transportShip->getPosition());
+    const auto& enemyBaseLocation = Global::Bases().getPlayerStartingBaseLocation(BWAPI::Broodwar->enemy());
+    const bool closeEnough = m_transportShip->getDistance(enemyBaseLocation->getPosition()) < 300;
+    const bool dying =  transportHP < 100;
+    const bool canUnload = m_transportShip->canUnloadAtPosition(m_transportShip->getPosition());
 
     if (enemyBaseLocation && (closeEnough || dying) && canUnload)
     {
@@ -252,7 +244,7 @@ void TransportManager::moveTroops()
 
         // get the unit's current command
 
-        if (fullMarker) {
+        if (!unload) {
             unloadAtPosition(m_transportShip->getPosition());
         }
     }

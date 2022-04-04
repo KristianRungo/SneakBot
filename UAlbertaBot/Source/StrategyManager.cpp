@@ -144,11 +144,12 @@ const MetaPairVector StrategyManager::getProtossBuildOrderGoal() const
     {
         if (numZealots == 0)
         {
-            goal.push_back(MetaPair(BWAPI::UnitTypes::Protoss_Zealot, numZealots + 4));
             goal.push_back(MetaPair(BWAPI::UnitTypes::Protoss_Shuttle, 1));
+            goal.push_back(MetaPair(BWAPI::UnitTypes::Protoss_Zealot, numZealots + 8));
         }
         else
         {
+            goal.push_back(MetaPair(BWAPI::UnitTypes::Protoss_Dragoon, numDragoons + 4));
             goal.push_back(MetaPair(BWAPI::UnitTypes::Protoss_Zealot, numZealots + 8));
         }
     }

@@ -5,6 +5,7 @@
 #include "WorkerManager.h"
 #include "UnitData.h"
 #include "MapTools.h"
+#include "Micro.h"
 #include "InformationManager.h"
 #include "StrategyManager.h"
 #include "Squad.h"
@@ -69,6 +70,10 @@ void CombatCommander::update(const BWAPI::Unitset & combatUnits)
 
     m_combatUnits = combatUnits;
 
+    if (Config::Strategy::StrategyName == "Protoss_Drop") {
+        handleDrop();
+        transferDropUnits();
+    }
     
 
     if (isSquadUpdateFrame())
@@ -82,6 +87,37 @@ void CombatCommander::update(const BWAPI::Unitset & combatUnits)
 
     m_squadData.update();
 }
+void CombatCommander::transferDropUnits() {
+    if (m_transferDropUnits && m_squadData.squadExists("Drop")) {
+        const auto& unitList = m_squadData.getSquad("Drop").getUnits();
+        
+        for (auto& unit : unitList) {
+            if ((unit->getType() == BWAPI::UnitTypes::Protoss_Zealot)) {
+                m_squadData.getSquad("MainAttack").addUnit(unit);
+            }
+            else
+                m_squadData.getSquad("ScoutDefense").addUnit(unit);
+        }
+        m_squadData.removeSquad("Drop");
+    }
+}
+void CombatCommander::handleDrop() {
+    if (m_dropSquadCreated && m_squadData.squadExists("Drop")) {
+        for (auto & unit : m_squadData.getSquad("Drop").getUnits()) {
+            if ((unit->getType() == BWAPI::UnitTypes::Protoss_Zealot)) continue;
+            if (unit->getLoadedUnits().size() == 4 && !m_dropShipFull) {
+                m_dropShipFull = true;
+                return;
+            }
+            if (unit->getLoadedUnits().size() == 0 && m_dropShipFull && !m_dropCompleted) {
+                m_dropCompleted = true;
+                return;
+            }
+            
+        }
+    }
+}
+
 
 void CombatCommander::updateIdleSquad()
 {
@@ -112,6 +148,11 @@ void CombatCommander::updateAttackSquads()
         {
             m_squadData.assignUnitToSquad(unit, mainAttackSquad);
         }
+        if (m_squadData.squadExists("Drop") && m_dropCompleted && !m_dropSquadSuicide){
+            if (unit->getDistance(m_squadData.getSquad("Drop").calcCenter()) < 200 && m_squadData.getSquad("MainAttack").containsUnit(unit)) {
+                m_transferDropUnits = true;
+            }
+        }
     }
 
     SquadOrder mainAttackOrder(SquadOrderTypes::Attack, getMainAttackLocation(), 800, "Attack Enemy Base");
@@ -120,7 +161,7 @@ void CombatCommander::updateAttackSquads()
 
 void CombatCommander::updateDropSquads()
 {
-    if (Config::Strategy::StrategyName != "Protoss_Drop")
+    if (Config::Strategy::StrategyName != "Protoss_Drop" || m_dropSquadCreated)
     {
         return;
     }
@@ -174,8 +215,9 @@ void CombatCommander::updateDropSquads()
     // otherwise the drop squad is full, so execute the order
     else
     {
-       SquadOrder dropOrder(SquadOrderTypes::Drop, getMainAttackLocation(), 800, "Attack Enemy Base");
-       dropSquad.setSquadOrder(dropOrder);
+        SquadOrder dropOrder(SquadOrderTypes::Drop, getMainAttackLocation(), 800, "Attack Enemy Base");
+        dropSquad.setSquadOrder(dropOrder);
+        m_dropSquadCreated = true;
     }
 }
 
