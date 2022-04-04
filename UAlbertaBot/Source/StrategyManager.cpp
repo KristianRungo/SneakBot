@@ -323,7 +323,8 @@ void StrategyManager::readResults()
         return;
     }
 
-    std::string enemyName = BWAPI::Broodwar->enemy()->getName();
+    //std::string enemyName = BWAPI::Broodwar->enemy()->getName();
+    std::string enemyName = BWAPI::Broodwar->enemy()->getRace().getName();
     std::replace(enemyName.begin(), enemyName.end(), ' ', '_');
 
     std::string enemyResultsFile = Config::Strategy::ReadDir + enemyName + ".txt";
@@ -371,8 +372,8 @@ void StrategyManager::writeResults()
     {
         return;
     }
-
-    std::string enemyName = BWAPI::Broodwar->enemy()->getName();
+    //std::string enemyName = BWAPI::Broodwar->enemy()->getName();
+    std::string enemyName = BWAPI::Broodwar->enemy()->getRace().getName();
     std::replace(enemyName.begin(), enemyName.end(), ' ', '_');
 
     std::string enemyResultsFile = Config::Strategy::WriteDir + enemyName + ".txt";
