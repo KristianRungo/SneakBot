@@ -131,6 +131,7 @@
     <ClCompile Include="..\source\DetectorManager.cpp" />
     <ClCompile Include="..\Source\DistanceMap.cpp" />
     <ClCompile Include="..\Source\Global.cpp" />
+    <ClCompile Include="..\Source\InfluenceMap.cpp" />
     <ClCompile Include="..\Source\main.cpp" />
     <ClCompile Include="..\Source\GameCommander.cpp" />
     <ClCompile Include="..\Source\InformationManager.cpp" />
@@ -178,6 +179,7 @@
     <ClInclude Include="..\Source\GameCommander.h" />
     <ClInclude Include="..\Source\Global.h" />
     <ClInclude Include="..\Source\Grid.hpp" />
+    <ClInclude Include="..\Source\InfluenceMap.h" />
     <ClInclude Include="..\Source\InformationManager.h" />
     <ClInclude Include="..\source\JSONTools.h" />
     <ClInclude Include="..\Source\Logger.h" />

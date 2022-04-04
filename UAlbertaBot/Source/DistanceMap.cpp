@@ -13,6 +13,11 @@ DistanceMap::DistanceMap()
 
 }
 
+
+Grid<int> DistanceMap::getDistanceMap() {
+    return m_dist;
+}
+
 int DistanceMap::getDistance(int tileX, int tileY) const
 {
     UAB_ASSERT(tileX < m_width && tileY < m_height, "Index out of range: X = %d, Y = %d", tileX, tileY);

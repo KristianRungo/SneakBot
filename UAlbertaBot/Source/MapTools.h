@@ -3,7 +3,7 @@
 #include <vector>
 #include "DistanceMap.h"
 #include "Grid.hpp"
-
+#include "InfluenceMap.h"
 #include "stardraft/StarDraft.h"
 
 namespace UAlbertaBot
@@ -18,9 +18,12 @@ class MapTools
     int     m_width = 0;
     int     m_height = 0;
     int     m_frame = 0;
+
+
     
     // a cache of already computed distance maps, which is mutable since it only acts as a cache
     mutable std::map<std::pair<int,int>, DistanceMap> m_allMaps;   
+    InfluenceMap m_influenceMap;
 
     Grid<int> m_walkable;       // whether a tile is buildable (includes static resources)          
     Grid<int> m_buildable;      // whether a tile is buildable (includes static resources)

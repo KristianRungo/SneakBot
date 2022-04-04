@@ -23,6 +23,7 @@ void MapTools::onStart()
 {
     PROFILE_FUNCTION();
 
+    
     m_width          = BWAPI::Broodwar->mapWidth();
     m_height         = BWAPI::Broodwar->mapHeight();
     m_walkable       = Grid<int>(m_width, m_height, 1);
@@ -30,7 +31,7 @@ void MapTools::onStart()
     m_depotBuildable = Grid<int>(m_width, m_height, 0);
     m_lastSeen       = Grid<int>(m_width, m_height, 0);
     m_sectorNumber   = Grid<int>(m_width, m_height, 0);
-
+    m_influenceMap   = InfluenceMap();
     // Set the boolean grid data from the Map
     for (int x(0); x < m_width; ++x)
     {
@@ -79,15 +80,17 @@ void MapTools::onStart()
     // compute the map connectivity
     computeConnectivity();
     computeMap();
+
+
 }
 
 void MapTools::onFrame()
 {
     PROFILE_FUNCTION();
 
-    for (int x=0; x<m_width; ++x)
+    for (int x = 0; x < m_width; ++x)
     {
-        for (int y=0; y<m_height; ++y)
+        for (int y = 0; y < m_height; ++y)
         {
             if (isVisible(x, y))
             {
@@ -95,9 +98,18 @@ void MapTools::onFrame()
             }
         }
     }
+    if (m_frame == 0) {
+        m_influenceMap.computeStartDepotInfluenceMap();
+    }
+
+
+    m_influenceMap.computeVisionMap();
+    m_influenceMap.computeAirDamageMap();
+    m_influenceMap.computeGroundDamageMap();
     
-    m_frame++;
     draw();
+    m_influenceMap.draw();
+    m_frame++;
 }
 
 void MapTools::computeMap()
@@ -409,7 +421,6 @@ BWAPI::TilePosition MapTools::getLeastRecentlySeenTile() const
     BWAPI::TilePosition leastSeen;
     const BaseLocation * baseLocation = Global::Bases().getPlayerStartingBaseLocation(BWAPI::Broodwar->self());
     UAB_ASSERT(baseLocation, "Null self baselocation is insanely bad");
-
     for (auto & tile : baseLocation->getClosestTiles())
     {
         UAB_ASSERT(isValidTile(tile), "How is this tile not valid?");

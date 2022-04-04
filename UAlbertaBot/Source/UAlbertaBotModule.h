@@ -3,6 +3,7 @@
 #include "Common.h"
 #include "GameCommander.h"
 #include "AutoObserver.h"
+#include "InfluenceMap.h"
 
 namespace UAlbertaBot
 {
@@ -10,7 +11,8 @@ namespace UAlbertaBot
 class UAlbertaBotModule
 {
 	GameCommander m_gameCommander;
-    AutoObserver  m_autoObserver;
+	AutoObserver  m_autoObserver;
+	InfluenceMap  m_influenceMap;
 
 public:
 

@@ -136,6 +136,9 @@
     <ClCompile Include="..\Source\BaseLocationManager.cpp">
       <Filter>macro</Filter>
     </ClCompile>
+    <ClCompile Include="..\Source\InfluenceMap.cpp">
+      <Filter>util</Filter>
+    </ClCompile>
   </ItemGroup>
   <ItemGroup>
     <ClInclude Include="..\Source\CombatCommander.h">
@@ -266,6 +269,9 @@
     </ClInclude>
     <ClInclude Include="..\Source\BaseLocation.h">
       <Filter>macro</Filter>
+    </ClInclude>
+    <ClInclude Include="..\Source\InfluenceMap.h">
+      <Filter>util</Filter>
     </ClInclude>
   </ItemGroup>
 </Project>

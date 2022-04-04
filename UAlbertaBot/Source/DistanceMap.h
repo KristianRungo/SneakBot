@@ -21,10 +21,12 @@ public:
     int getDistance(int tileX, int tileY) const;
     int getDistance(const BWAPI::TilePosition & pos) const;
     int getDistance(const BWAPI::Position & pos) const;
-
+    Grid<int> getDistanceMap();
     // given a position, get the position we should move to to minimize distance
     const std::vector<BWAPI::TilePosition> & getSortedTiles() const;
     const BWAPI::TilePosition & getStartTile() const;
+
+
 
     void draw() const;
 };
