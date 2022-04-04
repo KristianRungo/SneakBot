@@ -165,7 +165,7 @@ void InfluenceMap::computeVisionMap() {
     }
 }
 void InfluenceMap::computeAirDamageMap() {
-    BWAPI::Player enemy = BWAPI::Broodwar->self(); //TODO
+    BWAPI::Player enemy = BWAPI::Broodwar->enemy(); //TODO
     m_airDamageMap = Grid<float>(m_width, m_height, 0);
     const UIMap enemyUnits = Global::Info().getUnitInfo(enemy);
     if (enemyUnits.size() == 0) {
