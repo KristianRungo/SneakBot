@@ -195,7 +195,7 @@ void InfluenceMap::computeAirDamageMap() {
         }
 
         if (unitAirWeapon.targetsAir()) {
-            maxGroundRange = enemyUnit.second.type.airWeapon().maxRange();
+            maxAirRange = enemyUnit.second.type.airWeapon().maxRange();
             dps += unitAirWeapon.damageFactor() * unitAirWeapon.damageAmount() * (15.0 / unitAirWeapon.damageCooldown());  // Damage output
         }
 
@@ -219,7 +219,6 @@ void InfluenceMap::computeAirDamageMap() {
             for (int yi = minYi; yi < maxYi; yi++) {
                 dist = distance(x, xi, y, yi);
                 if (dist <= maxRange) {
-                    //m_airDamageMap.set(xi, yi, std::max(variableRangeInfluence(dist, maxRange, 0.9), m_airDamageMap.get(xi, yi)));
                     m_airDamageMap.set(xi, yi, variableRangeInfluence(dist, maxRange, 0.9) + m_airDamageMap.get(xi, yi));
                 }
             }
@@ -236,8 +235,8 @@ void InfluenceMap::computeGroundDamageMap() {
     int dist = 10000;
     for (const auto& enemyUnit : enemyUnits) {
 
-        BWAPI::WeaponType unitGroundWeapon = enemyUnit.second.type.groundWeapon();
-        BWAPI::WeaponType unitAirWeapon = enemyUnit.second.type.airWeapon();
+        BWAPI::WeaponType const unitGroundWeapon = enemyUnit.second.type.groundWeapon();
+        BWAPI::WeaponType const unitAirWeapon = enemyUnit.second.type.airWeapon();
 
         const bool canAttack = enemyUnit.second.type.canAttack();
         const bool canAttackGround = (unitGroundWeapon.targetsGround() || unitAirWeapon.targetsGround());
@@ -257,7 +256,7 @@ void InfluenceMap::computeGroundDamageMap() {
         }
 
         if (enemyUnit.second.type.airWeapon().targetsGround()) {
-            maxGroundRange = unitAirWeapon.maxRange();
+            maxAirRange = unitAirWeapon.maxRange();
             dps += unitAirWeapon.damageFactor() * unitAirWeapon.damageAmount() * (15.0 / unitAirWeapon.damageCooldown());  // Damage output
         }
 
@@ -281,7 +280,6 @@ void InfluenceMap::computeGroundDamageMap() {
             for (int yi = minYi; yi < maxYi; yi++) {
                 dist = distance(x, xi, y, yi);
                 if (dist <= maxRange) {
-                    //m_groundDamageMap.set(xi, yi, std::max(variableRangeInfluence(dist, maxRange, 0.9), m_groundDamageMap.get(xi, yi)));
                     m_groundDamageMap.set(xi, yi, variableRangeInfluence(dist, maxRange, 0.9) + m_groundDamageMap.get(xi, yi));
 
                 }
@@ -293,13 +291,13 @@ void InfluenceMap::draw() const
 {
     for (int x = 0; x < m_width; x++) {
         for (int y = 0; y < m_height; y++) {
-            if (m_influence.get(x, y) > 2) { // remember to set back to 0
+            if (m_influence.get(x, y) > 2) { // TODO: Set back to 0
                 Global::Map().drawTile(x, y, BWAPI::Color(
                     255, 
                     255 - (255 * (m_influence.get(x, y) / m_maxInfluence)), 
                     255 - (255 * (m_influence.get(x, y) / m_maxInfluence))));
             }
-            if (m_visionMap.get(x, y) > 0) {// remember to set back to 0
+            if (m_visionMap.get(x, y) > 0) { // TODO: Set back to 0
                 /*Global::Map().drawTile(x, y, BWAPI::Color(
                     255 - (255 * (m_visionMap.get(x, y) / m_maxInfluence)),
                     255 - (255 * (m_visionMap.get(x, y) / m_maxInfluence)),
@@ -314,13 +312,13 @@ void InfluenceMap::draw() const
                     
                 
             }
-            if (m_groundDamageMap.get(x, y) > 3.0) { // looking for a place with more than 15*3=45 dps potential
+            if (m_groundDamageMap.get(x, y) > 1.0) { // TODO: Set back to 0
                 Global::Map().drawTile(x, y, BWAPI::Color(
                     0,
                     255,
                     0));
             }
-            if (m_airDamageMap.get(x, y) > 3.0) {
+            if (m_airDamageMap.get(x, y) > 1.0) { // TODO: Set back to 0
                 Global::Map().drawTile(x, y, BWAPI::Color(
                     0,
                     0,
