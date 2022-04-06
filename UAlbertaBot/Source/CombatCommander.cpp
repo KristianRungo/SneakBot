@@ -71,7 +71,7 @@ void CombatCommander::update(const BWAPI::Unitset & combatUnits)
     m_combatUnits = combatUnits;
 
     if (Config::Strategy::StrategyName == "Protoss_Drop") {
-        handleDrop();
+        monitorDrop();
         transferDropUnits();
     }
     
@@ -101,7 +101,7 @@ void CombatCommander::transferDropUnits() {
         m_squadData.removeSquad("Drop");
     }
 }
-void CombatCommander::handleDrop() {
+void CombatCommander::monitorDrop() {
     if (m_dropSquadCreated && m_squadData.squadExists("Drop")) {
         for (auto & unit : m_squadData.getSquad("Drop").getUnits()) {
             if ((unit->getType() == BWAPI::UnitTypes::Protoss_Zealot)) continue;
@@ -113,7 +113,6 @@ void CombatCommander::handleDrop() {
                 m_dropCompleted = true;
                 return;
             }
-            
         }
     }
 }
