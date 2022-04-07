@@ -5,6 +5,10 @@
 #include "BaseLocationManager.h"
 #include "DistanceMap.h"
 #include "InformationManager.h"
+#include <functional>
+#include <queue>
+#include <vector>
+#include <iostream>
 
 
 using namespace UAlbertaBot;
@@ -35,6 +39,68 @@ int InfluenceMap::getInfluence(const BWAPI::Position& pos) const
     return getInfluence(BWAPI::TilePosition(pos));
 }
 
+std::vector<BWAPI::TilePosition> InfluenceMap::getSneakyPath(BWAPI::TilePosition start, BWAPI::TilePosition end) {
+    std::priority_queue<std::tuple<float, float, BWAPI::TilePosition>> openQueue;
+    std::vector<std::vector<std::tuple<BWAPI::TilePosition, BWAPI::TilePosition, float>>> closedQueue(
+        m_width, std::vector <std::tuple<BWAPI::TilePosition, BWAPI::TilePosition, float>>
+        (m_height, std::make_tuple(BWAPI::TilePositions::Unknown, BWAPI::TilePositions::Unknown, std::numeric_limits<float>::max())));
+    //Array with tileposition tuples, to point forwards and backwards first is back, second is forward, the current cost to travel to node is defaulted to the biggest float value
+    std::vector<BWAPI::TilePosition> shortestTilePath;
+    int possibleNodesToVisit = m_width * m_height;
+    openQueue.push(std::make_tuple((-1) * weightedDist(start, end), 0, start)); //Set start position with weightedDistance and distance traveled
+    closedQueue[start.x][start.y] = std::make_tuple(BWAPI::TilePositions::Unknown, BWAPI::TilePositions::Unknown, 0); //Set travel cost of start node to 0
+    while (openQueue.size() == possibleNodesToVisit) { //WHILE THERE ARE NODES LEFT TO EXPLORE! 
+        BWAPI::TilePosition currentTile = std::get<2>(openQueue.top());//Get best tile
+        float currentTileVal = std::get<1>(openQueue.top());//Get best tile cost
+        if (currentTile.x == end.x && currentTile.y == end.y) { // CALC AND RETURN BEST PATH IF WE HAVE REACHED OUR GOAL!
+            shortestTilePath.push_back(currentTile);//store end desination
+            while (currentTile != start) { //Keep going backwards from the end node, untill you reach the start node 
+                currentTile = std::get<0>(closedQueue[currentTile.x][currentTile.y]);
+                shortestTilePath.push_back(currentTile);//For each node you examine, save it as a part of the shortest    
+            }
+            return shortestTilePath;
+            //Start node reached, return the shortest path (Maybe we should reverse this list, but going from end to start is smarter)
+        }
+        BWAPI::TilePosition currentTileParent = std::get<1>(closedQueue[currentTile.x][currentTile.y]);
+        float parentTileVal = (currentTileParent == BWAPI::TilePositions::Unknown) ? std::numeric_limits<float>::max() : std::get<2>(closedQueue[currentTileParent.x][currentTileParent.y]);
+        //Get parent. If parent doesn't exist, set parentTileVal to max float nr (This is good)
+        for (size_t a = 0; a < LegalActions; ++a) // CHECK ALL ADJACENT TILES!
+        {
+            const BWAPI::TilePosition adjacentTile = BWAPI::TilePosition(currentTile.x + actionX[a], currentTile.y + actionY[a]);
+            if (std::get<1>(closedQueue[adjacentTile.x][adjacentTile.y]) != BWAPI::TilePositions::Unknown) { 
+                continue;//THE TILE YOU ARE LOOKING AT IS ALLREADY IN THE SHORTEST PATH!
+            }
+            if (weightedDist(adjacentTile, end)+cVal(currentTileVal,a) < weightedDist(currentTileParent, end) + parentTileVal) {
+                closedQueue[currentTile.x][currentTile.y] = std::make_tuple(std::get<0>(closedQueue[currentTile.x][currentTile.y]), adjacentTile, currentTileVal);
+                parentTileVal = cVal(currentTileVal, a);
+                currentTileParent = adjacentTile;
+                //IF ADJACENT TILE IS CLOSER THAN THE CURRENT PARENT THEN MAKE IT THE PARENT
+            }
+            openQueue.push(std::make_tuple((-1) * weightedDist(adjacentTile, end),cVal(currentTileVal,a), adjacentTile)); 
+        }
+        if (parentTileVal == std::numeric_limits<float>::max()) { //If parentTileVal was never changed, we never found an adjacent tile that was closer, or wasn't allready part of our shortest path
+            UAB_ASSERT_WARNING(currentTile, "Got stuck in dead end loop");
+            return;
+        }
+        //SAVE ADJACENT TILE AS THE NEXT IN SHORTEST PATH
+        BWAPI::TilePosition selectedAdjacentTile = std::get<1>(closedQueue[currentTile.x][currentTile.y]); 
+        closedQueue[selectedAdjacentTile.x][selectedAdjacentTile.y] = std::make_tuple(
+            currentTile, 
+            std::get<1>(closedQueue[selectedAdjacentTile.x][selectedAdjacentTile.y]),
+            parentTileVal);
+        //Saves currentNode as the child of our selected adjacent tile, and stores the new C value in the parent tile
+    }
+    UAB_ASSERT_WARNING(start, "End not reachable from start");
+}
+float cVal(float prevC, int a) {
+    float distTraveled = (actionX[a] * actionY[a] != 0) ? 1.41 : 1;
+    return prevC +  distTraveled;
+}
+
+float weightedDist(BWAPI::TilePosition start, BWAPI::TilePosition end) {
+    if (start == BWAPI::TilePositions::Unknown) return std::numeric_limits<float>::max();
+    else return std::sqrt(std::pow((end.x - start.x), 2) + std::pow((end.y - start.y), 2));
+}
 
 float InfluenceMap::distance(int x1, int x2, int y1, int y2) {
     return std::sqrt(std::pow((x2 - x1), 2) + std::pow((y2 - y1) * 1.0, 2));

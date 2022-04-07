@@ -26,6 +26,8 @@ class InfluenceMap
     float influence(float distance, float power);
     float calcInfluence(int x, int y);
     float variableRangeInfluence(float distance, int sightRange, float power);
+    float weightedDist(BWAPI::TilePosition start, BWAPI::TilePosition end);
+    float cVal(float prevC, int a);
 
 public:
 
@@ -35,7 +37,7 @@ public:
     void computeVisionMap();
     void computeAirDamageMap();
     void computeGroundDamageMap();
-
+    std::vector<BWAPI::TilePosition> getSneakyPath(BWAPI::TilePosition start, BWAPI::TilePosition end);
     int getInfluence(int tileX, int tileY) const;
     int getInfluence(const BWAPI::TilePosition& pos) const;
     int getInfluence(const BWAPI::Position& pos) const;
