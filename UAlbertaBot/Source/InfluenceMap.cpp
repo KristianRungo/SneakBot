@@ -58,6 +58,7 @@ std::vector<BWAPI::TilePosition> InfluenceMap::getSneakyPath(BWAPI::TilePosition
                 currentTile = std::get<0>(closedQueue[currentTile.x][currentTile.y]);
                 shortestTilePath.push_back(currentTile);//For each node you examine, save it as a part of the shortest    
             }
+            m_sneakyPath = shortestTilePath;
             return shortestTilePath;
             //Start node reached, return the shortest path (Maybe we should reverse this list, but going from end to start is smarter)
         }
@@ -76,11 +77,11 @@ std::vector<BWAPI::TilePosition> InfluenceMap::getSneakyPath(BWAPI::TilePosition
                 currentTileParent = adjacentTile;
                 //IF ADJACENT TILE IS CLOSER THAN THE CURRENT PARENT THEN MAKE IT THE PARENT
             }
-            openQueue.push(std::make_tuple((-1) * weightedDist(adjacentTile, end),cVal(currentTileVal,a), adjacentTile)); 
+            openQueue.push(std::make_tuple((-1) * (weightedDist(adjacentTile, end) + cVal(currentTileVal, a)),cVal(currentTileVal,a), adjacentTile));
         }
         if (parentTileVal == std::numeric_limits<float>::max()) { //If parentTileVal was never changed, we never found an adjacent tile that was closer, or wasn't allready part of our shortest path
             UAB_ASSERT_WARNING(currentTile, "Got stuck in dead end loop");
-            return;
+            return shortestTilePath;
         }
         //SAVE ADJACENT TILE AS THE NEXT IN SHORTEST PATH
         BWAPI::TilePosition selectedAdjacentTile = std::get<1>(closedQueue[currentTile.x][currentTile.y]); 
@@ -93,13 +94,12 @@ std::vector<BWAPI::TilePosition> InfluenceMap::getSneakyPath(BWAPI::TilePosition
     UAB_ASSERT_WARNING(start, "End not reachable from start");
 }
 float cVal(float prevC, int a) {
-    float distTraveled = (actionX[a] * actionY[a] != 0) ? 1.41 : 1;
-    return prevC +  distTraveled;
+    return prevC + ((actionX[a] * actionY[a] != 0) ? 1.41 : 1);
 }
 
 float weightedDist(BWAPI::TilePosition start, BWAPI::TilePosition end) {
     if (start == BWAPI::TilePositions::Unknown) return std::numeric_limits<float>::max();
-    else return std::sqrt(std::pow((end.x - start.x), 2) + std::pow((end.y - start.y), 2));
+    else return std::sqrt(std::pow((end.x - start.x), 2) + std::pow((end.y - start.y)*1.0, 2));
 }
 
 float InfluenceMap::distance(int x1, int x2, int y1, int y2) {
@@ -359,8 +359,8 @@ void InfluenceMap::draw() const
         for (int y = 0; y < m_height; y++) {
             if (m_influence.get(x, y) > 2) { // TODO: Set back to 0
                 Global::Map().drawTile(x, y, BWAPI::Color(
-                    255, 
-                    255 - (255 * (m_influence.get(x, y) / m_maxInfluence)), 
+                    255,
+                    255 - (255 * (m_influence.get(x, y) / m_maxInfluence)),
                     255 - (255 * (m_influence.get(x, y) / m_maxInfluence))));
             }
             if (m_visionMap.get(x, y) > 0) { // TODO: Set back to 0
@@ -370,13 +370,13 @@ void InfluenceMap::draw() const
                     255));
                     */
 
-                    
+
                 Global::Map().drawTile(x, y, BWAPI::Color(
                     255,
                     0,
                     0));
-                    
-                
+
+
             }
             if (m_groundDamageMap.get(x, y) > 3.0) { // TODO: Set back to 0
                 Global::Map().drawTile(x, y, BWAPI::Color(
@@ -391,5 +391,11 @@ void InfluenceMap::draw() const
                     255));
             }
         }
+    }
+    for (BWAPI::TilePosition tile : m_sneakyPath) {
+        Global::Map().drawTile(tile.x, tile.y, BWAPI::Color(
+            128,
+            0,
+            128));
     }
 }

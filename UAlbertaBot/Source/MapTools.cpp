@@ -100,6 +100,9 @@ void MapTools::onFrame()
     }
     if (m_frame == 0) {
         m_influenceMap.computeStartDepotInfluenceMap();
+        auto & start = Global::Bases().getPlayerStartingBaseLocation(BWAPI::Broodwar->self())->getDepotPosition();
+        auto & enemy = Global::Bases().getPlayerStartingBaseLocation(BWAPI::Broodwar->enemy())->getDepotPosition();
+        m_influenceMap.getSneakyPath(start, enemy);
     }
 
 

@@ -20,6 +20,7 @@ class InfluenceMap
     Grid<float>                      m_airDamageMap;
     Grid<float>                      m_groundDamageMap;
     Grid<float>                      m_visionMap;
+    std::vector<BWAPI::TilePosition> m_sneakyPath;
     BWAPI::TilePosition              m_startTile;
     BWAPI::Unitset                   m_enemyUnits;
     float distance(int x1, int x2, int y1, int y2);
