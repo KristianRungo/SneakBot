@@ -101,7 +101,13 @@ void MapTools::onFrame()
     if (m_frame == 0) {
         m_influenceMap.computeStartDepotInfluenceMap();
         auto & start = Global::Bases().getPlayerStartingBaseLocation(BWAPI::Broodwar->self())->getDepotPosition();
-        auto & enemy = Global::Bases().getPlayerStartingBaseLocation(BWAPI::Broodwar->enemy())->getDepotPosition();
+        BWAPI::TilePosition enemy;
+        for (auto& startTilePos : BWAPI::Broodwar->getStartLocations()) // Iterates over all possible starting bases
+        {
+            if (startTilePos.x == start.x && startTilePos.y == start.y) continue; //Continues if the base is ours
+            else enemy = startTilePos;
+
+        }
         m_influenceMap.getSneakyPath(start, enemy);
     }
 

@@ -49,7 +49,7 @@ std::vector<BWAPI::TilePosition> InfluenceMap::getSneakyPath(BWAPI::TilePosition
     int possibleNodesToVisit = m_width * m_height;
     openQueue.push(std::make_tuple((-1) * weightedDist(start, end), 0, start)); //Set start position with weightedDistance and distance traveled
     closedQueue[start.x][start.y] = std::make_tuple(BWAPI::TilePositions::Unknown, BWAPI::TilePositions::Unknown, 0); //Set travel cost of start node to 0
-    while (openQueue.size() == possibleNodesToVisit) { //WHILE THERE ARE NODES LEFT TO EXPLORE! 
+    while (openQueue.size() != possibleNodesToVisit) { //WHILE THERE ARE NODES LEFT TO EXPLORE! 
         BWAPI::TilePosition currentTile = std::get<2>(openQueue.top());//Get best tile
         float currentTileVal = std::get<1>(openQueue.top());//Get best tile cost
         if (currentTile.x == end.x && currentTile.y == end.y) { // CALC AND RETURN BEST PATH IF WE HAVE REACHED OUR GOAL!
@@ -71,7 +71,7 @@ std::vector<BWAPI::TilePosition> InfluenceMap::getSneakyPath(BWAPI::TilePosition
             if (std::get<1>(closedQueue[adjacentTile.x][adjacentTile.y]) != BWAPI::TilePositions::Unknown) { 
                 continue;//THE TILE YOU ARE LOOKING AT IS ALLREADY IN THE SHORTEST PATH!
             }
-            if (weightedDist(adjacentTile, end)+cVal(currentTileVal,a) < weightedDist(currentTileParent, end) + parentTileVal) {
+            if (weightedDist(adjacentTile, end)+ cVal(currentTileVal,a) < weightedDist(currentTileParent, end) + parentTileVal) {
                 closedQueue[currentTile.x][currentTile.y] = std::make_tuple(std::get<0>(closedQueue[currentTile.x][currentTile.y]), adjacentTile, currentTileVal);
                 parentTileVal = cVal(currentTileVal, a);
                 currentTileParent = adjacentTile;
@@ -93,13 +93,15 @@ std::vector<BWAPI::TilePosition> InfluenceMap::getSneakyPath(BWAPI::TilePosition
     }
     UAB_ASSERT_WARNING(start, "End not reachable from start");
 }
-float cVal(float prevC, int a) {
+float InfluenceMap::cVal(float prevC, int a) {
     return prevC + ((actionX[a] * actionY[a] != 0) ? 1.41 : 1);
 }
 
-float weightedDist(BWAPI::TilePosition start, BWAPI::TilePosition end) {
+float InfluenceMap::weightedDist(BWAPI::TilePosition start, BWAPI::TilePosition end) {
     if (start == BWAPI::TilePositions::Unknown) return std::numeric_limits<float>::max();
-    else return std::sqrt(std::pow((end.x - start.x), 2) + std::pow((end.y - start.y)*1.0, 2));
+    const float h_diagonal = std::min(std::abs(start.x - end.x), std::abs(start.y - end.y));
+    const float h_straight = std::abs(start.x - end.x) + std::abs(start.y - end.y);
+    return std::sqrt(2) * h_diagonal + (h_straight - (2.0 * h_diagonal));
 }
 
 float InfluenceMap::distance(int x1, int x2, int y1, int y2) {
