@@ -5,6 +5,7 @@
 #include "Global.h"
 #include "InformationManager.h"
 #include "WorkerManager.h"
+#include "SneakLogger.h"
 #include "Logger.h"
 
 using namespace UAlbertaBot;
@@ -407,6 +408,9 @@ void StrategyManager::onEnd(const bool isWinner)
     }
 
     writeResults();
+    m_sneaklogger.m_game.m_strategy = Config::Strategy::StrategyName;
+    m_sneaklogger.m_game.m_won = isWinner;
+    m_sneaklogger.onEnd();
 }
 
 void StrategyManager::setLearnedStrategy()

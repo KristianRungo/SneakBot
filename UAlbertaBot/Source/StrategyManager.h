@@ -2,6 +2,7 @@
 
 #include "Common.h"
 #include "BuildOrder.h"
+#include <SneakLogger.h>
 
 namespace UAlbertaBot
 {
@@ -36,11 +37,13 @@ class StrategyManager
 
     StrategyManager();
 
+    SneakLogger                     m_sneaklogger;
     BWAPI::Race					    m_selfRace;
     BWAPI::Race					    m_enemyRace;
     std::map<std::string, Strategy> m_strategies;
     int                             m_totalGamesPlayed = 0;
     BuildOrder                      m_emptyBuildOrder;
+  
 
     void                    writeResults();
     const	int             getScore(BWAPI::Player player) const;

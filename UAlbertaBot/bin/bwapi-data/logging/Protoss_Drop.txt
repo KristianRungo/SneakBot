@@ -1,1 +1,1 @@
-[]
+[{"description":"Protoss_Drop","UnitsLost":2,"ShuttleHealth":64,"TravelTime":6.165713243029195e-44,"TimeSpotted":61,"Won":false},{"description":"Protoss_Drop","UnitsLost":2,"ShuttleHealth":64,"TravelTime":6.165713243029195e-44,"TimeSpotted":61,"Won":false},{"description":"Protoss_Drop","UnitsLost":0,"ShuttleHealth":0,"TravelTime":0.0,"TimeSpotted":0,"Won":false}]

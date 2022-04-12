@@ -23,11 +23,6 @@ using namespace UAlbertaBot;
 using namespace rapidjson;
 
 
-// Constructor
-SneakLogger::SneakLogger() {
-	m_game = Game();
-}
-
 rapidjson::Document UAlbertaBot::SneakLogger::generateJsonObject(Game game)
 {
 	Document d;
@@ -104,6 +99,10 @@ bool UAlbertaBot::SneakLogger::appendToFile(rapidjson::Document doc)
 	std::fputc(']', fp);
 	fclose(fp);
 	return true;
+}
+
+UAlbertaBot::SneakLogger::SneakLogger()
+{
 }
 
 void UAlbertaBot::SneakLogger::onStart()

@@ -1,3 +1,4 @@
+#pragma once
 #include "Common.h"
 #include "ParseUtils.h"
 #include "UnitUtil.h"
@@ -11,42 +12,37 @@ namespace UAlbertaBot
 {
 	struct Game
 	{
-		std::string   m_strategy = "";
-		int			  m_unitslost = 0;
-		int			  m_shuttlehealth = 0;
-		float		  m_traveltime = 0;
-		int			  m_timespotted = 0;
-		bool		  m_won = false;
-
-
-		Game()
-		{
-
-		}
-
-		Game(const std::string& strategy)
-			: m_strategy(strategy)
-			, m_unitslost(0)
-			, m_shuttlehealth(0)
-			, m_traveltime(0)
-			, m_timespotted(0)
-			, m_won(false)
-		{
-		}
+		std::string   m_strategy;
+		int			  m_unitslost;
+		int			  m_shuttlehealth;
+		float		  m_traveltime;
+		int			  m_timespotted;
+		bool		  m_won;
+	
+		
+	Game()
+		: m_strategy("")
+		, m_unitslost(0)
+		, m_shuttlehealth(0)
+		, m_traveltime(0)
+		, m_timespotted(0)
+		, m_won(false)
+	{
+	}
 
 	};
 
-
 	class SneakLogger
 	{
-		friend class Global;
-
-		SneakLogger();
-
-		Game m_game = Game();
 
 		rapidjson::Document     generateJsonObject(Game game);
 		bool  					appendToFile(rapidjson::Document doc);
+	public:
+
+		SneakLogger();
+
+		Game					m_game;
+
 		void					onStart();
 		void					onFrame();
 		void					onEnd();
