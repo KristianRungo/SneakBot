@@ -103,6 +103,7 @@ namespace Config
         bool KiteWithRangedUnits            = true;
         std::set<BWAPI::UnitType> KiteLongerRangedUnits;
         bool WorkersDefendRush              = false; 
+        bool DropSquadSuicide               = true;
 		int RetreatMeleeUnitShields         = 0;
         int RetreatMeleeUnitHP              = 0;
         int CombatRadius                    = 1000;     // radius of combat to consider units for Micro Search

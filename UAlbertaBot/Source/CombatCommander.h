@@ -11,7 +11,13 @@ class CombatCommander
 {
     SquadData       m_squadData;
     BWAPI::Unitset  m_combatUnits;
-    bool            m_initialized = false;
+    bool            m_initialized       = false;
+    bool            m_dropSquadCreated  = false;
+    bool            m_dropShipFull      = false;
+    bool            m_dropCompleted     = false;
+    bool            m_transferDropUnits = false;
+    bool            m_dropShipMoved     = false;
+    bool            m_dropSquadSuicide  = Config::Micro::DropSquadSuicide;
 
     void updateScoutDefenseSquad();
     void updateDefenseSquads();
@@ -19,6 +25,8 @@ class CombatCommander
     void updateDropSquads();
     void updateIdleSquad();
     void initializeSquads();
+    void monitorDrop();
+    void transferDropUnits();
     void updateDefenseSquadUnits(Squad & defenseSquad, const size_t & flyingDefendersNeeded, const size_t & groundDefendersNeeded);
 
     int  defendWithWorkers();

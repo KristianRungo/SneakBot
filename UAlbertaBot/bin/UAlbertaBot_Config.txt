@@ -20,6 +20,7 @@
         "KiteWithRangedUnits"       : true,
         "KiteLongerRangedUnits"     : ["Mutalisk", "Vulture"],
         "WorkersDefendRush"         : true,
+	"DropSquadSuicide"          : true,
         "RetreatMeleeUnitShields"   : 0,
         "RetreatMeleeUnitHP"        : 0,
         "InCombatRadius"            : 1000,
@@ -85,7 +86,7 @@
         "Zerg"                      : "Zerg_ZerglingRush",
         
         "ScoutGasSteal"             : false,
-        "ScoutHarassEnemy"          : true,
+        "ScoutHarassEnemy"          : false,
         
         "ReadDirectory"             : "bwapi-data/write/",
         "WriteDirectory"            : "bwapi-data/write/",

@@ -94,6 +94,7 @@ namespace Config
         extern bool KiteWithRangedUnits;
         extern std::set<BWAPI::UnitType> KiteLongerRangedUnits;
         extern bool WorkersDefendRush;
+        extern bool DropSquadSuicide;
         extern int RetreatMeleeUnitShields;
         extern int RetreatMeleeUnitHP;
         extern int CombatRadius;                
