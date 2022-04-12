@@ -148,6 +148,7 @@
     <ClCompile Include="..\source\ProductionManager.cpp" />
     <ClCompile Include="..\source\RangedManager.cpp" />
     <ClCompile Include="..\source\ScoutManager.cpp" />
+    <ClCompile Include="..\Source\SneakLogger.cpp" />
     <ClCompile Include="..\Source\Squad.cpp" />
     <ClCompile Include="..\Source\SquadData.cpp" />
     <ClCompile Include="..\Source\StrategyManager.cpp" />
@@ -195,6 +196,7 @@
     <ClInclude Include="..\Source\Profiler.hpp" />
     <ClInclude Include="..\source\RangedManager.h" />
     <ClInclude Include="..\source\ScoutManager.h" />
+    <ClInclude Include="..\Source\SneakLogger.h" />
     <ClInclude Include="..\Source\Squad.h" />
     <ClInclude Include="..\Source\SquadData.h" />
     <ClInclude Include="..\Source\SquadOrder.h" />

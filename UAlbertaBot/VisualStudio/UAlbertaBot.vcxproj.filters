@@ -139,6 +139,9 @@
     <ClCompile Include="..\Source\InfluenceMap.cpp">
       <Filter>util</Filter>
     </ClCompile>
+    <ClCompile Include="..\Source\SneakLogger.cpp">
+      <Filter>util</Filter>
+    </ClCompile>
   </ItemGroup>
   <ItemGroup>
     <ClInclude Include="..\Source\CombatCommander.h">
@@ -271,6 +274,9 @@
       <Filter>macro</Filter>
     </ClInclude>
     <ClInclude Include="..\Source\InfluenceMap.h">
+      <Filter>util</Filter>
+    </ClInclude>
+    <ClInclude Include="..\Source\SneakLogger.h">
       <Filter>util</Filter>
     </ClInclude>
   </ItemGroup>

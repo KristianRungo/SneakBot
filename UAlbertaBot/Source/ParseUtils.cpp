@@ -148,6 +148,8 @@ void ParseUtils::ParseConfigFile(const std::string & filename)
         JSONTools::ReadBool("ScoutHarassEnemy", strategy, Config::Strategy::ScoutHarassEnemy);
         JSONTools::ReadString("ReadDirectory", strategy, Config::Strategy::ReadDir);
         JSONTools::ReadString("WriteDirectory", strategy, Config::Strategy::WriteDir);
+        JSONTools::ReadString("LoggingDir", strategy, Config::Strategy::LoggingDir);
+
 
         // if we have set a strategy for the current race, use it
         if (strategy.HasMember(race.c_str()) && strategy[race.c_str()].IsString())

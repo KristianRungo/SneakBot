@@ -18,6 +18,7 @@
 #include "Global.h"
 #include "StrategyManager.h"
 #include "MapTools.h"
+#include "SneakLogger.h"
 #include "InfluenceMap.h"
 
 using namespace UAlbertaBot;

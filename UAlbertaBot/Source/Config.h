@@ -36,6 +36,7 @@ namespace Config
         extern std::string StrategyName;
         extern std::string ReadDir;
         extern std::string WriteDir;
+        extern std::string LoggingDir;
         extern bool GasStealWithScout;
         extern bool ScoutHarassEnemy;
         extern bool UseEnemySpecificStrategy;
