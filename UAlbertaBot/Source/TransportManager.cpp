@@ -120,7 +120,7 @@ void TransportManager::update()
     {
         calculateMapEdgeVertices();
     }
-
+    if (m_transportShip != nullptr) Global::Map().setTransporterPosition(Global::Map().getClosestTilesTo(m_transportShip->getPosition())[0]);
     moveTroops();
     moveTransport();
 

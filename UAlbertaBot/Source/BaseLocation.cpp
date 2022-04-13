@@ -248,7 +248,8 @@ void BaseLocation::draw()
     for (auto & mineralPos : m_mineralPositions)
     {
         const BWAPI::TilePosition mineralTile(mineralPos);
-        Global::Map().drawTile(mineralTile.x,   mineralTile.y, BWAPI::Color(0, 255, 255));
+        
+        (mineralTile.x,   mineralTile.y, BWAPI::Color(0, 255, 255));
         Global::Map().drawTile(mineralTile.x-1, mineralTile.y, BWAPI::Color(0, 255, 255));
     }
 

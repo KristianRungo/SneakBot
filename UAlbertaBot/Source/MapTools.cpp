@@ -100,7 +100,9 @@ void MapTools::onFrame()
     }
     if (m_frame == 0) {
         m_influenceMap.computeStartDepotInfluenceMap();
-        auto & start = Global::Bases().getPlayerStartingBaseLocation(BWAPI::Broodwar->self())->getDepotPosition();
+    }
+    if (m_frame % 1000 == 0) {
+        BWAPI::TilePosition start = Global::Bases().getPlayerStartingBaseLocation(BWAPI::Broodwar->self())->getDepotPosition();
         BWAPI::TilePosition enemy;
         for (auto& startTilePos : BWAPI::Broodwar->getStartLocations()) // Iterates over all possible starting bases
         {
@@ -108,10 +110,10 @@ void MapTools::onFrame()
             else enemy = startTilePos;
 
         }
+        //start = (m_transporterPosition == BWAPI::TilePositions::Unknown) ? start : m_transporterPosition;
         m_influenceMap.getSneakyPath(start, enemy);
+        std::cout << "Ended pathfinding \n";
     }
-
-
     m_influenceMap.computeVisionMap();
     m_influenceMap.computeAirDamageMap();
     m_influenceMap.computeGroundDamageMap();
@@ -551,4 +553,7 @@ void MapTools::saveMapToFile(const std::string & path) const
     std::string mapFile = BWAPI::Broodwar->mapFileName();
     std::replace( mapFile.begin(), mapFile.end(), ' ', '_'); 
     getStarDraftMap().save(mapFile + ".txt");
+}
+void MapTools::setTransporterPosition(BWAPI::TilePosition pos) {
+    m_transporterPosition = pos;
 }
