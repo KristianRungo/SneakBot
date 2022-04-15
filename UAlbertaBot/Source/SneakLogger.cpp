@@ -33,7 +33,7 @@ rapidjson::Document UAlbertaBot::SneakLogger::generateJsonObject(Game game)
 	Value val(kObjectType);
 
 	val.SetString(game.m_strategy.c_str(), static_cast<SizeType>(game.m_strategy.length()), allocator);
-	d.AddMember("description", val, allocator);
+	d.AddMember("Strategy", val, allocator);
 
 	val.SetInt(game.m_unitslost);
 	d.AddMember("UnitsLost", val, allocator);
@@ -50,6 +50,12 @@ rapidjson::Document UAlbertaBot::SneakLogger::generateJsonObject(Game game)
 	val.SetBool(game.m_won);
 	d.AddMember("Won", val, allocator);
 
+	val.SetString(game.m_enemyrace.c_str(), static_cast<SizeType>(game.m_enemyrace.length()), allocator);
+	d.AddMember("Enemy Race", val, allocator);
+
+	val.SetString(game.m_map.c_str(), static_cast<SizeType>(game.m_map.length()), allocator);
+	d.AddMember("Map Played", val, allocator);
+
 	rapidjson::StringBuffer strbuf;
 	rapidjson::PrettyWriter<rapidjson::StringBuffer> writer(strbuf);
 	d.Accept(writer);
@@ -63,11 +69,17 @@ rapidjson::Document UAlbertaBot::SneakLogger::generateJsonObject(Game game)
 
 bool UAlbertaBot::SneakLogger::appendToFile(rapidjson::Document doc)
 {
-	const std::string fileName = Config::Strategy::LoggingDir + Config::Strategy::StrategyName + ".txt";
-
-	FILE* fp = fopen(fileName.c_str(), "rb+");
-
-	std::fseek(fp, 0, SEEK_SET);
+		const std::string fileName = Config::Strategy::LoggingDir + Config::Strategy::StrategyName + ".txt";
+		FILE* fp = fopen(fileName.c_str(), "rb+");
+	try
+	{
+		std::fseek(fp, 0, SEEK_SET);
+	}
+	catch (const std::exception&)
+	{
+		return false;
+	}
+	
 	if (getc(fp) != '[')
 	{
 		std::fclose(fp);
@@ -108,14 +120,17 @@ UAlbertaBot::SneakLogger::SneakLogger()
 void UAlbertaBot::SneakLogger::onStart()
 {
 	m_game.m_strategy = Config::Strategy::StrategyName;
+	m_game.m_map = BWAPI::Broodwar->mapFileName();
 }
 
 void UAlbertaBot::SneakLogger::onFrame()
 {
 }
 
-void UAlbertaBot::SneakLogger::onEnd()
+void UAlbertaBot::SneakLogger::onEnd(bool isWinner)
 {
+	m_game.m_won = isWinner;
+	m_game.m_enemyrace = BWAPI::Broodwar->enemy()->getRace().getName();
 	appendToFile(generateJsonObject(m_game));
 }
 

@@ -64,6 +64,8 @@ void UAlbertaBotModule::onStart()
         }
 	}
     //Global::Map().saveMapToFile("map.txt");
+
+    Global::Sneak().onStart();
 }
 
 void UAlbertaBotModule::onEnd(bool isWinner) 
@@ -72,9 +74,7 @@ void UAlbertaBotModule::onEnd(bool isWinner)
 	{
 		Global::Strategy().onEnd(isWinner);
 
-        Global::Sneak().m_game.m_strategy = Config::Strategy::StrategyName;
-        Global::Sneak().m_game.m_won = isWinner;
-        Global::Sneak().onEnd();
+        Global::Sneak().onEnd(isWinner);
 
 	}
 }

@@ -12,12 +12,14 @@ namespace UAlbertaBot
 {
 	struct Game
 	{
-		std::string   m_strategy;
-		int			  m_unitslost;
-		int			  m_shuttlehealth;
-		float		  m_traveltime;
-		int			  m_timespotted;
-		bool		  m_won;
+		std::string   m_strategy;       // Which strategy did we employ
+		int			  m_unitslost;		// How many units did we lose in the sneak attack (Before drop or after?))
+		int			  m_shuttlehealth;  // What was shuttle health + shield at the end of drop
+		float		  m_traveltime;     // How long was travel time for shuttle
+		int			  m_timespotted;	// for how long was shuttle seen by enemy while on path
+		bool		  m_won;			// Did we win
+		std::string   m_enemyrace;		// Name of enemy race
+		std::string   m_map;			// Name of played map
 	
 		
 	Game()
@@ -45,7 +47,7 @@ namespace UAlbertaBot
 
 		void					onStart();
 		void					onFrame();
-		void					onEnd();
+		void					onEnd(bool);
 
 	};
 
