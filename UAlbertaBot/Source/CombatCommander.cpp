@@ -111,6 +111,7 @@ void CombatCommander::monitorDrop() {
             }
             if (unit->getLoadedUnits().size() == 0 && m_dropShipFull && !m_dropCompleted) {
                 m_dropCompleted = true;
+                m_dropShipHealth = (unit->getHitPoints() + unit->getShields());
                 return;
             }
         }

@@ -2,10 +2,12 @@
 #include "Common.h"
 #include "ParseUtils.h"
 #include "UnitUtil.h"
+#include "TimerManager.h"
 #include<string>
 #include<vector>
 #include<fstream>
 #include "rapidjson\document.h"
+#include "../../BOSS/source/Timer.hpp"
 
 
 namespace UAlbertaBot
@@ -15,6 +17,7 @@ namespace UAlbertaBot
 		std::string   m_strategy;       // Which strategy did we employ
 		int			  m_unitslost;		// How many units did we lose in the sneak attack (Before drop or after?))
 		int			  m_shuttlehealth;  // What was shuttle health + shield at the end of drop
+		float		  m_beforesneak;	// Time spent before sneak started
 		float		  m_traveltime;     // How long was travel time for shuttle
 		int			  m_timespotted;	// for how long was shuttle seen by enemy while on path
 		bool		  m_won;			// Did we win
@@ -39,14 +42,18 @@ namespace UAlbertaBot
 
 		rapidjson::Document     generateJsonObject(Game game);
 		bool  					appendToFile(rapidjson::Document doc);
-	public:
 
+		int						dropShipFullFrame;
+		int						dropCompletedFrame;
+
+		public:
+		
 		SneakLogger();
 
 		Game					m_game;
 
 		void					onStart();
-		void					onFrame();
+		void					onFrame(bool, bool, int);
 		void					onEnd(bool);
 
 	};

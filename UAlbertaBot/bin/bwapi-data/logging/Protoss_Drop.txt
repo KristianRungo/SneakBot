@@ -1,1 +1,41 @@
-[{"Strategy":"Protoss_Drop","UnitsLost":0,"ShuttleHealth":0,"TravelTime":0.0,"TimeSpotted":0,"Won":true,"Enemy Race":"","Map Played":""},{"Strategy":"Protoss_Drop","UnitsLost":0,"ShuttleHealth":0,"TravelTime":0.0,"TimeSpotted":0,"Won":false,"Enemy Race":"Unknown","Map Played":"(3)Aztec.scx"},{"Strategy":"Protoss_Drop","UnitsLost":0,"ShuttleHealth":0,"TravelTime":0.0,"TimeSpotted":0,"Won":true,"Enemy Race":"Unknown","Map Played":"(3)Aztec.scx"}]
+[{
+    "Strategy": "Protoss_Drop",
+    "UnitsLost": 0,
+    "ShuttleHealth": 0,
+    "BeforeSneak": 1.1446822951893622e24,
+    "TravelTime": 9.997558692020903e-8,
+    "TimeSpotted": 0,
+    "Won": true,
+    "Enemy Race": "Terran",
+    "Map Played": "(2)Benzene.scx"
+},{
+    "Strategy": "Protoss_Drop",
+    "UnitsLost": 0,
+    "ShuttleHealth": 0,
+    "BeforeSneak": 287.0,
+    "TravelTime": 42.0,
+    "TimeSpotted": 0,
+    "Won": true,
+    "Enemy Race": "Terran",
+    "Map Played": "(2)Benzene.scx"
+},{
+    "Strategy": "Protoss_Drop",
+    "UnitsLost": 0,
+    "ShuttleHealth": 0,
+    "BeforeSneak": 0.0,
+    "TravelTime": 0.0,
+    "TimeSpotted": 0,
+    "Won": false,
+    "Enemy Race": "Zerg",
+    "Map Played": "(2)Benzene.scx"
+},{
+    "Strategy": "Protoss_Drop",
+    "UnitsLost": 0,
+    "ShuttleHealth": 97,
+    "BeforeSneak": 307.0,
+    "TravelTime": 43.0,
+    "TimeSpotted": 0,
+    "Won": true,
+    "Enemy Race": "Terran",
+    "Map Played": "(2)Benzene.scx"
+}]

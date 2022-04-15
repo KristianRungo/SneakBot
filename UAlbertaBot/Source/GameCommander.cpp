@@ -27,8 +27,6 @@ void GameCommander::update()
 {
     PROFILE_FUNCTION();
 
-	m_timerManager.startTimer(TimerManager::All);
-
 	// populate the unit vectors we will pass into various managers
 	handleUnitAssignments();
 
@@ -59,15 +57,14 @@ void GameCommander::update()
     Global::Scout().update();
 	m_timerManager.stopTimer(TimerManager::Scout);
 
-	m_timerManager.stopTimer(TimerManager::All);
-
-	m_timerManager.startTimer(TimerManager::Sneak);
-	Global::Sneak().onFrame();
-	m_timerManager.stopTimer(TimerManager::Sneak);
-
 	Global::Bases().onFrame();
 
+	Global::Sneak().onFrame(m_combatCommander.m_dropShipFull, m_combatCommander.m_dropCompleted, m_combatCommander.m_dropShipHealth);
+	
 	drawDebugInterface();
+
+
+
 }
 
 void GameCommander::drawDebugInterface()

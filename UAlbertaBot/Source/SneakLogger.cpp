@@ -3,13 +3,12 @@
 #include<fstream>
 #include "SneakLogger.h"
 #include "Common.h"
-#include "StrategyManager.h"
 #include "UnitUtil.h"
 #include "BaseLocationManager.h"
 #include "Global.h"
 #include "InformationManager.h"
 #include "WorkerManager.h"
-#include "Logger.h"
+#include "TimerManager.h"
 #include "rapidjson\document.h"
 #include "JSONTools.h"
 #include "Global.h"
@@ -40,6 +39,9 @@ rapidjson::Document UAlbertaBot::SneakLogger::generateJsonObject(Game game)
 
 	val.SetInt(game.m_shuttlehealth);
 	d.AddMember("ShuttleHealth", val, allocator);
+
+	val.SetDouble(game.m_beforesneak);
+	d.AddMember("BeforeSneak", val, allocator);
 
 	val.SetDouble(game.m_traveltime);
 	d.AddMember("TravelTime", val, allocator);
@@ -105,7 +107,7 @@ bool UAlbertaBot::SneakLogger::appendToFile(rapidjson::Document doc)
 
 
 	FileWriteStream os(fp, writeBuffer, sizeof(writeBuffer));
-	Writer<FileWriteStream> writer(os);
+	PrettyWriter<FileWriteStream> writer(os);
 	doc.Accept(writer);
 
 	std::fputc(']', fp);
@@ -123,16 +125,34 @@ void UAlbertaBot::SneakLogger::onStart()
 	m_game.m_map = BWAPI::Broodwar->mapFileName();
 }
 
-void UAlbertaBot::SneakLogger::onFrame()
+void UAlbertaBot::SneakLogger::onFrame(bool full, bool completed, int health)
 {
+	BWAPI::Broodwar->getFrameCount();
+
+	if (Config::Strategy::StrategyName != "Protoss_Drop") return;
+
+
+	if (full && Global::Sneak().m_game.m_beforesneak == 0.0) {
+		dropShipFullFrame = BWAPI::Broodwar->getFrameCount();
+		Global::Sneak().m_game.m_beforesneak = dropShipFullFrame / 24;
+	}
+
+	if (completed && Global::Sneak().m_game.m_traveltime == 0.0) {
+		dropCompletedFrame = BWAPI::Broodwar->getFrameCount();
+		Global::Sneak().m_game.m_traveltime = (dropCompletedFrame - dropShipFullFrame) / 24;
+		m_game.m_shuttlehealth = health;
+	}
 }
 
 void UAlbertaBot::SneakLogger::onEnd(bool isWinner)
 {
 	m_game.m_won = isWinner;
-	m_game.m_enemyrace = BWAPI::Broodwar->enemy()->getRace().getName();
+
+	std::string enemyName = BWAPI::Broodwar->enemy()->getRace().getName();
+	m_game.m_enemyrace = enemyName;
 	appendToFile(generateJsonObject(m_game));
 }
+
 
 
 

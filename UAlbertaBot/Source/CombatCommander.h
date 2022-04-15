@@ -12,12 +12,9 @@ class CombatCommander
     SquadData       m_squadData;
     BWAPI::Unitset  m_combatUnits;
     bool            m_initialized       = false;
-    bool            m_dropSquadCreated  = false;
-    bool            m_dropShipFull      = false;
-    bool            m_dropCompleted     = false;
+    bool            m_dropSquadSuicide  = Config::Micro::DropSquadSuicide;
     bool            m_transferDropUnits = false;
     bool            m_dropShipMoved     = false;
-    bool            m_dropSquadSuicide  = Config::Micro::DropSquadSuicide;
 
     void updateScoutDefenseSquad();
     void updateDefenseSquads();
@@ -41,6 +38,10 @@ class CombatCommander
 
 public:
 
+    bool            m_dropShipFull      = false;
+    bool            m_dropSquadCreated  = false;
+    bool            m_dropCompleted     = false;
+    int             m_dropShipHealth    = 0;
     CombatCommander();
 
     void update(const BWAPI::Unitset & combatUnits);
