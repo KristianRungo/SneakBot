@@ -71,6 +71,11 @@ void UAlbertaBotModule::onEnd(bool isWinner)
 	if (Config::Modules::UsingGameCommander)
 	{
 		Global::Strategy().onEnd(isWinner);
+
+        Global::Sneak().m_game.m_strategy = Config::Strategy::StrategyName;
+        Global::Sneak().m_game.m_won = isWinner;
+        Global::Sneak().onEnd();
+
 	}
 }
 

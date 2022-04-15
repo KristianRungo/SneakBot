@@ -47,3 +47,4 @@ StrategyManager &       Global::Strategy()       { return *get(Instance().m_stra
 WorkerManager &         Global::Workers()        { return *get(Instance().m_workerManager);       }
 ProductionManager &     Global::Production()     { return *get(Instance().m_productionManager);   }
 ScoutManager &          Global::Scout()          { return *get(Instance().m_scoutManager);        }
+SneakLogger&            Global::Sneak()          { return *get(Instance().m_sneakLogger);         }

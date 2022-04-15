@@ -12,6 +12,7 @@ class StrategyManager;
 class WorkerManager;
 class ProductionManager;
 class ScoutManager;
+class SneakLogger;
 
 
 class Global
@@ -23,6 +24,7 @@ class Global
     WorkerManager *       m_workerManager       = nullptr;
     ProductionManager *   m_productionManager   = nullptr;
     ScoutManager *        m_scoutManager        = nullptr;
+    SneakLogger*          m_sneakLogger         = nullptr;
     
     template <class T>
     void reset(T *& ptr)
@@ -52,6 +54,7 @@ public:
     static WorkerManager & Workers();
     static ProductionManager & Production();
     static ScoutManager & Scout();
+    static SneakLogger& Sneak();
 };
 
 }

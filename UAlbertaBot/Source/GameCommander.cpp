@@ -12,6 +12,7 @@
 #include "BuildingManager.h"
 #include "ScoutManager.h"
 #include "StrategyManager.h"
+#include "SneakLogger.h"
 #include "Squad.h"
 
 using namespace UAlbertaBot;
@@ -59,6 +60,10 @@ void GameCommander::update()
 	m_timerManager.stopTimer(TimerManager::Scout);
 
 	m_timerManager.stopTimer(TimerManager::All);
+
+	m_timerManager.startTimer(TimerManager::Sneak);
+	Global::Sneak().onFrame();
+	m_timerManager.stopTimer(TimerManager::Sneak);
 
 	Global::Bases().onFrame();
 

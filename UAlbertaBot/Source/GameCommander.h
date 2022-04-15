@@ -26,7 +26,6 @@ class GameCommander
 {
 	CombatCommander m_combatCommander;
 	TimerManager    m_timerManager;
-
 	BWAPI::Unitset  m_validUnits;
 	BWAPI::Unitset  m_combatUnits;
 	BWAPI::Unitset  m_scoutUnits;
