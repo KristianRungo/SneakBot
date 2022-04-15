@@ -68,7 +68,8 @@ void Squad::update()
         m_rangedManager.execute(m_order);
         m_tankManager.execute(m_order);
         m_medicManager.execute(m_order);
-        m_transportManager.update();
+        if(m_name == "Drop"){m_transportManager.update(m_units);}
+        //m_transportManager.update();
 
         m_detectorManager.setUnitClosestToEnemy(unitClosestToEnemy());
         m_detectorManager.execute(m_order);
@@ -200,6 +201,7 @@ bool Squad::needsToRegroup()
     {
         return false;
     }
+    if (m_name == "Drop") return false;
 
     // if we are not attacking, never regroup
     if (m_units.empty() || (m_order.getType() != SquadOrderTypes::Attack))
