@@ -38,10 +38,11 @@ class CombatCommander
 
 public:
 
-    bool            m_dropShipFull      = false;
-    bool            m_dropSquadCreated  = false;
-    bool            m_dropCompleted     = false;
-    int             m_dropShipHealth    = 0;
+    bool                m_dropShipFull      = false;
+    bool                m_dropSquadCreated  = false;
+    bool                m_dropCompleted     = false;
+    BWAPI::Position m_dropShipPosition = BWAPI::Position(0, 0);
+    int                 m_dropShipHealth    = 0;
     CombatCommander();
 
     void update(const BWAPI::Unitset & combatUnits);

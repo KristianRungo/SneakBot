@@ -4,11 +4,8 @@
 #include "SneakLogger.h"
 #include "Common.h"
 #include "UnitUtil.h"
-#include "BaseLocationManager.h"
 #include "Global.h"
-#include "InformationManager.h"
-#include "WorkerManager.h"
-#include "TimerManager.h"
+#include "MapTools.h"
 #include "rapidjson\document.h"
 #include "JSONTools.h"
 #include "Global.h"
@@ -46,7 +43,7 @@ rapidjson::Document UAlbertaBot::SneakLogger::generateJsonObject(Game game)
 	val.SetDouble(game.m_traveltime);
 	d.AddMember("TravelTime", val, allocator);
 
-	val.SetInt(game.m_timespotted);
+	val.SetDouble(game.m_timespotted);
 	d.AddMember("TimeSpotted", val, allocator);
 
 	val.SetBool(game.m_won);
@@ -122,34 +119,37 @@ UAlbertaBot::SneakLogger::SneakLogger()
 void UAlbertaBot::SneakLogger::onStart()
 {
 	m_game.m_strategy = Config::Strategy::StrategyName;
+	m_game.m_enemyrace = BWAPI::Broodwar->enemy()->getRace().getName();
 	m_game.m_map = BWAPI::Broodwar->mapFileName();
 }
 
-void UAlbertaBot::SneakLogger::onFrame(bool full, bool completed, int health)
+void UAlbertaBot::SneakLogger::onFrame(bool full, bool completed, int health, BWAPI::Position pos)
 {
-	BWAPI::Broodwar->getFrameCount();
 
 	if (Config::Strategy::StrategyName != "Protoss_Drop") return;
 
-
 	if (full && Global::Sneak().m_game.m_beforesneak == 0.0) {
-		dropShipFullFrame = BWAPI::Broodwar->getFrameCount();
-		Global::Sneak().m_game.m_beforesneak = dropShipFullFrame / 24;
+		dropFull = BWAPI::Broodwar->getFrameCount();
+		m_game.m_beforesneak = dropFull / (BWAPI::Broodwar->getAverageFPS());
 	}
 
 	if (completed && Global::Sneak().m_game.m_traveltime == 0.0) {
-		dropCompletedFrame = BWAPI::Broodwar->getFrameCount();
-		Global::Sneak().m_game.m_traveltime = (dropCompletedFrame - dropShipFullFrame) / 24;
+		dropCompleted = BWAPI::Broodwar->getFrameCount();
+		m_game.m_traveltime = (dropCompleted - dropFull) / (BWAPI::Broodwar->getAverageFPS());
 		m_game.m_shuttlehealth = health;
 	}
+
+	if (Global::Map().m_influenceMap.getVisionInfluence(pos.x / 32, pos.y / 32) > 0.0 && m_game.m_timespotted == 0.0) {
+		m_game.m_timespotted = (BWAPI::Broodwar->getFrameCount() / BWAPI::Broodwar->getAverageFPS());
+	}
+	
+
+
 }
 
 void UAlbertaBot::SneakLogger::onEnd(bool isWinner)
 {
 	m_game.m_won = isWinner;
-
-	std::string enemyName = BWAPI::Broodwar->enemy()->getRace().getName();
-	m_game.m_enemyrace = enemyName;
 	appendToFile(generateJsonObject(m_game));
 }
 

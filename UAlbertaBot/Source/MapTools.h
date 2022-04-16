@@ -23,7 +23,6 @@ class MapTools
     
     // a cache of already computed distance maps, which is mutable since it only acts as a cache
     mutable std::map<std::pair<int,int>, DistanceMap> m_allMaps;   
-    InfluenceMap m_influenceMap;
 
     Grid<int> m_walkable;       // whether a tile is buildable (includes static resources)          
     Grid<int> m_buildable;      // whether a tile is buildable (includes static resources)
@@ -43,6 +42,7 @@ class MapTools
 
 public:
     
+    InfluenceMap m_influenceMap;
     void    onStart();
     void    onFrame();
     void    draw() const;

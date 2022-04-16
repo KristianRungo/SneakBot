@@ -37,6 +37,7 @@ public:
     void computeGroundDamageMap();
 
     int getInfluence(int tileX, int tileY) const;
+    float getVisionInfluence(int tileX, int tileY);
     int getInfluence(const BWAPI::TilePosition& pos) const;
     int getInfluence(const BWAPI::Position& pos) const;
 

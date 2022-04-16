@@ -19,7 +19,7 @@ namespace UAlbertaBot
 		int			  m_shuttlehealth;  // What was shuttle health + shield at the end of drop
 		float		  m_beforesneak;	// Time spent before sneak started
 		float		  m_traveltime;     // How long was travel time for shuttle
-		int			  m_timespotted;	// for how long was shuttle seen by enemy while on path
+		float		  m_timespotted;	// for how long was shuttle seen by enemy while on path
 		bool		  m_won;			// Did we win
 		std::string   m_enemyrace;		// Name of enemy race
 		std::string   m_map;			// Name of played map
@@ -29,8 +29,8 @@ namespace UAlbertaBot
 		: m_strategy("")
 		, m_unitslost(0)
 		, m_shuttlehealth(0)
-		, m_traveltime(0)
-		, m_timespotted(0)
+		, m_traveltime(0.0)
+		, m_timespotted(0.0)
 		, m_won(false)
 	{
 	}
@@ -43,8 +43,8 @@ namespace UAlbertaBot
 		rapidjson::Document     generateJsonObject(Game game);
 		bool  					appendToFile(rapidjson::Document doc);
 
-		int						dropShipFullFrame;
-		int						dropCompletedFrame;
+		float						dropFull;
+		float						dropCompleted;
 
 		public:
 		
@@ -53,7 +53,7 @@ namespace UAlbertaBot
 		Game					m_game;
 
 		void					onStart();
-		void					onFrame(bool, bool, int);
+		void					onFrame(bool, bool, int, BWAPI::Position);
 		void					onEnd(bool);
 
 	};

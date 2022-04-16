@@ -25,6 +25,11 @@ int InfluenceMap::getInfluence(int tileX, int tileY) const
     return m_influence.get(tileX, tileY);
 }
 
+float UAlbertaBot::InfluenceMap::getVisionInfluence(int tileX, int tileY)
+{
+    return m_visionMap.get(tileX, tileY);
+}
+
 int InfluenceMap::getInfluence(const BWAPI::TilePosition& pos) const
 {
     return getInfluence(pos.x, pos.y);

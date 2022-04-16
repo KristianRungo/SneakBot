@@ -114,6 +114,7 @@ void CombatCommander::monitorDrop() {
                 m_dropShipHealth = (unit->getHitPoints() + unit->getShields());
                 return;
             }
+            m_dropShipPosition = unit->getPosition();
         }
     }
 }

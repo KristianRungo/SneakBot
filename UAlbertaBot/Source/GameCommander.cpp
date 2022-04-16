@@ -59,7 +59,12 @@ void GameCommander::update()
 
 	Global::Bases().onFrame();
 
-	Global::Sneak().onFrame(m_combatCommander.m_dropShipFull, m_combatCommander.m_dropCompleted, m_combatCommander.m_dropShipHealth);
+	Global::Sneak().onFrame(
+		m_combatCommander.m_dropShipFull, 
+		m_combatCommander.m_dropCompleted, 
+		m_combatCommander.m_dropShipHealth, 
+		m_combatCommander.m_dropShipPosition
+	);
 	
 	drawDebugInterface();
 
