@@ -102,7 +102,7 @@ void MapTools::onFrame()
     if (m_frame == 0) {
         m_influenceMap.computeStartDepotInfluenceMap();
     }
-    if (m_frame % 1000 == 0) {
+    /*if (m_frame % 1000 == 0) {
         
         try {
             auto& test = Global::Info().getUnitInfo(BWAPI::Broodwar->enemy());
@@ -117,7 +117,7 @@ void MapTools::onFrame()
         catch(...){
             std::cout << "Couldn't find enemy base :S";
         }
-    }
+    }*/
     m_influenceMap.computeVisionMap();
     m_influenceMap.computeAirDamageMap();
     m_influenceMap.computeGroundDamageMap();

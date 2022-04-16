@@ -162,6 +162,7 @@ void TransportManager::update(BWAPI::Unitset dropZealots)
         moveTransport();
 
     }
+    if(m_transportShip != nullptr)Global::Map().setTransporterPosition(BWAPI::TilePosition(m_transportShip->getPosition()));
     
 
 
@@ -214,8 +215,8 @@ void TransportManager::moveTransport()
     
     
     const auto enemyBaseLocation = Global::Bases().getPlayerStartingBaseLocation(BWAPI::Broodwar->enemy());
-    
-    m_transportShip->move(enemyBaseLocation->getPosition());
+    Global::Map().getSneakyPath(BWAPI::TilePosition(m_transportShip->getPosition()), enemyBaseLocation->getDepotPosition());
+    m_transportShip->move(enemyBaseLocation->getPosition()); //Replace with pathfinding
 
 
 
