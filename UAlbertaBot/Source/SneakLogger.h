@@ -53,7 +53,7 @@ namespace UAlbertaBot
 		Game					m_game;
 
 		void					onStart();
-		void					onFrame(bool, bool, int, BWAPI::Position);
+		void					onFrame(bool, bool, int, BWAPI::Position, int);
 		void					onEnd(bool);
 
 	};

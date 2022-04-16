@@ -123,26 +123,29 @@ void UAlbertaBot::SneakLogger::onStart()
 	m_game.m_map = BWAPI::Broodwar->mapFileName();
 }
 
-void UAlbertaBot::SneakLogger::onFrame(bool full, bool completed, int health, BWAPI::Position pos)
+void UAlbertaBot::SneakLogger::onFrame(bool full, bool completed, int health, BWAPI::Position pos, int unitsLost)
 {
 
 	if (Config::Strategy::StrategyName != "Protoss_Drop") return;
 
 	if (full && Global::Sneak().m_game.m_beforesneak == 0.0) {
 		dropFull = BWAPI::Broodwar->getFrameCount();
-		m_game.m_beforesneak = dropFull / (BWAPI::Broodwar->getAverageFPS());
+		m_game.m_beforesneak = dropFull;
 	}
 
 	if (completed && Global::Sneak().m_game.m_traveltime == 0.0) {
 		dropCompleted = BWAPI::Broodwar->getFrameCount();
-		m_game.m_traveltime = (dropCompleted - dropFull) / (BWAPI::Broodwar->getAverageFPS());
+		m_game.m_traveltime = (dropCompleted - dropFull);
 		m_game.m_shuttlehealth = health;
 	}
 
 	if (Global::Map().m_influenceMap.getVisionInfluence(pos.x / 32, pos.y / 32) > 0.0 && m_game.m_timespotted == 0.0) {
-		m_game.m_timespotted = (BWAPI::Broodwar->getFrameCount() / BWAPI::Broodwar->getAverageFPS());
+		m_game.m_timespotted = BWAPI::Broodwar->getFrameCount();
 	}
 	
+	if (unitsLost != 0) {
+		m_game.m_unitslost = unitsLost;
+	}
 
 
 }
@@ -151,6 +154,7 @@ void UAlbertaBot::SneakLogger::onEnd(bool isWinner)
 {
 	m_game.m_won = isWinner;
 	appendToFile(generateJsonObject(m_game));
+	m_game = Game();
 }
 
 

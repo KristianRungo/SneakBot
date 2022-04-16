@@ -63,7 +63,8 @@ void GameCommander::update()
 		m_combatCommander.m_dropShipFull, 
 		m_combatCommander.m_dropCompleted, 
 		m_combatCommander.m_dropShipHealth, 
-		m_combatCommander.m_dropShipPosition
+		m_combatCommander.m_dropShipPosition,
+		m_combatCommander.m_unitsLost
 	);
 	
 	drawDebugInterface();

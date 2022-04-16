@@ -76,6 +76,8 @@ void UAlbertaBotModule::onEnd(bool isWinner)
 
         Global::Sneak().onEnd(isWinner);
 
+        BWAPI::Broodwar->restartGame();
+
 	}
 }
 

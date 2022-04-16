@@ -103,13 +103,27 @@ void CombatCommander::transferDropUnits() {
 }
 void CombatCommander::monitorDrop() {
     if (m_dropSquadCreated && m_squadData.squadExists("Drop")) {
+
+        if (m_dropShipFull && !m_dropCompleted && (m_squadData.getSquad("Drop").getUnits().size() != 5)) {
+            m_dropCompleted = true;
+            m_unitsLost = (4 - m_squadData.getSquad("Drop").getUnits().size());
+            if (m_unitsLost == -1) m_unitsLost = 0;
+
+        }
+
+
         for (auto & unit : m_squadData.getSquad("Drop").getUnits()) {
+
+
             if ((unit->getType() == BWAPI::UnitTypes::Protoss_Zealot)) continue;
+
+
+
             if (unit->getLoadedUnits().size() == 4 && !m_dropShipFull) {
                 m_dropShipFull = true;
                 return;
             }
-            if (unit->getLoadedUnits().size() == 0 && m_dropShipFull && !m_dropCompleted) {
+            if ((unit->getLoadedUnits().size() == 0 && m_dropShipFull && !m_dropCompleted)) {
                 m_dropCompleted = true;
                 m_dropShipHealth = (unit->getHitPoints() + unit->getShields());
                 return;

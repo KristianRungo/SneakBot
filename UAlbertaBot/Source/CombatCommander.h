@@ -41,6 +41,7 @@ public:
     bool                m_dropShipFull      = false;
     bool                m_dropSquadCreated  = false;
     bool                m_dropCompleted     = false;
+    int                 m_unitsLost         = 0;
     BWAPI::Position m_dropShipPosition = BWAPI::Position(0, 0);
     int                 m_dropShipHealth    = 0;
     CombatCommander();
