@@ -1,5 +1,6 @@
 #include "MapTools.h"
 #include "BaseLocationManager.h"
+#include "InformationManager.h"
 #include "Global.h"
 
 #include <iostream>
@@ -102,17 +103,20 @@ void MapTools::onFrame()
         m_influenceMap.computeStartDepotInfluenceMap();
     }
     if (m_frame % 1000 == 0) {
-        BWAPI::TilePosition start = Global::Bases().getPlayerStartingBaseLocation(BWAPI::Broodwar->self())->getDepotPosition();
-        BWAPI::TilePosition enemy;
-        for (auto& startTilePos : BWAPI::Broodwar->getStartLocations()) // Iterates over all possible starting bases
-        {
-            if (startTilePos.x == start.x && startTilePos.y == start.y) continue; //Continues if the base is ours
-            else enemy = startTilePos;
-
+        
+        try {
+            auto& test = Global::Info().getUnitInfo(BWAPI::Broodwar->enemy());
+            BWAPI::TilePosition enemy = BWAPI::TilePositions::Unknown;
+            if(test.size()>1)enemy = Global::Bases().getPlayerStartingBaseLocation(BWAPI::Broodwar->enemy())->getDepotPosition();
+            BWAPI::TilePosition start = (m_transporterPosition == BWAPI::TilePositions::Unknown) ? Global::Bases().getPlayerStartingBaseLocation(BWAPI::Broodwar->self())->getDepotPosition() : m_transporterPosition;
+            if (enemy != BWAPI::TilePositions::Unknown && start != BWAPI::TilePositions::Unknown) {
+                m_influenceMap.getSneakyPath(start, enemy);
+                std::cout << "Ended pathfinding \n";
+            }
         }
-        //start = (m_transporterPosition == BWAPI::TilePositions::Unknown) ? start : m_transporterPosition;
-        m_influenceMap.getSneakyPath(start, enemy);
-        std::cout << "Ended pathfinding \n";
+        catch(...){
+            std::cout << "Couldn't find enemy base :S";
+        }
     }
     m_influenceMap.computeVisionMap();
     m_influenceMap.computeAirDamageMap();
@@ -556,4 +560,7 @@ void MapTools::saveMapToFile(const std::string & path) const
 }
 void MapTools::setTransporterPosition(BWAPI::TilePosition pos) {
     m_transporterPosition = pos;
+}
+std::vector<BWAPI::TilePosition> MapTools::getSneakyPath(BWAPI::TilePosition start, BWAPI::TilePosition end) {
+    return m_influenceMap.getSneakyPath(start, end);
 }

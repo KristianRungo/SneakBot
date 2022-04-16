@@ -23,6 +23,7 @@ class InfluenceMap
     Grid<float>                      m_visionMap;
     BWAPI::TilePosition              m_prevTile = BWAPI::TilePositions::Unknown;
     std::vector<BWAPI::TilePosition> m_sneakyPath;
+    BWAPI::TilePosition              m_depotPosition;
     BWAPI::TilePosition              m_startTile;
     BWAPI::TilePosition              selectedAdjacentTile;
     BWAPI::Unitset                   m_enemyUnits;

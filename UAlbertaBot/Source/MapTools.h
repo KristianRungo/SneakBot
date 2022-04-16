@@ -77,6 +77,7 @@ public:
     
     void    getUnits(BWAPI::Unitset & units, BWAPI::Position center, int radius, bool ourUnits, bool oppUnits);
     void    setTransporterPosition(BWAPI::TilePosition pos);
+    std::vector<BWAPI::TilePosition> getSneakyPath(BWAPI::TilePosition start, BWAPI::TilePosition end);
 
     const StarDraftMap & getStarDraftMap() const;
     void saveMapToFile(const std::string & path) const;

@@ -191,7 +191,9 @@ float InfluenceMap::weightedDist(BWAPI::TilePosition start, BWAPI::TilePosition 
     if (start == BWAPI::TilePositions::Unknown) return std::numeric_limits<float>::max();
     const float h_diagonal = std::min(std::abs(start.x - end.x), std::abs(start.y - end.y));
     const float h_straight = std::abs(start.x - end.x) + std::abs(start.y - end.y);
-    const float w_dist = (std::sqrt(2) * h_diagonal + (h_straight - (2.0 * h_diagonal)));
+    const float w_dist = (std::sqrt(2) * h_diagonal + (h_straight - (2.0 * h_diagonal))) + m_airDamageMap.get(start.x,start.y);
+    //const float distToOwnBase = distance(start.x, m_depotPosition.x, start.y, m_depotPosition.y);
+    //if (distToOwnBase < 15) return w_dist;
     bool distTest = w_dist > 4;
     bool infTest = getVision(start) > 0.0;
     if (distTest && infTest) {
@@ -237,6 +239,7 @@ void InfluenceMap::computeStartDepotInfluenceMap()
 {
     PROFILE_FUNCTION();
     const BaseLocation* baseLocation = Global::Bases().getPlayerStartingBaseLocation(BWAPI::Broodwar->self());
+    m_depotPosition = baseLocation->getDepotPosition();
     m_distanceMap = DistanceMap();
     m_distanceMap.computeDistanceMap(baseLocation->getDepotPosition());
     m_dist = m_distanceMap.getDistanceMap();
