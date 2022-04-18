@@ -11,6 +11,12 @@ class TransportManager : public MicroManager
 {
     bool                            unloading                    = false;
     bool                            unload                       = false;
+    bool                            sneak                        = false;
+    bool                            sneakInConfig                = true;
+    bool                            inVision                     = false;
+    int                             m_indexInSneak = 0;
+    int                             m_dropRange = 300;
+    std::vector<BWAPI::TilePosition> m_sneakPath;
     float                           transportShipTopSpeed        = 4.43;
     float                           percentageCutOff             = 0.3;
     BWAPI::Unitset                  m_dropZealots;
@@ -31,6 +37,7 @@ class TransportManager : public MicroManager
     void followPerimeter(int clockwise=1);
     void followPerimeter(BWAPI::Position to, BWAPI::Position from);
     bool isUnloading();
+    void handleSneaking();
 
     int getClosestVertexIndex(BWAPI::UnitInterface * unit);
     int getClosestVertexIndex(BWAPI::Position p);
