@@ -1,41 +1,61 @@
 [{
     "Strategy": "Protoss_Drop",
     "UnitsLost": 0,
-    "ShuttleHealth": 0,
-    "BeforeSneak": 1.1446822951893622e24,
-    "TravelTime": 9.997558692020903e-8,
-    "TimeSpotted": 0,
+    "ShuttleHealth": 140,
+    "BeforeSneak": 297.3500061035156,
+    "TravelTime": 38.899993896484378,
+    "TimeSpotted": 328.75,
     "Won": true,
-    "Enemy Race": "Terran",
-    "Map Played": "(2)Benzene.scx"
-},{
-    "Strategy": "Protoss_Drop",
-    "UnitsLost": 0,
-    "ShuttleHealth": 0,
-    "BeforeSneak": 287.0,
-    "TravelTime": 42.0,
-    "TimeSpotted": 0,
-    "Won": true,
-    "Enemy Race": "Terran",
-    "Map Played": "(2)Benzene.scx"
-},{
-    "Strategy": "Protoss_Drop",
-    "UnitsLost": 0,
-    "ShuttleHealth": 0,
-    "BeforeSneak": 0.0,
-    "TravelTime": 0.0,
-    "TimeSpotted": 0,
-    "Won": false,
     "Enemy Race": "Zerg",
     "Map Played": "(2)Benzene.scx"
 },{
     "Strategy": "Protoss_Drop",
     "UnitsLost": 0,
-    "ShuttleHealth": 97,
-    "BeforeSneak": 307.0,
-    "TravelTime": 43.0,
-    "TimeSpotted": 0,
+    "ShuttleHealth": 5,
+    "BeforeSneak": 283.5780029296875,
+    "TravelTime": 40.7969970703125,
+    "TimeSpotted": 314.375,
     "Won": true,
-    "Enemy Race": "Terran",
+    "Enemy Race": "Zerg",
+    "Map Played": "(2)Benzene.scx"
+},{
+    "Strategy": "Protoss_Drop",
+    "UnitsLost": 0,
+    "ShuttleHealth": 76,
+    "BeforeSneak": 297.3500061035156,
+    "TravelTime": 40.774993896484378,
+    "TimeSpotted": 328.75,
+    "Won": true,
+    "Enemy Race": "Zerg",
+    "Map Played": "(2)Benzene.scx"
+},{
+    "Strategy": "Protoss_Drop",
+    "UnitsLost": 4,
+    "ShuttleHealth": 0,
+    "BeforeSneak": 292.9679870605469,
+    "TravelTime": 40.782012939453128,
+    "TimeSpotted": 326.875,
+    "Won": true,
+    "Enemy Race": "Zerg",
+    "Map Played": "(2)Benzene.scx"
+},{
+    "Strategy": "Protoss_Drop",
+    "UnitsLost": 0,
+    "ShuttleHealth": 30,
+    "BeforeSneak": 299.85400390625,
+    "TravelTime": 40.14599609375,
+    "TimeSpotted": 330.0,
+    "Won": true,
+    "Enemy Race": "Zerg",
+    "Map Played": "(2)Benzene.scx"
+},{
+    "Strategy": "Protoss_Drop",
+    "UnitsLost": 0,
+    "ShuttleHealth": 12,
+    "BeforeSneak": 306.114013671875,
+    "TravelTime": 44.510986328125,
+    "TimeSpotted": 339.375,
+    "Won": false,
+    "Enemy Race": "Zerg",
     "Map Played": "(2)Benzene.scx"
 }]

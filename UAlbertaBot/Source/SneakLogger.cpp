@@ -129,18 +129,18 @@ void UAlbertaBot::SneakLogger::onFrame(bool full, bool completed, int health, BW
 	if (Config::Strategy::StrategyName != "Protoss_Drop") return;
 
 	if (full && Global::Sneak().m_game.m_beforesneak == 0.0) {
-		dropFull = BWAPI::Broodwar->getFrameCount();
+		dropFull = BWAPI::Broodwar->elapsedTime() * 0.626;
 		m_game.m_beforesneak = dropFull;
 	}
 
 	if (completed && Global::Sneak().m_game.m_traveltime == 0.0) {
-		dropCompleted = BWAPI::Broodwar->getFrameCount();
+		dropCompleted = BWAPI::Broodwar->elapsedTime() * 0.625;
 		m_game.m_traveltime = (dropCompleted - dropFull);
 		m_game.m_shuttlehealth = health;
 	}
 
 	if (Global::Map().m_influenceMap.getVisionInfluence(pos.x / 32, pos.y / 32) > 0.0 && m_game.m_timespotted == 0.0) {
-		m_game.m_timespotted = BWAPI::Broodwar->getFrameCount();
+		m_game.m_timespotted = BWAPI::Broodwar->elapsedTime() * 0.625;
 	}
 	
 	if (unitsLost != 0) {

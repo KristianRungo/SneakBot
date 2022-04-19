@@ -29,6 +29,7 @@ namespace UAlbertaBot
 		: m_strategy("")
 		, m_unitslost(0)
 		, m_shuttlehealth(0)
+		, m_beforesneak(0.0)
 		, m_traveltime(0.0)
 		, m_timespotted(0.0)
 		, m_won(false)
