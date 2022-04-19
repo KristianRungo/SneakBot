@@ -153,8 +153,11 @@ void TransportManager::update(BWAPI::Unitset dropZealots)
     if (unload) {
         handleUnload();
     }
+    if (sneak && !isUnloading() && !unload) {
+        handleSneaking();
+    }
     if (!isUnloading() && unloading) { //When done unloading go home
-        Micro::SmartMove(m_transportShip, BWAPI::Broodwar->getClosestUnit(Global::Bases().getPlayerStartingBaseLocation(BWAPI::Broodwar->enemy())->getPosition())->getPosition());
+        Micro::SmartMove(m_transportShip, BWAPI::Broodwar->getClosestUnit(Global::Bases().getPlayerStartingBaseLocation(BWAPI::Broodwar->self())->getPosition())->getPosition());
     }
     if (!unload) {
         loadTroops();
@@ -162,10 +165,35 @@ void TransportManager::update(BWAPI::Unitset dropZealots)
         moveTransport();
 
     }
+}
+bool inPath(std::vector<BWAPI::TilePosition> sneakPath, BWAPI::UnitInterface* m_transportShip, int index) {
+    for (int i = 0; i < std::min(index,(int)sneakPath.size()); i++) {
+        if (sneakPath[i] == BWAPI::TilePosition(m_transportShip->getPosition())) return true;
+    }
+    return false;
+}
+
+void TransportManager::handleSneaking() {
+    if (!m_sneakPath.size() > 0) return;
     
+    if (m_sneakPath.size() < 5) m_transportShip->move(BWAPI::Position(Global::Bases().getPlayerStartingBaseLocation(BWAPI::Broodwar->enemy())->getDepotPosition()));
 
-
-
+    BWAPI::TilePosition transporterTile = BWAPI::TilePosition(m_transportShip->getPosition());
+    if (transporterTile == m_sneakPath[std::min(m_indexInSneak, (int)m_sneakPath.size() - 1)]) {
+        m_indexInSneak++;
+        BWAPI::Position nextTile = BWAPI::Position(m_sneakPath[std::min(m_indexInSneak + 2, (int)m_sneakPath.size() - 1)]);
+        m_transportShip->move(BWAPI::Position(nextTile.x + 16,nextTile.y + 16));
+    }
+    else if (inPath(m_sneakPath,m_transportShip,m_indexInSneak)) {
+        BWAPI::Position nextTile = BWAPI::Position(m_sneakPath[std::min(m_indexInSneak + 2, (int)m_sneakPath.size() - 1)]);
+        m_transportShip->move(BWAPI::Position(nextTile.x + 16, nextTile.y + 16));
+    }
+    else {
+        BWAPI::Position nextTile = BWAPI::Position(m_sneakPath[std::min(m_indexInSneak, (int)m_sneakPath.size() - 1)]);
+        m_transportShip->move(BWAPI::Position(nextTile.x + 16, nextTile.y + 16));
+        //m_indexInSneak++;
+    }
+    //
 }
 
 void TransportManager::loadTroops() {
@@ -211,12 +239,31 @@ void TransportManager::moveTransport()
 
     // If I didn't finish unloading the troops, wait
     if (isUnloading() || unload) return;
-    
-    
-    const auto enemyBaseLocation = Global::Bases().getPlayerStartingBaseLocation(BWAPI::Broodwar->enemy());
-    
-    m_transportShip->move(enemyBaseLocation->getPosition());
 
+    if (sneak && Global::Map().getMapFrame() % 1000 == 0) {
+        const auto enemyBaseLocation = Global::Bases().getPlayerStartingBaseLocation(BWAPI::Broodwar->enemy());
+        m_sneakPath = Global::Map().getSneakyPath(BWAPI::TilePosition(m_transportShip->getPosition()), enemyBaseLocation->getDepotPosition());
+        m_indexInSneak = 0;
+
+    }
+    if (sneak && Global::Map().inVision(m_transportShip->getTilePosition()) && !inVision) {
+        const auto enemyBaseLocation = Global::Bases().getPlayerStartingBaseLocation(BWAPI::Broodwar->enemy());
+        m_sneakPath = Global::Map().getSneakyPath(BWAPI::TilePosition(m_transportShip->getPosition()), enemyBaseLocation->getDepotPosition());
+        m_indexInSneak = 0;
+        inVision = true;
+    }
+    else if (!sneak && sneakInConfig) {
+        sneak = true * sneakInConfig;
+        const auto enemyBaseLocation = Global::Bases().getPlayerStartingBaseLocation(BWAPI::Broodwar->enemy());
+        const auto ourBaseLocation = Global::Bases().getPlayerStartingBaseLocation(BWAPI::Broodwar->self());
+        Global::Map().updateCommonPath(ourBaseLocation->getDepotPosition(), enemyBaseLocation->getDepotPosition());
+        m_sneakPath = Global::Map().getSneakyPath(BWAPI::TilePosition(m_transportShip->getPosition()), enemyBaseLocation->getDepotPosition());
+        
+    }
+    else if (!sneakInConfig) {
+        const auto enemyBaseLocation = Global::Bases().getPlayerStartingBaseLocation(BWAPI::Broodwar->enemy());
+        m_transportShip->move(enemyBaseLocation->getPosition());
+    }
 
 
 
@@ -233,7 +280,7 @@ void TransportManager::moveTroops()
     const int transportHP = m_transportShip->getHitPoints() + m_transportShip->getShields();
 
     const auto& enemyBaseLocation = Global::Bases().getPlayerStartingBaseLocation(BWAPI::Broodwar->enemy());
-    const bool closeEnough = m_transportShip->getDistance(enemyBaseLocation->getPosition()) < 300;
+    const bool closeEnough = m_transportShip->getDistance(enemyBaseLocation->getPosition()) < m_dropRange;
     const bool dying =  transportHP < 100;
     const bool canUnload = m_transportShip->canUnloadAtPosition(m_transportShip->getPosition());
 

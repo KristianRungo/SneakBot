@@ -1,61 +1,231 @@
 [{
     "Strategy": "Protoss_Drop",
     "UnitsLost": 0,
+    "ShuttleHealth": 50,
+    "BeforeSneak": 295.47198486328127,
+    "TravelTime": 63.90301513671875,
+    "TimeSpotted": 346.25,
+    "Won": true,
+    "Enemy Race": "Terran",
+    "Map Played": "(2)Benzene.scx"
+},{
+    "Strategy": "Protoss_Drop",
+    "UnitsLost": 0,
+    "ShuttleHealth": 98,
+    "BeforeSneak": 294.84600830078127,
+    "TravelTime": 68.27899169921875,
+    "TimeSpotted": 352.5,
+    "Won": true,
+    "Enemy Race": "Terran",
+    "Map Played": "(2)Benzene.scx"
+},{
+    "Strategy": "Protoss_Drop",
+    "UnitsLost": 0,
     "ShuttleHealth": 140,
-    "BeforeSneak": 297.3500061035156,
-    "TravelTime": 38.899993896484378,
-    "TimeSpotted": 328.75,
-    "Won": true,
-    "Enemy Race": "Zerg",
-    "Map Played": "(2)Benzene.scx"
-},{
-    "Strategy": "Protoss_Drop",
-    "UnitsLost": 0,
-    "ShuttleHealth": 5,
-    "BeforeSneak": 283.5780029296875,
-    "TravelTime": 40.7969970703125,
-    "TimeSpotted": 314.375,
-    "Won": true,
-    "Enemy Race": "Zerg",
-    "Map Played": "(2)Benzene.scx"
-},{
-    "Strategy": "Protoss_Drop",
-    "UnitsLost": 0,
-    "ShuttleHealth": 76,
-    "BeforeSneak": 297.3500061035156,
-    "TravelTime": 40.774993896484378,
-    "TimeSpotted": 328.75,
-    "Won": true,
-    "Enemy Race": "Zerg",
-    "Map Played": "(2)Benzene.scx"
-},{
-    "Strategy": "Protoss_Drop",
-    "UnitsLost": 4,
-    "ShuttleHealth": 0,
-    "BeforeSneak": 292.9679870605469,
-    "TravelTime": 40.782012939453128,
-    "TimeSpotted": 326.875,
-    "Won": true,
-    "Enemy Race": "Zerg",
-    "Map Played": "(2)Benzene.scx"
-},{
-    "Strategy": "Protoss_Drop",
-    "UnitsLost": 0,
-    "ShuttleHealth": 30,
     "BeforeSneak": 299.85400390625,
-    "TravelTime": 40.14599609375,
-    "TimeSpotted": 330.0,
+    "TravelTime": 65.77099609375,
+    "TimeSpotted": 358.125,
     "Won": true,
-    "Enemy Race": "Zerg",
+    "Enemy Race": "Terran",
     "Map Played": "(2)Benzene.scx"
 },{
     "Strategy": "Protoss_Drop",
     "UnitsLost": 0,
-    "ShuttleHealth": 12,
-    "BeforeSneak": 306.114013671875,
-    "TravelTime": 44.510986328125,
-    "TimeSpotted": 339.375,
+    "ShuttleHealth": 60,
+    "BeforeSneak": 292.3420104980469,
+    "TravelTime": 70.15798950195313,
+    "TimeSpotted": 348.75,
+    "Won": true,
+    "Enemy Race": "Terran",
+    "Map Played": "(2)Benzene.scx"
+},{
+    "Strategy": "Protoss_Drop",
+    "UnitsLost": 0,
+    "ShuttleHealth": 140,
+    "BeforeSneak": 288.58599853515627,
+    "TravelTime": 66.41400146484375,
+    "TimeSpotted": 346.875,
+    "Won": true,
+    "Enemy Race": "Terran",
+    "Map Played": "(2)Benzene.scx"
+},{
+    "Strategy": "Protoss_Drop",
+    "UnitsLost": 0,
+    "ShuttleHealth": 140,
+    "BeforeSneak": 267.302001953125,
+    "TravelTime": 62.072998046875,
+    "TimeSpotted": 322.5,
+    "Won": true,
+    "Enemy Race": "Terran",
+    "Map Played": "(2)Benzene.scx"
+},{
+    "Strategy": "Protoss_Drop",
+    "UnitsLost": 0,
+    "ShuttleHealth": 40,
+    "BeforeSneak": 273.56201171875,
+    "TravelTime": 63.93798828125,
+    "TimeSpotted": 329.375,
+    "Won": false,
+    "Enemy Race": "Terran",
+    "Map Played": "(2)Benzene.scx"
+},{
+    "Strategy": "Protoss_Drop",
+    "UnitsLost": 0,
+    "ShuttleHealth": 140,
+    "BeforeSneak": 288.58599853515627,
+    "TravelTime": 65.78900146484375,
+    "TimeSpotted": 346.25,
     "Won": false,
     "Enemy Race": "Zerg",
+    "Map Played": "(2)Benzene.scx"
+},{
+    "Strategy": "Protoss_Drop",
+    "UnitsLost": 0,
+    "ShuttleHealth": 140,
+    "BeforeSneak": 284.8299865722656,
+    "TravelTime": 62.045013427734378,
+    "TimeSpotted": 338.125,
+    "Won": true,
+    "Enemy Race": "Zerg",
+    "Map Played": "(2)Benzene.scx"
+},{
+    "Strategy": "Protoss_Drop",
+    "UnitsLost": 0,
+    "ShuttleHealth": 140,
+    "BeforeSneak": 284.2040100097656,
+    "TravelTime": 62.045989990234378,
+    "TimeSpotted": 337.5,
+    "Won": true,
+    "Enemy Race": "Zerg",
+    "Map Played": "(2)Benzene.scx"
+},{
+    "Strategy": "Protoss_Drop",
+    "UnitsLost": 0,
+    "ShuttleHealth": 66,
+    "BeforeSneak": 293.593994140625,
+    "TravelTime": 67.031005859375,
+    "TimeSpotted": 351.875,
+    "Won": true,
+    "Enemy Race": "Zerg",
+    "Map Played": "(2)Benzene.scx"
+},{
+    "Strategy": "Protoss_Drop",
+    "UnitsLost": 0,
+    "ShuttleHealth": 140,
+    "BeforeSneak": 287.9599914550781,
+    "TravelTime": 62.040008544921878,
+    "TimeSpotted": 341.25,
+    "Won": false,
+    "Enemy Race": "Zerg",
+    "Map Played": "(2)Benzene.scx"
+},{
+    "Strategy": "Protoss_Drop",
+    "UnitsLost": 0,
+    "ShuttleHealth": 102,
+    "BeforeSneak": 291.71600341796877,
+    "TravelTime": 66.40899658203125,
+    "TimeSpotted": 350.0,
+    "Won": false,
+    "Enemy Race": "Zerg",
+    "Map Played": "(2)Benzene.scx"
+},{
+    "Strategy": "Protoss_Drop",
+    "UnitsLost": 0,
+    "ShuttleHealth": 140,
+    "BeforeSneak": 286.0820007324219,
+    "TravelTime": 67.04299926757813,
+    "TimeSpotted": 346.25,
+    "Won": false,
+    "Enemy Race": "Protoss",
+    "Map Played": "(2)Benzene.scx"
+},{
+    "Strategy": "Protoss_Drop",
+    "UnitsLost": 0,
+    "ShuttleHealth": 140,
+    "BeforeSneak": 291.0899963378906,
+    "TravelTime": 63.285003662109378,
+    "TimeSpotted": 345.0,
+    "Won": false,
+    "Enemy Race": "Protoss",
+    "Map Played": "(2)Benzene.scx"
+},{
+    "Strategy": "Protoss_Drop",
+    "UnitsLost": 0,
+    "ShuttleHealth": 140,
+    "BeforeSneak": 289.8380126953125,
+    "TravelTime": 65.7869873046875,
+    "TimeSpotted": 348.75,
+    "Won": false,
+    "Enemy Race": "Protoss",
+    "Map Played": "(2)Benzene.scx"
+},{
+    "Strategy": "Protoss_Drop",
+    "UnitsLost": 0,
+    "ShuttleHealth": 140,
+    "BeforeSneak": 286.7080078125,
+    "TravelTime": 66.4169921875,
+    "TimeSpotted": 343.125,
+    "Won": false,
+    "Enemy Race": "Protoss",
+    "Map Played": "(2)Benzene.scx"
+},{
+    "Strategy": "Protoss_Drop",
+    "UnitsLost": 0,
+    "ShuttleHealth": 140,
+    "BeforeSneak": 292.3420104980469,
+    "TravelTime": 62.032989501953128,
+    "TimeSpotted": 347.5,
+    "Won": false,
+    "Enemy Race": "Protoss",
+    "Map Played": "(2)Benzene.scx"
+},{
+    "Strategy": "Protoss_Drop",
+    "UnitsLost": 0,
+    "ShuttleHealth": 140,
+    "BeforeSneak": 287.3340148925781,
+    "TravelTime": 65.16598510742188,
+    "TimeSpotted": 345.625,
+    "Won": false,
+    "Enemy Race": "Protoss",
+    "Map Played": "(2)Benzene.scx"
+},{
+    "Strategy": "Protoss_Drop",
+    "UnitsLost": 0,
+    "ShuttleHealth": 140,
+    "BeforeSneak": 319.260009765625,
+    "TravelTime": 65.114990234375,
+    "TimeSpotted": 377.5,
+    "Won": true,
+    "Enemy Race": "Protoss",
+    "Map Played": "(2)Benzene.scx"
+},{
+    "Strategy": "Protoss_Drop",
+    "UnitsLost": 0,
+    "ShuttleHealth": 140,
+    "BeforeSneak": 286.7080078125,
+    "TravelTime": 65.7919921875,
+    "TimeSpotted": 345.625,
+    "Won": false,
+    "Enemy Race": "Protoss",
+    "Map Played": "(2)Benzene.scx"
+},{
+    "Strategy": "Protoss_Drop",
+    "UnitsLost": 0,
+    "ShuttleHealth": 140,
+    "BeforeSneak": 282.9519958496094,
+    "TravelTime": 63.298004150390628,
+    "TimeSpotted": 339.375,
+    "Won": false,
+    "Enemy Race": "Protoss",
+    "Map Played": "(2)Benzene.scx"
+},{
+    "Strategy": "Protoss_Drop",
+    "UnitsLost": 0,
+    "ShuttleHealth": 140,
+    "BeforeSneak": 283.5780029296875,
+    "TravelTime": 63.2969970703125,
+    "TimeSpotted": 338.125,
+    "Won": false,
+    "Enemy Race": "Protoss",
     "Map Played": "(2)Benzene.scx"
 }]

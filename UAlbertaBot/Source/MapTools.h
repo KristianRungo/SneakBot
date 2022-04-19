@@ -18,6 +18,7 @@ class MapTools
     int     m_width = 0;
     int     m_height = 0;
     int     m_frame = 0;
+    BWAPI::TilePosition m_transporterPosition = BWAPI::TilePositions::Unknown;
 
 
     
@@ -75,6 +76,11 @@ public:
     bool    isDepotBuildableTile(int tileX, int tileY) const;
     
     void    getUnits(BWAPI::Unitset & units, BWAPI::Position center, int radius, bool ourUnits, bool oppUnits);
+    void    setTransporterPosition(BWAPI::TilePosition pos);
+    std::vector<BWAPI::TilePosition> getSneakyPath(BWAPI::TilePosition start, BWAPI::TilePosition end);
+    int     getMapFrame();
+    void    updateCommonPath(BWAPI::TilePosition start, BWAPI::TilePosition end);
+    bool    inVision(BWAPI::TilePosition pos);
 
     const StarDraftMap & getStarDraftMap() const;
     void saveMapToFile(const std::string & path) const;

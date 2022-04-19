@@ -1,5 +1,6 @@
 #include "MapTools.h"
 #include "BaseLocationManager.h"
+#include "InformationManager.h"
 #include "Global.h"
 
 #include <iostream>
@@ -101,8 +102,24 @@ void MapTools::onFrame()
     if (m_frame == 0) {
         m_influenceMap.computeStartDepotInfluenceMap();
     }
-
-
+    
+    /*
+    if (m_frame % 1000 == 0) {
+        
+        try {
+            auto& test = Global::Info().getUnitInfo(BWAPI::Broodwar->enemy());
+            BWAPI::TilePosition enemy = BWAPI::TilePositions::Unknown;
+            if(test.size()>1)enemy = Global::Bases().getPlayerStartingBaseLocation(BWAPI::Broodwar->enemy())->getDepotPosition();
+            BWAPI::TilePosition start = (m_transporterPosition == BWAPI::TilePositions::Unknown) ? Global::Bases().getPlayerStartingBaseLocation(BWAPI::Broodwar->self())->getDepotPosition() : m_transporterPosition;
+            if (enemy != BWAPI::TilePositions::Unknown && start != BWAPI::TilePositions::Unknown) {
+                m_influenceMap.getSneakyPath(start, enemy);
+                std::cout << "Ended pathfinding \n";
+            }
+        }
+        catch(...){
+            std::cout << "Couldn't find enemy base :S";
+        }
+    }/**/
     m_influenceMap.computeVisionMap();
     m_influenceMap.computeAirDamageMap();
     m_influenceMap.computeGroundDamageMap();
@@ -542,4 +559,19 @@ void MapTools::saveMapToFile(const std::string & path) const
     std::string mapFile = BWAPI::Broodwar->mapFileName();
     std::replace( mapFile.begin(), mapFile.end(), ' ', '_'); 
     getStarDraftMap().save(mapFile + ".txt");
+}
+void MapTools::setTransporterPosition(BWAPI::TilePosition pos) {
+    m_transporterPosition = pos;
+}
+std::vector<BWAPI::TilePosition> MapTools::getSneakyPath(BWAPI::TilePosition start, BWAPI::TilePosition end) {
+    return m_influenceMap.getSneakyPath(start, end);
+}
+int MapTools::getMapFrame(){
+    return m_frame;
+}
+void MapTools::updateCommonPath(BWAPI::TilePosition start, BWAPI::TilePosition end) {
+    m_influenceMap.computeCommonPath(start, end);
+}
+bool MapTools::inVision(BWAPI::TilePosition pos) {
+    return m_influenceMap.inVision(pos);
 }

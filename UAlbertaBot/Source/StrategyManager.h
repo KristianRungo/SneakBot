@@ -13,6 +13,7 @@ struct Strategy
     BWAPI::Race m_race          = BWAPI::Races::None;
     int         m_wins          = 0;
     int         m_losses        = 0;
+
     BuildOrder  m_buildOrder;
 
     Strategy()
@@ -43,7 +44,7 @@ class StrategyManager
     std::map<std::string, Strategy> m_strategies;
     int                             m_totalGamesPlayed = 0;
     BuildOrder                      m_emptyBuildOrder;
-  
+    bool                            m_shuttleBuilt = false;
 
     void                    writeResults();
     const	int             getScore(BWAPI::Player player) const;

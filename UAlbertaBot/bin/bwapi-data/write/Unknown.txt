@@ -10,4 +10,4 @@ Zerg_2HatchHydra 0 0
 Zerg_3HatchMuta 0 0
 Zerg_3HatchScourge 0 0
 Zerg_9Pool 0 0
-Zerg_ZerglingRush 1 0
+Zerg_ZerglingRush 2 8

@@ -16,7 +16,6 @@ StrategyManager::StrategyManager()
     , m_enemyRace(BWAPI::Broodwar->enemy()->getRace())
     , m_emptyBuildOrder(BWAPI::Broodwar->self()->getRace())
 {
-
 }
 
 
@@ -126,6 +125,9 @@ const MetaPairVector StrategyManager::getProtossBuildOrderGoal() const
     int numScout            = UnitUtil::GetAllUnitCount(BWAPI::UnitTypes::Protoss_Corsair);
     int numReaver           = UnitUtil::GetAllUnitCount(BWAPI::UnitTypes::Protoss_Reaver);
     int numDarkTeplar       = UnitUtil::GetAllUnitCount(BWAPI::UnitTypes::Protoss_Dark_Templar);
+    int numShuttles         = UnitUtil::GetAllUnitCount(BWAPI::UnitTypes::Protoss_Shuttle);
+    
+
 
     if (Config::Strategy::StrategyName == "Protoss_ZealotRush")
     {
