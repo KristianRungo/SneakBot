@@ -197,8 +197,7 @@ void UAlbertaBot::SneakLogger::onUnitShow(BWAPI::Unit unit)
 	if (unit->getPlayer() != BWAPI::Broodwar->enemy() || (unit->getType().isWorker())) return;
 
 	if ((unit->getPosition().getApproxDistance(startingPosition) < 1000) && m_game.m_enemynearbasetime == 0.0) {
-		float time = (float)BWAPI::Broodwar->elapsedTime() * 0.625;
-		m_game.m_enemynearbasetime = time;
+		m_game.m_enemynearbasetime = (float)BWAPI::Broodwar->elapsedTime() * 0.625;
 	}
 
 }

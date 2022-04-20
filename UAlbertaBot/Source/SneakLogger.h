@@ -49,8 +49,6 @@ namespace UAlbertaBot
 	{
 
 		Game					m_game;
-		float					dropCompleted = 0.0;
-		float					dropFull = 0.0;
 		bool  					appendToFile(rapidjson::Document doc);
 		rapidjson::Document     generateJsonObject(Game game);
 		BWAPI::Position			startingPosition;
@@ -69,5 +67,4 @@ namespace UAlbertaBot
 		void					onEnd(bool);
 
 	};
-
 }
