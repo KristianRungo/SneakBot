@@ -46,14 +46,23 @@ rapidjson::Document UAlbertaBot::SneakLogger::generateJsonObject(Game game)
 	val.SetDouble(game.m_timespotted);
 	d.AddMember("TimeSpotted", val, allocator);
 
+	val.SetDouble(game.m_enemynearbasetime);
+	d.AddMember("EnemyNearBase", val, allocator);
+
+	val.SetInt(game.m_workersbuilt);
+	d.AddMember("WorkersBuilt", val, allocator);
+
+	val.SetInt(game.m_workerslost);
+	d.AddMember("WorkersLost", val, allocator);
+
 	val.SetBool(game.m_won);
 	d.AddMember("Won", val, allocator);
 
 	val.SetString(game.m_enemyrace.c_str(), static_cast<SizeType>(game.m_enemyrace.length()), allocator);
-	d.AddMember("Enemy Race", val, allocator);
+	d.AddMember("EnemyRace", val, allocator);
 
 	val.SetString(game.m_map.c_str(), static_cast<SizeType>(game.m_map.length()), allocator);
-	d.AddMember("Map Played", val, allocator);
+	d.AddMember("MapPlayed", val, allocator);
 
 	rapidjson::StringBuffer strbuf;
 	rapidjson::PrettyWriter<rapidjson::StringBuffer> writer(strbuf);
@@ -66,7 +75,7 @@ rapidjson::Document UAlbertaBot::SneakLogger::generateJsonObject(Game game)
 // append to it on end
 
 
-bool UAlbertaBot::SneakLogger::appendToFile(rapidjson::Document doc)
+bool SneakLogger::appendToFile(rapidjson::Document doc)
 {
 		const std::string fileName = Config::Strategy::LoggingDir + Config::Strategy::StrategyName + ".txt";
 		FILE* fp = fopen(fileName.c_str(), "rb+");
@@ -121,30 +130,39 @@ void UAlbertaBot::SneakLogger::onStart()
 	m_game.m_strategy = Config::Strategy::StrategyName;
 	m_game.m_enemyrace = BWAPI::Broodwar->enemy()->getRace().getName();
 	m_game.m_map = BWAPI::Broodwar->mapFileName();
+	startingPosition = BWAPI::Position(BWAPI::Broodwar->self()->getStartLocation());
 }
 
 void UAlbertaBot::SneakLogger::onFrame(bool full, bool completed, int health, BWAPI::Position pos, int unitsLost)
 {
+	float time = (float)BWAPI::Broodwar->elapsedTime() * 0.625;
 
 	if (Config::Strategy::StrategyName != "Protoss_Drop") return;
 
 	if (full && Global::Sneak().m_game.m_beforesneak == 0.0) {
-		dropFull = BWAPI::Broodwar->elapsedTime() * 0.626;
-		m_game.m_beforesneak = dropFull;
+		m_game.m_beforesneak = time;
 	}
 
 	if (completed && Global::Sneak().m_game.m_traveltime == 0.0) {
-		dropCompleted = BWAPI::Broodwar->elapsedTime() * 0.625;
-		m_game.m_traveltime = (dropCompleted - dropFull);
+		m_game.m_traveltime = (time - m_game.m_beforesneak);
 		m_game.m_shuttlehealth = health;
 	}
 
 	if (Global::Map().m_influenceMap.getVisionInfluence(pos.x / 32, pos.y / 32) > 0.0 && m_game.m_timespotted == 0.0) {
-		m_game.m_timespotted = BWAPI::Broodwar->elapsedTime() * 0.625;
+		m_game.m_timespotted = time;
 	}
 	
 	if (unitsLost != 0) {
 		m_game.m_unitslost = unitsLost;
+	}
+
+	if (time > 400.0 && m_game.m_workerslost == 0) { //  right after usual drop time
+		BWAPI::Unitset units = BWAPI::Broodwar->self()->getUnits();
+		for (auto& unit: units) {
+			if (unit->getType().isWorker()) {
+				m_game.m_workerslost++;
+			}
+		}
 	}
 
 
@@ -157,7 +175,45 @@ void UAlbertaBot::SneakLogger::onEnd(bool isWinner)
 	m_game = Game();
 }
 
+void UAlbertaBot::SneakLogger::onUnitCreate(BWAPI::Unit unit) {
 
+	if (unit == nullptr) {
+		return;
+	}
 
+	if (unit->getPlayer() == BWAPI::Broodwar->enemy()) return;
+	
+	if (unit->getType().isWorker()) {
+		m_game.m_workersbuilt = m_game.m_workersbuilt + 1;
+	}
+}
+
+void UAlbertaBot::SneakLogger::onUnitShow(BWAPI::Unit unit)
+{
+	if (unit == nullptr) {
+		return;
+	}
+
+	if (unit->getPlayer() != BWAPI::Broodwar->enemy() || (unit->getType().isWorker())) return;
+
+	if ((unit->getPosition().getApproxDistance(startingPosition) < 1000) && m_game.m_enemynearbasetime == 0.0) {
+		float time = (float)BWAPI::Broodwar->elapsedTime() * 0.625;
+		m_game.m_enemynearbasetime = time;
+	}
+
+}
+
+void UAlbertaBot::SneakLogger::onUnitDestroy(BWAPI::Unit unit) {
+
+	if (unit == nullptr) {
+		return;
+	}
+
+	if (unit->getPlayer() == BWAPI::Broodwar->enemy()) return;
+
+	if (unit->getType().isWorker() && m_game.m_workersbuilt > 0) {
+		m_game.m_workerslost = m_game.m_workerslost + 1;
+	}
+}
 
 

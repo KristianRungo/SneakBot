@@ -216,6 +216,7 @@ void GameCommander::onUnitShow(BWAPI::Unit unit)
 { 
 	Global::Info().onUnitShow(unit); 
 	Global::Workers().onUnitShow(unit);
+	Global::Sneak().onUnitShow(unit);
 }
 
 void GameCommander::onUnitHide(BWAPI::Unit unit)			
@@ -226,11 +227,13 @@ void GameCommander::onUnitHide(BWAPI::Unit unit)
 void GameCommander::onUnitCreate(BWAPI::Unit unit)		
 { 
 	Global::Info().onUnitCreate(unit); 
+	Global::Sneak().onUnitCreate(unit);
 }
 
 void GameCommander::onUnitComplete(BWAPI::Unit unit)
 {
 	Global::Info().onUnitComplete(unit);
+
 }
 
 void GameCommander::onUnitRenegade(BWAPI::Unit unit)		
@@ -243,6 +246,7 @@ void GameCommander::onUnitDestroy(BWAPI::Unit unit)
 	Global::Production().onUnitDestroy(unit);
 	Global::Workers().onUnitDestroy(unit);
 	Global::Info().onUnitDestroy(unit); 
+	Global::Sneak().onUnitDestroy(unit);
 }
 
 void GameCommander::onUnitMorph(BWAPI::Unit unit)		
