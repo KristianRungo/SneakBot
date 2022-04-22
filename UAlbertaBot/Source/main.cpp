@@ -19,7 +19,7 @@ void UAlbertaBot_BWAPIReconnect()
 	}
 }
 
-void UAlbertaBot_PlayGame()
+void UAlbertaBot_PlayGame(int gameCount)
 {
     PROFILE_FUNCTION();
 
@@ -35,7 +35,7 @@ void UAlbertaBot_PlayGame()
 			{
 				case BWAPI::EventType::MatchStart:      { bot.onStart();					  break; }
 				case BWAPI::EventType::MatchFrame:      { bot.onFrame();                      break; }
-				case BWAPI::EventType::MatchEnd:        { bot.onEnd(e.isWinner());            break; }
+				case BWAPI::EventType::MatchEnd:        { bot.onEnd(e.isWinner(), gameCount);            break; }
 				case BWAPI::EventType::UnitShow:        { bot.onUnitShow(e.getUnit());        break; }
 				case BWAPI::EventType::UnitHide:        { bot.onUnitHide(e.getUnit());        break; }
 				case BWAPI::EventType::UnitCreate:      { bot.onUnitCreate(e.getUnit());      break; }
@@ -78,6 +78,7 @@ int main(int argc, char * argv[])
 	size_t gameCount = 0;
 	while (true)
 	{
+
 		// if we are not currently connected to BWAPI, try to reconnect
 		if (!BWAPI::BWAPIClient.isConnected())
 		{
@@ -105,7 +106,7 @@ int main(int argc, char * argv[])
 			{
 				std::cout << "Playing game " << gameCount++ << " on map " << BWAPI::Broodwar->mapFileName() << "\n";
 
-				UAlbertaBot_PlayGame();
+				UAlbertaBot_PlayGame(gameCount);
 			}
 		}
 
