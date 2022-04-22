@@ -18,6 +18,7 @@ const size_t AttackPriority = 1;
 const size_t BaseDefensePriority = 2;
 const size_t ScoutDefensePriority = 3;
 const size_t DropPriority = 4;
+const size_t DropDefendersPriority = 5;
 
 CombatCommander::CombatCommander()
 {
@@ -44,6 +45,9 @@ void CombatCommander::initializeSquads()
     {
         SquadOrder zealotDrop(SquadOrderTypes::Drop, ourBasePosition, 900, "Wait for transport");
         m_squadData.addSquad("Drop", Squad("Drop", zealotDrop, DropPriority));
+
+        SquadOrder zealotDropDefenders(SquadOrderTypes::Defend, ourBasePosition, 900, "Wait for transport");
+        m_squadData.addSquad("DropDefenders", Squad("DropDefenders", zealotDropDefenders, DropDefendersPriority));
     }
 
     m_initialized = true;
@@ -134,6 +138,7 @@ void CombatCommander::monitorDrop() {
 }
 
 
+
 void CombatCommander::updateIdleSquad()
 {
     Squad & idleSquad = m_squadData.getSquad("Idle");
@@ -173,6 +178,13 @@ void CombatCommander::updateAttackSquads()
     SquadOrder mainAttackOrder(SquadOrderTypes::Attack, getMainAttackLocation(), 800, "Attack Enemy Base");
     mainAttackSquad.setSquadOrder(mainAttackOrder);
 }
+void CombatCommander::updateDropDefenceSquad() {
+
+}
+
+void CombatCommander::transferDropDefenceUnits() {
+
+}
 
 void CombatCommander::updateDropSquads()
 {
@@ -199,6 +211,15 @@ void CombatCommander::updateDropSquads()
             transportSpotsRemaining -= unit->getType().spaceRequired();
         }
     }
+    if (m_dropDefendersFound = true && m_squadData.getSquad("DropDefenders").getUnits().size() != 4) { //Some amount of drop defenders has died
+        transportSpotsRemaining = 8;
+        for (auto& unit : m_squadData.getSquad("DropDefenders").getUnits())
+        {
+            transportSpotsRemaining -= unit->getType().spaceRequired();
+        }
+        m_dropDefendersFound = false;
+    
+    }
 
     // if there are still units to be added to the drop squad, do it
     if (transportSpotsRemaining > 0 || !dropSquadHasTransport)
@@ -211,6 +232,7 @@ void CombatCommander::updateDropSquads()
             {
                 m_squadData.assignUnitToSquad(unit, dropSquad);
                 dropSquadHasTransport = true;
+                transferDropDefenceUnits();
                 continue;
             }
 
@@ -222,8 +244,9 @@ void CombatCommander::updateDropSquads()
             // get every unit of a lower priority and put it into the attack squad
             if (!unit->getType().isWorker() && m_squadData.canAssignUnitToSquad(unit, dropSquad))
             {
-                m_squadData.assignUnitToSquad(unit, dropSquad);
+                m_squadData.assignUnitToSquad(unit, m_squadData.getSquad("DropDefenders"));
                 transportSpotsRemaining -= unit->getType().spaceRequired();
+                if (transportSpotsRemaining == 0) m_dropDefendersFound = true;
             }
         }
     }

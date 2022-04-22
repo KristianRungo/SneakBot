@@ -15,12 +15,15 @@ class CombatCommander
     bool            m_dropSquadSuicide  = Config::Micro::DropSquadSuicide;
     bool            m_transferDropUnits = false;
     bool            m_dropShipMoved     = false;
+    bool            m_dropDefendersFound = false;
 
     void updateScoutDefenseSquad();
     void updateDefenseSquads();
     void updateAttackSquads();
     void updateDropSquads();
     void updateIdleSquad();
+    void updateDropDefenceSquad();
+    void transferDropDefenceUnits();
     void initializeSquads();
     void monitorDrop();
     void transferDropUnits();

@@ -518,4 +518,56 @@
     "Won": false,
     "EnemyRace": "Protoss",
     "MapPlayed": "(2)Benzene.scx"
+},{
+    "Strategy": "Protoss_Drop",
+    "UnitsLost": 0,
+    "ShuttleHealth": 85,
+    "BeforeSneak": 292.5,
+    "TravelTime": 66.25,
+    "TimeSpotted": 346.25,
+    "EnemyNearBase": 0.0,
+    "WorkersBuilt": 31,
+    "WorkersLost": 1,
+    "Won": true,
+    "EnemyRace": "Unknown",
+    "MapPlayed": "(2)Benzene.scx"
+},{
+    "Strategy": "Protoss_Drop",
+    "UnitsLost": 0,
+    "ShuttleHealth": 0,
+    "BeforeSneak": 0.0,
+    "TravelTime": 0.0,
+    "TimeSpotted": 0.0,
+    "EnemyNearBase": 0.0,
+    "WorkersBuilt": 9,
+    "WorkersLost": 0,
+    "Won": false,
+    "EnemyRace": "Unknown",
+    "MapPlayed": "(2)Benzene.scx"
+},{
+    "Strategy": "Protoss_Drop",
+    "UnitsLost": 0,
+    "ShuttleHealth": 140,
+    "BeforeSneak": 288.75,
+    "TravelTime": 42.5,
+    "TimeSpotted": 325.625,
+    "EnemyNearBase": 328.125,
+    "WorkersBuilt": 22,
+    "WorkersLost": 22,
+    "Won": false,
+    "EnemyRace": "Unknown",
+    "MapPlayed": "(3)Aztec.scx"
+},{
+    "Strategy": "Protoss_Drop",
+    "UnitsLost": 0,
+    "ShuttleHealth": 114,
+    "BeforeSneak": 297.5,
+    "TravelTime": 58.125,
+    "TimeSpotted": 344.375,
+    "EnemyNearBase": 0.0,
+    "WorkersBuilt": 23,
+    "WorkersLost": 1,
+    "Won": false,
+    "EnemyRace": "Unknown",
+    "MapPlayed": "(4)Andromeda.scx"
 }]
