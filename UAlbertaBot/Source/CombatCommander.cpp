@@ -183,7 +183,11 @@ void CombatCommander::updateDropDefenceSquad() {
 }
 
 void CombatCommander::transferDropDefenceUnits() {
-
+    BWAPI::Unitset dropUnits = m_squadData.getSquad("DropDefenders").getUnits();
+    m_squadData.getSquad("DropDefenders").clear();
+    for (BWAPI::Unit unit : dropUnits) {
+        m_squadData.getSquad("Drop").addUnit(unit);
+    }
 }
 
 void CombatCommander::updateDropSquads()
@@ -211,16 +215,19 @@ void CombatCommander::updateDropSquads()
             transportSpotsRemaining -= unit->getType().spaceRequired();
         }
     }
-    if (m_dropDefendersFound = true && m_squadData.getSquad("DropDefenders").getUnits().size() != 4) { //Some amount of drop defenders has died
-        transportSpotsRemaining = 8;
-        for (auto& unit : m_squadData.getSquad("DropDefenders").getUnits())
+    for (auto& unit : m_squadData.getSquad("DropDefenders").getUnits())
+    {
+        if (unit->isFlying() && unit->getType().spaceProvided() > 0)
+        {
+            dropSquadHasTransport = true;
+        }
+        else
         {
             transportSpotsRemaining -= unit->getType().spaceRequired();
         }
-        m_dropDefendersFound = false;
-    
     }
 
+    //Make sure it knows dropSquad is full
     // if there are still units to be added to the drop squad, do it
     if (transportSpotsRemaining > 0 || !dropSquadHasTransport)
     {
@@ -228,10 +235,11 @@ void CombatCommander::updateDropSquads()
         for (auto & unit : m_combatUnits)
         {
             // if this is a transport unit and we don't have one in the squad yet, add it
-            if (!dropSquadHasTransport && (unit->getType().spaceProvided() > 0 && unit->isFlying()))
+            if (!dropSquadHasTransport && (unit->getType().spaceProvided() > 0 && unit->isFlying()) && !m_dropShipLoading)
             {
                 m_squadData.assignUnitToSquad(unit, dropSquad);
                 dropSquadHasTransport = true;
+                m_dropShipLoading = true;
                 transferDropDefenceUnits();
                 continue;
             }
@@ -246,7 +254,7 @@ void CombatCommander::updateDropSquads()
             {
                 m_squadData.assignUnitToSquad(unit, m_squadData.getSquad("DropDefenders"));
                 transportSpotsRemaining -= unit->getType().spaceRequired();
-                if (transportSpotsRemaining == 0) m_dropDefendersFound = true;
+                
             }
         }
     }
@@ -434,7 +442,7 @@ void CombatCommander::updateDefenseSquads()
         const Squad & squad = kv.second;
         const SquadOrder & order = squad.getSquadOrder();
 
-        if (order.getType() != SquadOrderTypes::Defend)
+        if (order.getType() != SquadOrderTypes::Defend || squad.getName() == "DropDefenders")
         {
             continue;
         }
