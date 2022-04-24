@@ -18,6 +18,7 @@ const size_t AttackPriority = 1;
 const size_t BaseDefensePriority = 2;
 const size_t ScoutDefensePriority = 3;
 const size_t DropPriority = 4;
+const size_t DropDefendersPriority = 5;
 
 CombatCommander::CombatCommander()
 {
@@ -44,6 +45,9 @@ void CombatCommander::initializeSquads()
     {
         SquadOrder zealotDrop(SquadOrderTypes::Drop, ourBasePosition, 900, "Wait for transport");
         m_squadData.addSquad("Drop", Squad("Drop", zealotDrop, DropPriority));
+
+        SquadOrder zealotDropDefenders(SquadOrderTypes::Defend, ourBasePosition, 900, "Wait for transport");
+        m_squadData.addSquad("DropDefenders", Squad("DropDefenders", zealotDropDefenders, DropDefendersPriority));
     }
 
     m_initialized = true;
@@ -134,6 +138,7 @@ void CombatCommander::monitorDrop() {
 }
 
 
+
 void CombatCommander::updateIdleSquad()
 {
     Squad & idleSquad = m_squadData.getSquad("Idle");
@@ -173,6 +178,17 @@ void CombatCommander::updateAttackSquads()
     SquadOrder mainAttackOrder(SquadOrderTypes::Attack, getMainAttackLocation(), 800, "Attack Enemy Base");
     mainAttackSquad.setSquadOrder(mainAttackOrder);
 }
+void CombatCommander::updateDropDefenceSquad() {
+
+}
+
+void CombatCommander::transferDropDefenceUnits() {
+    BWAPI::Unitset dropUnits = m_squadData.getSquad("DropDefenders").getUnits();
+    m_squadData.getSquad("DropDefenders").clear();
+    for (BWAPI::Unit unit : dropUnits) {
+        m_squadData.getSquad("Drop").addUnit(unit);
+    }
+}
 
 void CombatCommander::updateDropSquads()
 {
@@ -199,7 +215,19 @@ void CombatCommander::updateDropSquads()
             transportSpotsRemaining -= unit->getType().spaceRequired();
         }
     }
+    for (auto& unit : m_squadData.getSquad("DropDefenders").getUnits())
+    {
+        if (unit->isFlying() && unit->getType().spaceProvided() > 0)
+        {
+            dropSquadHasTransport = true;
+        }
+        else
+        {
+            transportSpotsRemaining -= unit->getType().spaceRequired();
+        }
+    }
 
+    //Make sure it knows dropSquad is full
     // if there are still units to be added to the drop squad, do it
     if (transportSpotsRemaining > 0 || !dropSquadHasTransport)
     {
@@ -207,10 +235,12 @@ void CombatCommander::updateDropSquads()
         for (auto & unit : m_combatUnits)
         {
             // if this is a transport unit and we don't have one in the squad yet, add it
-            if (!dropSquadHasTransport && (unit->getType().spaceProvided() > 0 && unit->isFlying()))
+            if (!dropSquadHasTransport && (unit->getType().spaceProvided() > 0 && unit->isFlying()) && !m_dropShipLoading)
             {
                 m_squadData.assignUnitToSquad(unit, dropSquad);
                 dropSquadHasTransport = true;
+                m_dropShipLoading = true;
+                transferDropDefenceUnits();
                 continue;
             }
 
@@ -222,8 +252,9 @@ void CombatCommander::updateDropSquads()
             // get every unit of a lower priority and put it into the attack squad
             if (!unit->getType().isWorker() && m_squadData.canAssignUnitToSquad(unit, dropSquad))
             {
-                m_squadData.assignUnitToSquad(unit, dropSquad);
+                m_squadData.assignUnitToSquad(unit, m_squadData.getSquad("DropDefenders"));
                 transportSpotsRemaining -= unit->getType().spaceRequired();
+                
             }
         }
     }
@@ -411,7 +442,7 @@ void CombatCommander::updateDefenseSquads()
         const Squad & squad = kv.second;
         const SquadOrder & order = squad.getSquadOrder();
 
-        if (order.getType() != SquadOrderTypes::Defend)
+        if (order.getType() != SquadOrderTypes::Defend || squad.getName() == "DropDefenders")
         {
             continue;
         }
