@@ -817,4 +817,17 @@
     "Won": false,
     "EnemyRace": "Zerg",
     "MapPlayed": "(2)Heartbreak Ridge.scx"
+},{
+    "Strategy": "Protoss_Drop",
+    "UnitsLost": 0,
+    "ShuttleHealth": 140,
+    "BeforeSneak": 288.75,
+    "TravelTime": 73.125,
+    "TimeSpotted": 352.5,
+    "EnemyNearBase": 348.125,
+    "WorkersBuilt": 21,
+    "WorkersLost": 21,
+    "Won": false,
+    "EnemyRace": "Unknown",
+    "MapPlayed": "(2)Benzene.scx"
 }]
