@@ -169,7 +169,7 @@ void UAlbertaBotModule::onUnitRenegade(BWAPI::Unit unit)
 
 void UAlbertaBot::UAlbertaBotModule::handleRestart(int gameCount)
 {
-    if (gameCount != 0 && gameCount % 100 == 0) {
+    if (gameCount != 0 && gameCount % 33 == 0) {
         return;
     }
     else BWAPI::Broodwar->restartGame();
