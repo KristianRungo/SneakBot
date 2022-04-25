@@ -9,6 +9,7 @@ using namespace UAlbertaBot;
 
 TransportManager::TransportManager()
 {
+    sneakInConfig = Config::Strategy::StrategyName == "Protoss_Drop";
 }
 
 void TransportManager::executeMicro(const BWAPI::Unitset & targets)

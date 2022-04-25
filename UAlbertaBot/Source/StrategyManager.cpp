@@ -143,7 +143,7 @@ const MetaPairVector StrategyManager::getProtossBuildOrderGoal() const
     {
         goal.push_back(MetaPair(BWAPI::UnitTypes::Protoss_Dragoon, numDragoons + 6));
     }
-    else if (Config::Strategy::StrategyName == "Protoss_Drop")
+    else if (Config::Strategy::StrategyName == "Protoss_Drop" || Config::Strategy::StrategyName == "Protoss_DirectDrop")
     {
         if (numZealots == 0)
         {

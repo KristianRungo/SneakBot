@@ -12,7 +12,7 @@ class TransportManager : public MicroManager
     bool                            unloading                    = false;
     bool                            unload                       = false;
     bool                            sneak                        = false;
-    bool                            sneakInConfig                = true;
+    bool                            sneakInConfig                = false;
     bool                            inVision                     = false;
     int                             m_indexInSneak = 0;
     int                             m_dropRange = 300;

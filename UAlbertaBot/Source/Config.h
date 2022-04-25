@@ -21,7 +21,7 @@ namespace Config
         extern bool UsingUnitCommandManager;
         extern bool UsingBuildOrderSearch;  
         extern bool UsingAutoObserver;
-        extern bool UsingStrategyIO;			
+        extern bool UsingStrategyIO;		
     }
     
     namespace BotInfo

@@ -40,9 +40,11 @@ namespace Config
         bool UsingAutoObserver              = false;
         bool UsingStrategyIO                = false;    // toggle the use of file io for strategy
         bool UsingUnitCommandManager        = false;    // handles all unit commands
+        bool test                           = false;
 		
         // extra things, don't enable unless you know what they are
         bool UsingBuildOrderDemo            = false;
+
     }
 
     namespace BotInfo

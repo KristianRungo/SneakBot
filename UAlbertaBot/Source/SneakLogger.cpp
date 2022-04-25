@@ -137,7 +137,7 @@ void UAlbertaBot::SneakLogger::onFrame(bool full, bool completed, int health, BW
 {
 	float time = (float)BWAPI::Broodwar->elapsedTime() * 0.625;
 
-	if (Config::Strategy::StrategyName != "Protoss_Drop") return;
+	if (!(Config::Strategy::StrategyName == "Protoss_Drop" || Config::Strategy::StrategyName == "Protoss_DirectDrop")) return;
 
 	if (full && Global::Sneak().m_game.m_beforesneak == 0.0) {
 		m_game.m_beforesneak = time;

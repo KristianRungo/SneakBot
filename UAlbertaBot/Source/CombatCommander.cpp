@@ -41,7 +41,7 @@ void CombatCommander::initializeSquads()
     m_squadData.addSquad("ScoutDefense", Squad("ScoutDefense", enemyScoutDefense, ScoutDefensePriority));
 
     // add a drop squad if we are using a drop strategy
-    if (Config::Strategy::StrategyName == "Protoss_Drop")
+    if (Config::Strategy::StrategyName == "Protoss_Drop" || Config::Strategy::StrategyName == "Protoss_DirectDrop")
     {
         SquadOrder zealotDrop(SquadOrderTypes::Drop, ourBasePosition, 900, "Wait for transport");
         m_squadData.addSquad("Drop", Squad("Drop", zealotDrop, DropPriority));
@@ -74,7 +74,7 @@ void CombatCommander::update(const BWAPI::Unitset & combatUnits)
 
     m_combatUnits = combatUnits;
 
-    if (Config::Strategy::StrategyName == "Protoss_Drop") {
+    if (Config::Strategy::StrategyName == "Protoss_Drop" || Config::Strategy::StrategyName == "Protoss_DirectDrop") {
         monitorDrop();
         transferDropUnits();
     }
@@ -192,7 +192,7 @@ void CombatCommander::transferDropDefenceUnits() {
 
 void CombatCommander::updateDropSquads()
 {
-    if (Config::Strategy::StrategyName != "Protoss_Drop" || m_dropSquadCreated)
+    if (!(Config::Strategy::StrategyName == "Protoss_Drop" || Config::Strategy::StrategyName ==  "Protoss_DirectDrop") || m_dropSquadCreated )
     {
         return;
     }

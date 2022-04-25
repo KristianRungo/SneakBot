@@ -1,9 +1,10 @@
 Protoss_DTRush 0 0
+Protoss_DirectDrop 2 7
 Protoss_DragoonRush 0 0
 Protoss_Drop 6 13
-Protoss_ZealotRush 0 1
+Protoss_ZealotRush 7 3
 Terran_4RaxMarines 0 0
-Terran_MarineRush 1 1
+Terran_MarineRush 1 2
 Terran_TankPush 0 0
 Terran_VultureRush 0 0
 Zerg_2HatchHydra 0 0
