@@ -38,6 +38,7 @@ class MapTools
     void printMap() const;
     bool canBuild(int tileX, int tileY) const;
     bool canWalk(int tileX, int tileY) const;
+    
 
     MapTools();
 
@@ -90,6 +91,8 @@ public:
     // returns a list of all tiles on the map, sorted by 4-direcitonal walk distance from the given position
     const std::vector<BWAPI::TilePosition> & getClosestTilesTo(const BWAPI::TilePosition & tilePos) const;
     const std::vector<BWAPI::TilePosition> & getClosestTilesTo(const BWAPI::Position & pos) const;
+ 
+
 };
 
 }

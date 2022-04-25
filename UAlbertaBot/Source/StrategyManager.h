@@ -44,7 +44,7 @@ class StrategyManager
     std::map<std::string, Strategy> m_strategies;
     int                             m_totalGamesPlayed = 0;
     BuildOrder                      m_emptyBuildOrder;
-    bool                            m_shuttleBuilt = false;
+    bool                            m_shuttleOrdered;
 
     void                    writeResults();
     const	int             getScore(BWAPI::Player player) const;

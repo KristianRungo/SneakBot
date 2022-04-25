@@ -16,6 +16,7 @@ StrategyManager::StrategyManager()
     , m_enemyRace(BWAPI::Broodwar->enemy()->getRace())
     , m_emptyBuildOrder(BWAPI::Broodwar->self()->getRace())
 {
+    m_shuttleOrdered = false;
 }
 
 
@@ -95,7 +96,11 @@ const MetaPairVector StrategyManager::getBuildOrderGoal()
 
     if (myRace == BWAPI::Races::Protoss)
     {
-        return getProtossBuildOrderGoal();
+        auto buildOrderGoal = getProtossBuildOrderGoal();
+        for (auto& metaPair : buildOrderGoal) {
+            m_shuttleOrdered = (metaPair.first.getUnitType() == BWAPI::UnitTypes::Protoss_Shuttle) || m_shuttleOrdered;
+        }
+        return buildOrderGoal;
     }
     else if (myRace == BWAPI::Races::Terran)
     {
@@ -145,7 +150,7 @@ const MetaPairVector StrategyManager::getProtossBuildOrderGoal() const
     }
     else if (Config::Strategy::StrategyName == "Protoss_Drop" || Config::Strategy::StrategyName == "Protoss_DirectDrop")
     {
-        if (numZealots == 0)
+        if (!m_shuttleOrdered)
         {
             goal.push_back(MetaPair(BWAPI::UnitTypes::Protoss_Shuttle, 1));
             goal.push_back(MetaPair(BWAPI::UnitTypes::Protoss_Zealot, numZealots + 8));

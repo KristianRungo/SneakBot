@@ -81,12 +81,12 @@
     
     "Strategy" :
     {
-        "Protoss"                   : "Protoss_ZealotRush",
+        "Protoss"                   : "Protoss_Drop",
         "Terran"                    : "Terran_MarineRush",
         "Zerg"                      : "Zerg_ZerglingRush",
         
         "ScoutGasSteal"             : false,
-        "ScoutHarassEnemy"          : false,
+        "ScoutHarassEnemy"          : true,
         
         "ReadDirectory"             : "bwapi-data/write/",
         "WriteDirectory"            : "bwapi-data/write/",

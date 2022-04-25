@@ -164,6 +164,7 @@ void UAlbertaBot::SneakLogger::onFrame(bool full, bool completed, int health, BW
 			}
 		}
 	}
+	
 
 
 }

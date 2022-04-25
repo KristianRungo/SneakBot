@@ -58,7 +58,7 @@ void drawClosedQueue(std::vector<std::vector<std::tuple<BWAPI::TilePosition, BWA
     std::cout << "\n";
     int row = 0;
     for (auto& line : closedQueue) {
-        for (int i = line.size()-1; i > 0; i--) {
+        for (int i = 0; i < line.size() - 1; i++) {
             float cVal = std::get<2>(line[i]);
             if      (BWAPI::TilePosition(i,row) == start) std::cout << "S";
             else if (BWAPI::TilePosition(i,row) == end) std::cout << "E";
@@ -125,6 +125,8 @@ std::vector<BWAPI::TilePosition>  InfluenceMap::findShortestPathInClosedQueue2
     std::vector<BWAPI::TilePosition> shortestTilePath;
     BWAPI::TilePosition currentTile = end;
     while (currentTile != start) {
+
+
         if (getNumSurroundingTiles(closedQueue, currentTile) > 2) { //More than one option ahead
             BWAPI::TilePosition clusterEndTile = currentTile;
             std::vector<std::vector<float>> clusterTiles(m_width, std::vector<float>(m_height, -1));;
@@ -160,6 +162,7 @@ std::vector<BWAPI::TilePosition>  InfluenceMap::findShortestPathInClosedQueue2
             std::reverse(shortestPathInCluster.begin(), shortestPathInCluster.end());
             for (BWAPI::TilePosition tile : shortestPathInCluster) shortestTilePath.push_back(tile);
             currentTile = std::get<0>(closedQueue[clusterEndTile.x][clusterEndTile.y]);
+            if (currentTile == BWAPI::TilePositions::Unknown) continue; 
             shortestTilePath.push_back(currentTile);
 
         }
@@ -174,8 +177,10 @@ std::vector<BWAPI::TilePosition>  InfluenceMap::findShortestPathInClosedQueue2
     
 
 }
+
 std::vector<BWAPI::TilePosition> InfluenceMap::getSneakyPath(BWAPI::TilePosition start, BWAPI::TilePosition end) {
     std::cout << "Started pathfinding\n";
+    int stuckCounter = 0;
     std::priority_queue<std::tuple<float, float, BWAPI::TilePosition>> openQueue;
     std::vector<std::vector<std::tuple<BWAPI::TilePosition, BWAPI::TilePosition, float>>> closedQueue(
         m_width, std::vector <std::tuple<BWAPI::TilePosition, BWAPI::TilePosition, float>>
@@ -194,6 +199,12 @@ std::vector<BWAPI::TilePosition> InfluenceMap::getSneakyPath(BWAPI::TilePosition
             m_sneakyPath = findShortestPathInClosedQueue2(closedQueue, start, end);
             std::reverse(m_sneakyPath.begin(), m_sneakyPath.end());
             m_goStraight = false;
+            for (auto tile : m_sneakyPath) {
+                if (tile == BWAPI::TilePositions::Unknown)
+                {
+                    std::cout << "Its here boss!";
+                }
+            }
             return m_sneakyPath;
 
         }
@@ -218,8 +229,12 @@ std::vector<BWAPI::TilePosition> InfluenceMap::getSneakyPath(BWAPI::TilePosition
             openQueue.push(std::make_tuple((-1) * (weightedDist(adjacentTile, end)) - cVal(currentTileVal, a,adjacentTile),cVal(currentTileVal,a, adjacentTile), adjacentTile));
         }
         if (parentTileVal == std::numeric_limits<float>::max()) { //If parentTileVal was never changed, we never found an adjacent tile that was closer, or wasn't allready part of our shortest path
-            std::cout << "I got stuck :S";
-            //drawClosedQueue(closedQueue, start, end, currentTile);
+            //std::cout << "I got stuck :S";
+            stuckCounter++;
+            if (stuckCounter > 10) {
+                std::cout << "even more fucked!";
+            }
+            //drawClosedQueue(closedQueue, start, end, currentTile); 
             UAB_ASSERT_WARNING(currentTile, "Got stuck in dead end loop"); //CurrentTile enclosed by tiles in closedQueue, so it is stuck.
             m_goStraight = true;
             std::vector<std::vector<std::tuple<BWAPI::TilePosition, BWAPI::TilePosition, float>>> closedQueueTmp = closedQueue;
@@ -231,11 +246,11 @@ std::vector<BWAPI::TilePosition> InfluenceMap::getSneakyPath(BWAPI::TilePosition
                 currentTile = nextTile;
             }
             closedQueue = closedQueueTmp;
-            
             if (currentTile == BWAPI::TilePositions::Unknown) {
-                std::cout << "All messed up, will now just B-line to base";
-                std::priority_queue<std::tuple<float, float, BWAPI::TilePosition>> openQueue;
-                std::vector<std::vector<std::tuple<BWAPI::TilePosition, BWAPI::TilePosition, float>>> closedQueue(
+                std::cout << "All messed up, will now just B-line from base";
+                drawClosedQueue(closedQueue, start, end, currentTile);
+                while (!openQueue.empty()) openQueue.pop();
+                closedQueue = std::vector<std::vector<std::tuple<BWAPI::TilePosition, BWAPI::TilePosition, float>>> (
                     m_width, std::vector <std::tuple<BWAPI::TilePosition, BWAPI::TilePosition, float>>
                     (m_height, std::make_tuple(BWAPI::TilePositions::Unknown, BWAPI::TilePositions::Unknown, std::numeric_limits<float>::max())));
                 //clear openQueue
@@ -383,7 +398,8 @@ void InfluenceMap::computeCommonPath(BWAPI::TilePosition start, BWAPI::TilePosit
     }
     for (int x = 0; x < m_width; x++) {
         for (int y = 0; y < m_height; y++) {
-            m_influence.set(x, y, std::max(m_influence.get(x, y), m_influenced.get(x, y)));
+            if (m_dist.get(x, y) > 20) m_influence.set(x, y, std::max(m_influence.get(x, y), m_influenced.get(x, y)));
+            else m_influence.set(x, y, 0);
         }
     }
 }
@@ -443,7 +459,8 @@ void InfluenceMap::computeStartDepotInfluenceMap()
     }
     for (int x = 0; x < m_width; x++) {
         for (int y = 0; y < m_height; y++) {
-            m_influence.set(x, y,std::max(m_influence.get(x,y),m_influenced.get(x,y)));
+            if (m_dist.get(x,y) > 10) m_influence.set(x, y,std::max(m_influence.get(x,y),m_influenced.get(x,y)));
+            else m_influence.set(x, y, 0);
         }
     }
 } 

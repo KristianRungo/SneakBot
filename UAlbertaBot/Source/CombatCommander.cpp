@@ -183,17 +183,21 @@ void CombatCommander::updateDropDefenceSquad() {
 }
 
 void CombatCommander::transferDropDefenceUnits() {
+    if (!m_squadData.squadExists("DropDefenders")) return;
+    if (m_squadData.getSquad("DropDefenders").getUnits().size() == 0) return;
     BWAPI::Unitset dropUnits = m_squadData.getSquad("DropDefenders").getUnits();
     m_squadData.getSquad("DropDefenders").clear();
     for (BWAPI::Unit unit : dropUnits) {
         m_squadData.getSquad("Drop").addUnit(unit);
     }
+    //m_squadData.removeSquad("DropDefenders");
 }
 
 void CombatCommander::updateDropSquads()
 {
     if (!(Config::Strategy::StrategyName == "Protoss_Drop" || Config::Strategy::StrategyName ==  "Protoss_DirectDrop") || m_dropSquadCreated )
     {
+        transferDropDefenceUnits();
         return;
     }
 
@@ -201,7 +205,7 @@ void CombatCommander::updateDropSquads()
 
     // figure out how many units the drop squad needs
     bool dropSquadHasTransport = false;
-    int transportSpotsRemaining = 8;
+    int transportSpotsRemaining = 8; 
     auto & dropUnits = dropSquad.getUnits();
 
     for (auto & unit : dropUnits)
@@ -249,8 +253,8 @@ void CombatCommander::updateDropSquads()
                 continue;
             }
 
-            // get every unit of a lower priority and put it into the attack squad
-            if (!unit->getType().isWorker() && m_squadData.canAssignUnitToSquad(unit, dropSquad))
+            // get every unit of a lower priority and put it into the drop squad
+            if (unit->getType() == BWAPI::UnitTypes::Protoss_Zealot && m_squadData.canAssignUnitToSquad(unit, dropSquad))
             {
                 m_squadData.assignUnitToSquad(unit, m_squadData.getSquad("DropDefenders"));
                 transportSpotsRemaining -= unit->getType().spaceRequired();
