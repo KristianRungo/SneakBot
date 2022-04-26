@@ -81,7 +81,7 @@ bool SneakLogger::appendToFile(rapidjson::Document doc)
 		map.erase(0, 3);
 		std::size_t found = map.find_last_of(".");
 		map.erase(found, map.size());
-		const std::string fileName = Config::Strategy::LoggingDir + Config::Strategy::StrategyName + "_" + m_game.m_enemyrace +"_" + map +".txt";
+		const std::string fileName = Config::Strategy::LoggingDir + Config::Strategy::StrategyName + "_" + map +"_" + m_game.m_enemyrace +".txt";
 		FILE* fp = fopen(fileName.c_str(), "rb+");
 	try
 	{
