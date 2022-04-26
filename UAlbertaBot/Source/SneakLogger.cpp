@@ -1,6 +1,6 @@
-#include<string>
-#include<vector>
-#include<fstream>
+#include <string>
+#include <vector>
+#include <fstream>
 #include "SneakLogger.h"
 #include "Common.h"
 #include "UnitUtil.h"
@@ -77,8 +77,11 @@ rapidjson::Document UAlbertaBot::SneakLogger::generateJsonObject(Game game)
 
 bool SneakLogger::appendToFile(rapidjson::Document doc)
 {
-	
-		const std::string fileName = Config::Strategy::LoggingDir + Config::Strategy::StrategyName + "_" + m_game.m_enemyrace + ".txt";
+		std::string map = m_game.m_map;
+		map.erase(0, 3);
+		std::size_t found = map.find_last_of(".");
+		map.erase(found, map.size());
+		const std::string fileName = Config::Strategy::LoggingDir + Config::Strategy::StrategyName + "_" + m_game.m_enemyrace +"_" + map +".txt";
 		FILE* fp = fopen(fileName.c_str(), "rb+");
 	try
 	{

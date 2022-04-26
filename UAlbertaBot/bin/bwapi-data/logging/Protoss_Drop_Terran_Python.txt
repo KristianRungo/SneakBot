@@ -1,0 +1,14 @@
+[{
+    "Strategy": "Protoss_Drop",
+    "UnitsLost": 0,
+    "ShuttleHealth": 0,
+    "BeforeSneak": 0.0,
+    "TravelTime": 0.0,
+    "TimeSpotted": 0.0,
+    "EnemyNearBase": 0.0,
+    "WorkersBuilt": 10,
+    "WorkersLost": 0,
+    "Won": false,
+    "EnemyRace": "Terran",
+    "MapPlayed": "(4)Empire of the Sun.scm"
+}]
