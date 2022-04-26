@@ -1,1 +1,14 @@
-[]
+[{
+    "Strategy": "Protoss_Drop",
+    "UnitsLost": 0,
+    "ShuttleHealth": 64,
+    "BeforeSneak": 254.375,
+    "TravelTime": 123.125,
+    "TimeSpotted": 336.25,
+    "EnemyNearBase": 380.0,
+    "WorkersBuilt": 22,
+    "WorkersLost": 1,
+    "Won": false,
+    "EnemyRace": "Terran",
+    "MapPlayed": "(4)Circuit Breaker.scx"
+}]

@@ -1,1 +1,27 @@
-[]
+[{
+    "Strategy": "Protoss_Drop",
+    "UnitsLost": 0,
+    "ShuttleHealth": 91,
+    "BeforeSneak": 291.875,
+    "TravelTime": 68.75,
+    "TimeSpotted": 353.125,
+    "EnemyNearBase": 183.75,
+    "WorkersBuilt": 22,
+    "WorkersLost": 1,
+    "Won": false,
+    "EnemyRace": "Terran",
+    "MapPlayed": "(2)Benzene.scx"
+},{
+    "Strategy": "Protoss_Drop",
+    "UnitsLost": 1,
+    "ShuttleHealth": 0,
+    "BeforeSneak": 251.25,
+    "TravelTime": 76.25,
+    "TimeSpotted": 320.0,
+    "EnemyNearBase": 0.0,
+    "WorkersBuilt": 20,
+    "WorkersLost": 1,
+    "Won": false,
+    "EnemyRace": "Terran",
+    "MapPlayed": "(2)Benzene.scx"
+}]

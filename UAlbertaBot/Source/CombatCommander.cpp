@@ -77,6 +77,7 @@ void CombatCommander::update(const BWAPI::Unitset & combatUnits)
     if (Config::Strategy::StrategyName == "Protoss_Drop" || Config::Strategy::StrategyName == "Protoss_DirectDrop") {
         monitorDrop();
         transferDropUnits();
+        handleDropAgression();
     }
     
 
@@ -90,6 +91,13 @@ void CombatCommander::update(const BWAPI::Unitset & combatUnits)
     }
 
     m_squadData.update();
+}
+void CombatCommander::handleDropAgression() {
+    if (m_dropCompleted) {
+        Squad dropSquad = m_squadData.getSquad("Drop");
+        SquadOrder dropOrder(SquadOrderTypes::Attack, getMainAttackLocation(), 800, "Attack Enemy Base");
+        dropSquad.setSquadOrder(dropOrder);
+    }
 }
 void CombatCommander::transferDropUnits() {
     if (m_transferDropUnits && m_squadData.squadExists("Drop")) {
