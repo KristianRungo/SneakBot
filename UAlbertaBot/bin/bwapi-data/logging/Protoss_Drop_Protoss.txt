@@ -1,0 +1,27 @@
+[{
+    "Strategy": "Protoss_Drop",
+    "UnitsLost": 4,
+    "ShuttleHealth": 0,
+    "BeforeSneak": 288.75,
+    "TravelTime": 38.75,
+    "TimeSpotted": 322.5,
+    "EnemyNearBase": 0.0,
+    "WorkersBuilt": 38,
+    "WorkersLost": 23,
+    "Won": true,
+    "EnemyRace": "Protoss",
+    "MapPlayed": "(4)Python.scx"
+},{
+    "Strategy": "Protoss_Drop",
+    "UnitsLost": 0,
+    "ShuttleHealth": 0,
+    "BeforeSneak": 0.0,
+    "TravelTime": 0.0,
+    "TimeSpotted": 0.0,
+    "EnemyNearBase": 0.0,
+    "WorkersBuilt": 11,
+    "WorkersLost": 0,
+    "Won": false,
+    "EnemyRace": "Protoss",
+    "MapPlayed": "(4)Python.scx"
+}]

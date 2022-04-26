@@ -77,7 +77,8 @@ rapidjson::Document UAlbertaBot::SneakLogger::generateJsonObject(Game game)
 
 bool SneakLogger::appendToFile(rapidjson::Document doc)
 {
-		const std::string fileName = Config::Strategy::LoggingDir + Config::Strategy::StrategyName + ".txt";
+	
+		const std::string fileName = Config::Strategy::LoggingDir + Config::Strategy::StrategyName + "_" + m_game.m_enemyrace + ".txt";
 		FILE* fp = fopen(fileName.c_str(), "rb+");
 	try
 	{
