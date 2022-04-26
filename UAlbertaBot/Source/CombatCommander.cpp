@@ -178,9 +178,7 @@ void CombatCommander::updateAttackSquads()
     SquadOrder mainAttackOrder(SquadOrderTypes::Attack, getMainAttackLocation(), 800, "Attack Enemy Base");
     mainAttackSquad.setSquadOrder(mainAttackOrder);
 }
-void CombatCommander::updateDropDefenceSquad() {
 
-}
 
 void CombatCommander::transferDropDefenceUnits() {
     if (!m_squadData.squadExists("DropDefenders")) return;
@@ -190,7 +188,6 @@ void CombatCommander::transferDropDefenceUnits() {
     for (BWAPI::Unit unit : dropUnits) {
         m_squadData.getSquad("Drop").addUnit(unit);
     }
-    //m_squadData.removeSquad("DropDefenders");
 }
 
 void CombatCommander::updateDropSquads()

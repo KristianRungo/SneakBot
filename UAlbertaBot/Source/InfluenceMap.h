@@ -29,7 +29,6 @@ class InfluenceMap
     BWAPI::TilePosition              selectedAdjacentTile;
     BWAPI::Unitset                   m_enemyUnits;
     std::vector<BWAPI::TilePosition> findShortestPathInClosedQueue(std::vector<std::vector<std::tuple<BWAPI::TilePosition, BWAPI::TilePosition, float>>> closedQueue, BWAPI::TilePosition start, BWAPI::TilePosition end);
-    std::vector<BWAPI::TilePosition> findShortestPathInClosedQueue2(std::vector<std::vector<std::tuple<BWAPI::TilePosition, BWAPI::TilePosition, float>>> closedQueue, BWAPI::TilePosition start, BWAPI::TilePosition end);
     float distance(int x1, int x2, int y1, int y2);
     int getNumSurroundingTiles(std::vector<std::vector<std::tuple<BWAPI::TilePosition, BWAPI::TilePosition, float>>> closedQueue, BWAPI::TilePosition tile);
     float influence(float distance, float power);

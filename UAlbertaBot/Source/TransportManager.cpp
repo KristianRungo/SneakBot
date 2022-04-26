@@ -203,10 +203,6 @@ void TransportManager::loadTroops() {
         return;
     }
     if (isUnloading() || unload) return;
-    if (m_dropZealots.size() != 5) {
-        //std::cout << "ERROR";
-        int ii = 0;
-    }
     for(auto & unit:m_dropZealots)
     {
         if ((unit->getType() == BWAPI::UnitTypes::Protoss_Shuttle)) continue;

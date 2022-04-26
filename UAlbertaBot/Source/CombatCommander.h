@@ -22,7 +22,6 @@ class CombatCommander
     void updateAttackSquads();
     void updateDropSquads();
     void updateIdleSquad();
-    void updateDropDefenceSquad();
     void transferDropDefenceUnits();
     void initializeSquads();
     void monitorDrop();
