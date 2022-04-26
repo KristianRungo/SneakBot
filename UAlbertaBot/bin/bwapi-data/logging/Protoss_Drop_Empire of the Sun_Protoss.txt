@@ -1,1 +1,27 @@
-[]
+[{
+    "Strategy": "Protoss_Drop",
+    "UnitsLost": 0,
+    "ShuttleHealth": 106,
+    "BeforeSneak": 296.875,
+    "TravelTime": 59.375,
+    "TimeSpotted": 341.25,
+    "EnemyNearBase": 1415.0,
+    "WorkersBuilt": 36,
+    "WorkersLost": 57,
+    "Won": false,
+    "EnemyRace": "Protoss",
+    "MapPlayed": "(4)Empire of the Sun.scm"
+},{
+    "Strategy": "Protoss_Drop",
+    "UnitsLost": 0,
+    "ShuttleHealth": 140,
+    "BeforeSneak": 294.375,
+    "TravelTime": 43.75,
+    "TimeSpotted": 330.0,
+    "EnemyNearBase": 336.25,
+    "WorkersBuilt": 21,
+    "WorkersLost": 21,
+    "Won": false,
+    "EnemyRace": "Protoss",
+    "MapPlayed": "(4)Empire of the Sun.scm"
+}]
