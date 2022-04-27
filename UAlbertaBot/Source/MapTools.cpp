@@ -100,6 +100,8 @@ void MapTools::onFrame()
         }
     }
     if (m_frame == 0) {
+
+
         m_influenceMap.computeStartDepotInfluenceMap();
     }
     m_influenceMap.computeVisionMap();

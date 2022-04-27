@@ -1,1 +1,40 @@
-[]
+[{
+    "Strategy": "Protoss_DirectDrop",
+    "UnitsLost": 0,
+    "ShuttleHealth": 140,
+    "BeforeSneak": 292.5,
+    "TravelTime": 33.125,
+    "TimeSpotted": 316.875,
+    "EnemyNearBase": 352.5,
+    "WorkersBuilt": 23,
+    "WorkersLost": 23,
+    "Won": false,
+    "EnemyRace": "Protoss",
+    "MapPlayed": "(4)Andromeda.scx"
+},{
+    "Strategy": "Protoss_DirectDrop",
+    "UnitsLost": 0,
+    "ShuttleHealth": 104,
+    "BeforeSneak": 288.75,
+    "TravelTime": 48.125,
+    "TimeSpotted": 322.5,
+    "EnemyNearBase": 331.875,
+    "WorkersBuilt": 22,
+    "WorkersLost": 22,
+    "Won": false,
+    "EnemyRace": "Protoss",
+    "MapPlayed": "(4)Andromeda.scx"
+},{
+    "Strategy": "Protoss_DirectDrop",
+    "UnitsLost": 3,
+    "ShuttleHealth": 0,
+    "BeforeSneak": 290.625,
+    "TravelTime": 33.125,
+    "TimeSpotted": 315.625,
+    "EnemyNearBase": 453.125,
+    "WorkersBuilt": 29,
+    "WorkersLost": 7,
+    "Won": true,
+    "EnemyRace": "Protoss",
+    "MapPlayed": "(4)Andromeda.scx"
+}]

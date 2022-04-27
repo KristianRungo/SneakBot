@@ -230,7 +230,7 @@ void TransportManager::unloadAtPosition(BWAPI::Position position){
 
 void TransportManager::moveTransport()
 {
-    if (!m_transportShip || !m_transportShip->exists() || !(m_transportShip->getHitPoints() > 0) || (m_transportShip->getLoadedUnits().size() < 4))
+    if (!m_transportShip || !m_transportShip->exists() || !(m_transportShip->getHitPoints() > 0) || (m_transportShip->getLoadedUnits().size() < 4) ||  Global::Bases().getPlayerStartingBaseLocation(BWAPI::Broodwar->enemy()) == NULL)
     {
         return;
     }
@@ -269,7 +269,7 @@ void TransportManager::moveTransport()
 
 void TransportManager::moveTroops()
 {
-    if (!m_transportShip || !m_transportShip->exists() || !(m_transportShip->getHitPoints() > 0))
+    if (!m_transportShip || !m_transportShip->exists() || !(m_transportShip->getHitPoints() > 0) || Global::Bases().getPlayerStartingBaseLocation(BWAPI::Broodwar->enemy()) == NULL)
     {
         return;
     }
