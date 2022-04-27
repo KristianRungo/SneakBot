@@ -1,1 +1,66 @@
-[]
+[{
+    "Strategy": "Protoss_DirectDrop",
+    "UnitsLost": 0,
+    "ShuttleHealth": 140,
+    "BeforeSneak": 286.25,
+    "TravelTime": 33.125,
+    "TimeSpotted": 306.25,
+    "EnemyNearBase": 0.0,
+    "WorkersBuilt": 27,
+    "WorkersLost": 1,
+    "Won": true,
+    "EnemyRace": "Zerg",
+    "MapPlayed": "(4)Andromeda.scx"
+},{
+    "Strategy": "Protoss_DirectDrop",
+    "UnitsLost": 0,
+    "ShuttleHealth": 0,
+    "BeforeSneak": 0.0,
+    "TravelTime": 0.0,
+    "TimeSpotted": 0.0,
+    "EnemyNearBase": 144.375,
+    "WorkersBuilt": 37,
+    "WorkersLost": 8,
+    "Won": true,
+    "EnemyRace": "Zerg",
+    "MapPlayed": "(4)Andromeda.scx"
+},{
+    "Strategy": "Protoss_DirectDrop",
+    "UnitsLost": 0,
+    "ShuttleHealth": 84,
+    "BeforeSneak": 313.75,
+    "TravelTime": 35.625,
+    "TimeSpotted": 337.5,
+    "EnemyNearBase": 0.0,
+    "WorkersBuilt": 25,
+    "WorkersLost": 1,
+    "Won": true,
+    "EnemyRace": "Zerg",
+    "MapPlayed": "(4)Andromeda.scx"
+},{
+    "Strategy": "Protoss_DirectDrop",
+    "UnitsLost": 0,
+    "ShuttleHealth": 50,
+    "BeforeSneak": 291.875,
+    "TravelTime": 33.75,
+    "TimeSpotted": 317.5,
+    "EnemyNearBase": 0.0,
+    "WorkersBuilt": 46,
+    "WorkersLost": 1,
+    "Won": true,
+    "EnemyRace": "Zerg",
+    "MapPlayed": "(4)Andromeda.scx"
+},{
+    "Strategy": "Protoss_DirectDrop",
+    "UnitsLost": 0,
+    "ShuttleHealth": 0,
+    "BeforeSneak": 0.0,
+    "TravelTime": 0.0,
+    "TimeSpotted": 0.0,
+    "EnemyNearBase": 153.125,
+    "WorkersBuilt": 23,
+    "WorkersLost": 8,
+    "Won": true,
+    "EnemyRace": "Zerg",
+    "MapPlayed": "(4)Andromeda.scx"
+}]
