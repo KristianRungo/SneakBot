@@ -161,7 +161,7 @@ std::vector<BWAPI::TilePosition> InfluenceMap::getSneakyPath(BWAPI::TilePosition
 
             m_sneakyPath = findShortestPathInClosedQueue(closedQueue, start, end);
             std::reverse(m_sneakyPath.begin(), m_sneakyPath.end());
-            storeInfluenceAndSneakyPath();
+            //storeInfluenceAndSneakyPath();
             return m_sneakyPath;
 
         }
