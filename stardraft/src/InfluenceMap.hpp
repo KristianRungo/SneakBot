@@ -156,7 +156,6 @@ public:
         m_stack.reserve(128 * 128);
         compute(map, m_basesIn);
     }
-
     Grid2D<float> compute(const StarDraftMap& map, std::vector<Base> m_basesIn)
     {
         m_map = &map;

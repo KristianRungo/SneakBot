@@ -36,6 +36,7 @@ class InfluenceMap
     float variableRangeInfluence(float distance, int sightRange, float power);
     float weightedDist(BWAPI::TilePosition start, BWAPI::TilePosition end);
     float InfluenceMap::cVal(float prevC, int a, BWAPI::TilePosition tile);
+    void  storeInfluenceAndSneakyPath();
 
 public:
 

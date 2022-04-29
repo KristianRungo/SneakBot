@@ -18,15 +18,22 @@ class GameState_Map : public GameState
 
     int  m_tileSize         = 32;       // size of tiles (keep 32)
     bool m_drawGrid         = true;     // draw the grid lines
-    bool m_drawInfluenceTile = true;    // Draw the influence
-    bool m_drawInfluenceNumbers = true; // Draw the influenceNumbers
+    bool m_drawLoadedInfluence = true;    // Draw the influence
+    bool m_drawSneakPath = true; // Draw the influenceNumbers
     bool m_drawWalkTiles    = true;     // draw the walk tiles
     bool m_drawBuildTiles   = true;     // draw the build tiles
     bool m_drawField        = true;     // draw the distance map values?
     bool m_drawDistance     = true;     // draw the distance map (t) directions (f)
     bool m_leftMouseDown    = false;    // is the left mouse button down
+    bool m_filesLoaded = false;
+    bool m_draw = false;
     int m_pgx               = -1;       // previous goal x
     int m_pgy               = -1;       // previous goal y
+    Grid2D<float>       m_loadedVision;
+    Grid2D<float>       m_loadedCommonPath;
+    Grid2D<float>       m_loadedGround;
+    Grid2D<float>       m_loadedAir;
+    std::vector<std::tuple<float,float>>       m_loadedSneak;
 
     sf::VertexArray     m_buildTileArray;
     sf::VertexArray     m_walkTileArray;
@@ -52,6 +59,9 @@ class GameState_Map : public GameState
     void setMapVertexArray();
     void sUserInput();  
     void sRender();
+    void loadInfluenceAndSneakFromFiles();
+
+    Grid2D<float> loadFile(std::fstream& file);
     
 public:
 

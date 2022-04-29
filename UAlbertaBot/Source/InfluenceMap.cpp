@@ -13,6 +13,7 @@
 #include <queue>
 #include <vector>
 #include <iostream>
+#include <fstream>  
 #include <algorithm> 
 
 
@@ -160,6 +161,7 @@ std::vector<BWAPI::TilePosition> InfluenceMap::getSneakyPath(BWAPI::TilePosition
 
             m_sneakyPath = findShortestPathInClosedQueue(closedQueue, start, end);
             std::reverse(m_sneakyPath.begin(), m_sneakyPath.end());
+            storeInfluenceAndSneakyPath();
             return m_sneakyPath;
 
         }
@@ -345,7 +347,7 @@ void InfluenceMap::computeCommonPath(BWAPI::TilePosition start, BWAPI::TilePosit
         }
     }
 }
-void InfluenceMap::computeStartDepotInfluenceMap()
+void InfluenceMap::computeStartDepotInfluenceMap() //DEPRICATED!
 {
     PROFILE_FUNCTION();
     const BaseLocation* baseLocation = Global::Bases().getPlayerStartingBaseLocation(BWAPI::Broodwar->self());
@@ -613,4 +615,69 @@ void InfluenceMap::draw() const
 }
 bool InfluenceMap::inVision(const BWAPI::TilePosition& pos) const {
     return (m_visionMap.get(pos.x,pos.y) > 0) ? true : false;
+}
+void InfluenceMap::storeInfluenceAndSneakyPath() {
+
+    //Save shortest path
+    std::ofstream foutSneaky("shortestPath.txt");
+    if (!foutSneaky.is_open()) return;
+    
+
+    for (int i = 0; i < m_sneakyPath.size(); i++) {
+        foutSneaky << m_sneakyPath[i] << "\n";
+    }
+    foutSneaky.close();
+
+    //Save commonpathinfluencemap
+    std::ofstream foutCommon("commonPath.txt");
+    if (!foutCommon.is_open()) return;
+
+    for (int x = 0; x < m_width; x++) {
+        for (int y = 0; y < m_height; y++) {
+            if (y != m_height - 1)  foutCommon << m_influence.get(x, y) << ",";
+            else foutCommon << m_influence.get(x, y) << "";
+        }
+        foutCommon << "\n";
+    }
+    foutCommon.close();
+
+    //Save vision map
+    std::ofstream foutVision("visionMap.txt");
+    if (!foutVision.is_open()) return;
+
+    for (int x = 0; x < m_width; x++) {
+        for (int y = 0; y < m_height; y++) {
+            if (y != m_height - 1)  foutVision << m_visionMap.get(x, y) << ",";
+            else foutVision << m_visionMap.get(x, y) << "";;
+        }
+        foutVision << "\n";
+    }
+    foutVision.close();
+
+    //Save groundDamage map
+    std::ofstream foutGround("groundMap.txt");
+    if (!foutGround.is_open()) return;
+
+    for (int x = 0; x < m_width; x++) {
+        for (int y = 0; y < m_height; y++) {
+            if (y != m_height - 1)  foutGround << m_groundDamageMap.get(x, y) << ",";
+            else foutGround << m_groundDamageMap.get(x, y) << "";;
+        }
+        foutGround << "\n";
+    }
+    foutGround.close();
+
+    //Save airDamage map
+    std::ofstream foutAir("airMap.txt");
+    if (!foutAir.is_open()) return;
+
+    for (int x = 0; x < m_width; x++) {
+        for (int y = 0; y < m_height; y++) {
+            if (y != m_height - 1)  foutAir << m_airDamageMap.get(x, y) << ",";
+            else foutAir << m_airDamageMap.get(x, y) << "";;
+        }
+        foutAir << "\n";
+    }
+    foutAir.close();
+
 }

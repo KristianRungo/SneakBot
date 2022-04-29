@@ -427,4 +427,17 @@
     "Won": true,
     "EnemyRace": "Terran",
     "MapPlayed": "(2)Benzene.scx"
+},{
+    "Strategy": "Protoss_ZealotRush",
+    "UnitsLost": 0,
+    "ShuttleHealth": 0,
+    "BeforeSneak": 0.0,
+    "TravelTime": 0.0,
+    "TimeSpotted": 0.0,
+    "EnemyNearBase": 0.0,
+    "WorkersBuilt": 16,
+    "WorkersLost": 0,
+    "Won": false,
+    "EnemyRace": "Terran",
+    "MapPlayed": "(2)Benzene.scx"
 }]
