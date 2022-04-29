@@ -3,7 +3,8 @@
 #include "WorldView.hpp"
 #include "StarDraftMap.hpp"
 #include "InfluenceMap.hpp"
-
+#include <functional>
+#include <tuple>
 #include <fstream>
 #include <iostream>
 #include <sstream>
@@ -33,6 +34,8 @@ GameState_Map::GameState_Map(GameEngine& game, const std::string & mapFile)
     m_bases = m_baseFinder.getBases();
 
     m_influence = m_influenceMap.compute(m_map, m_bases);
+    loadInfluenceAndSneakFromFiles();
+
 }
 
 void GameState_Map::init()
@@ -69,8 +72,8 @@ void GameState_Map::sUserInput()
                     m_game.popState();
                     break;
                 }
-                case sf::Keyboard::K: m_drawInfluenceNumbers = !m_drawInfluenceNumbers; break;
-                case sf::Keyboard::N: m_drawInfluenceTile = !m_drawInfluenceTile; break;
+                case sf::Keyboard::K: m_drawSneakPath = !m_drawSneakPath; break;
+                case sf::Keyboard::N: m_drawLoadedInfluence = !m_drawLoadedInfluence; break;
                 case sf::Keyboard::E: break;
                 case sf::Keyboard::W: m_view.zoom(0.8); break;
                 case sf::Keyboard::A: break;
@@ -365,22 +368,28 @@ void GameState_Map::sRender()
         {
             for (size_t y=0; y < m_map.height(); y++)
             {
-                if (m_drawInfluenceTile && (m_influence.get(x, y) > 0)) {
-
+                if (m_drawLoadedInfluence && m_filesLoaded) {
                     
-                    float influence = m_influence.get(x, y);
-                    if (influence > 1.1) tile.setFillColor(sf::Color((155), 0, 0));
-                    else tile.setFillColor(sf::Color((255),255 - (255 * influence), 255 - (255 * influence)));
+                    if (m_loadedAir.get(x, y) > 0) {
+                        float influence = m_loadedAir.get(x, y);
+                        tile.setFillColor(sf::Color(255 - (255 * influence), 255 - (255 * influence), 255));
+                    }
+                    else if (m_loadedGround.get(x, y) > 0) {
+                        float influence = m_loadedGround.get(x, y);
+                        tile.setFillColor(sf::Color(255 - (255 * influence), 255, 255 - (255 * influence)));
+                    }
+                    else if (m_loadedVision.get(x, y) > 0) {
+                        float influence = m_loadedVision.get(x, y);
+                        tile.setFillColor(sf::Color(255, 255 - (255 * influence), 255 - (255 * influence)));
+                    }
+                    else if (m_loadedCommonPath.get(x, y) > 0) {
+                        float influence = m_loadedCommonPath.get(x, y);
+                        tile.setFillColor(sf::Color(255, 128 + (127 * (1 - influence)), 255 - (255 * influence)));
+                    }
+                    else continue;
                     tile.setPosition((float)x * m_tileSize, (float)y * m_tileSize);
                     m_game.window().draw(tile);
-                    
                 } 
-                if (m_drawInfluenceNumbers && (m_influence.get(x, y) > 0)) {
-                    float influence = rounds(m_influence.get(x, y));
-                    m_text.setString(std::to_string(influence));
-                    m_text.setPosition({ (float)x * m_tileSize + 3, (float)y * m_tileSize + 8 });
-                    m_game.window().draw(m_text);
-                }
 
                 if (m_drawDistance)
                 {
@@ -406,6 +415,13 @@ void GameState_Map::sRender()
                         drawLine(cx, cy, dx, dy, sf::Color(0, 0, 0));
                     }
                 }*/
+            }
+        }
+        if (m_drawSneakPath && m_filesLoaded) {
+            for (std::tuple<float, float> sneakTile : m_loadedSneak) {
+                tile.setFillColor(sf::Color(138, 43, 226));
+                tile.setPosition((float)std::get<0>(sneakTile)* m_tileSize, (float)std::get<1>(sneakTile)* m_tileSize);
+                m_game.window().draw(tile);
             }
         }
     }
@@ -440,4 +456,68 @@ void GameState_Map::sRender()
     m_game.window().draw(m_text);
     // call the screen to display(), which swaps the buffers
     m_game.window().display();
+}
+void GameState_Map::loadInfluenceAndSneakFromFiles() {
+    std::fstream commonFile;
+    std::fstream visionFile;
+    std::fstream groundFile;
+    std::fstream airFile;
+    std::fstream sneakFile;
+    commonFile.open("commonPath.txt", std::ios::in);
+    m_loadedCommonPath = loadFile(commonFile);
+    // Read common path file
+    visionFile.open("visionMap.txt", std::ios::in);
+    m_loadedVision = loadFile(visionFile);
+    // Read vision map file
+    groundFile.open("groundMap.txt", std::ios::in);
+    m_loadedGround = loadFile(groundFile);
+    // Read common path file
+    airFile.open("airMap.txt", std::ios::in);
+    m_loadedAir = loadFile(airFile);
+    // Read common path file
+    sneakFile.open("shortestPath.txt", std::ios::in); 
+    // Read common path file
+
+    if (sneakFile.is_open()) { //checking whether the file is open
+        std::string tp;
+
+        while (std::getline(sneakFile, tp)) { //read data from file object and put it into string
+            int commaIndex = tp.find(",");
+            int tplen = tp.length()-1;
+            const float y = std::stof(tp.substr(tp.find(",") + 1, tp.length()));
+            const float x = std::stof(tp.substr(0, tp.find(",")));
+            m_loadedSneak.push_back(std::make_tuple(x, y));
+            
+        }
+        sneakFile.close(); //close the file object.
+    }
+    m_filesLoaded = true;
+
+}
+
+Grid2D<float> GameState_Map::loadFile(std::fstream& file)
+{
+    Grid2D<float> map = Grid2D<float>(m_map.width(), m_map.height(), 1);
+
+    if (file.is_open()) { //checking whether the file is open
+        std::string tp;
+        int y = 0;
+        while (std::getline(file, tp)) { //read data from file object and put it into string
+            int x = 0;
+            std::vector<char> charVector;
+            for (int i = 0; i < tp.length(); i++) charVector.push_back(tp[i]);
+            char* arr = &charVector[0];
+            char* ptr = strtok(arr, ",");
+            while (ptr != NULL)
+            {
+                std::string idk = ptr;
+                map.set(y, x, std::stof(idk));
+                ptr = strtok(NULL, " , ");
+                x = x + 1;
+            }
+            y = y + 1;
+        }
+        file.close(); //close the file object.
+    }
+    return map;
 }
