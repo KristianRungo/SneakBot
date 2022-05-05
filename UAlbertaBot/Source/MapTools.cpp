@@ -102,7 +102,7 @@ void MapTools::onFrame()
     if (m_frame == 0) {
 
 
-        m_influenceMap.computeStartDepotInfluenceMap();
+        m_influenceMap.init();
     }
     m_influenceMap.computeVisionMap();
     m_influenceMap.computeAirDamageMap();
@@ -548,13 +548,14 @@ void MapTools::setTransporterPosition(BWAPI::TilePosition pos) {
     m_transporterPosition = pos;
 }
 std::vector<BWAPI::TilePosition> MapTools::getSneakyPath(BWAPI::TilePosition start, BWAPI::TilePosition end) {
+    std::cout << "started pathfinding";
     return m_influenceMap.getSneakyPath2(start, end);
 }
 int MapTools::getMapFrame(){
     return m_frame;
 }
 void MapTools::updateCommonPath(BWAPI::TilePosition start, BWAPI::TilePosition end) {
-    m_influenceMap.computeCommonPath(start, end);
+    m_influenceMap.computeCommonPath(end);
 }
 bool MapTools::inVision(BWAPI::TilePosition pos) {
     return m_influenceMap.inVision(pos);

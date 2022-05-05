@@ -34,7 +34,7 @@ GameState_Map::GameState_Map(GameEngine& game, const std::string & mapFile)
     m_bases = m_baseFinder.getBases();
 
     m_influence = m_influenceMap.compute(m_map, m_bases);
-    loadInfluenceAndSneakFromFiles();
+    //loadInfluenceAndSneakFromFiles();
 
 }
 

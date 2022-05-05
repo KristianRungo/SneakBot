@@ -11,11 +11,13 @@ class InfluenceMap
 {
     int                              m_width = 0;
     int                              m_height = 0;
-    int                              m_viewDistance = 12;
+    int                              m_viewDistance = 8;
     int                              m_minDist = 8;
+    float                            m_w = 5;
+    float                            m_damageModifyer = 2;
     bool                             m_goStraight = false;
-    float                            m_maxInfluence = 1.0;
-    bool                             m_drawCommonPath = false;
+    float                            m_maxInfluence = 2.0;
+    bool                             m_drawCommonPath = true;
     DistanceMap                      m_distanceMap;
     Grid<int>                        m_dist;
     Grid<float>                      m_influence;
@@ -29,26 +31,25 @@ class InfluenceMap
     BWAPI::TilePosition              selectedAdjacentTile;
     BWAPI::Unitset                   m_enemyUnits;
     std::vector<BWAPI::TilePosition> findShortestPathInClosedQueue(std::vector<std::vector<std::tuple<BWAPI::TilePosition, BWAPI::TilePosition, float>>> closedQueue, BWAPI::TilePosition start, BWAPI::TilePosition end);
+    std::vector<BWAPI::TilePosition> generateShortestPath(std::vector<std::vector<std::tuple<bool, BWAPI::TilePosition, float>>> closedQueue, BWAPI::TilePosition start, BWAPI::TilePosition end);
     float distance(int x1, int x2, int y1, int y2);
     int getNumSurroundingTiles(std::vector<std::vector<std::tuple<BWAPI::TilePosition, BWAPI::TilePosition, float>>> closedQueue, BWAPI::TilePosition tile);
     float influence(float distance, float power);
     float calcInfluence(int x, int y);
     float variableRangeInfluence(float distance, int sightRange, float power);
     float weightedDist(BWAPI::TilePosition start, BWAPI::TilePosition end);
-    float weightedDist2(BWAPI::TilePosition start, BWAPI::TilePosition end);
     float cVal(float prevC, int a, BWAPI::TilePosition tile);
     void  storeInfluenceAndSneakyPath();
-    float getParentH(BWAPI::TilePosition pos, std::vector<std::vector<std::tuple<BWAPI::TilePosition, BWAPI::TilePosition, float>>> closedQueue, BWAPI::TilePosition end);
     BWAPI::TilePosition findNextAdjacentTile(BWAPI::TilePosition currentTile, int a);
-    float cVal2(float prevC, int a, BWAPI::TilePosition tile);
-
+    float C(std::vector<std::vector<std::tuple<bool, BWAPI::TilePosition, float>>> closedQueue, BWAPI::TilePosition currentTile, BWAPI::TilePosition nextTile);
+    float H(BWAPI::TilePosition start, BWAPI::TilePosition end);
 public:
 
     InfluenceMap();
 
     Grid<float>                      m_visionMap;
-    void computeStartDepotInfluenceMap();
-    void computeCommonPath(BWAPI::TilePosition start, BWAPI::TilePosition end);
+    void init();
+    void computeCommonPath(BWAPI::TilePosition end);
     void computeVisionMap();
     void computeAirDamageMap();
     void computeGroundDamageMap();
