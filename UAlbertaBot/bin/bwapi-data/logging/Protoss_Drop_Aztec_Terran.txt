@@ -427,4 +427,17 @@
     "Won": true,
     "EnemyRace": "Terran",
     "MapPlayed": "(3)Aztec.scx"
+},{
+    "Strategy": "Protoss_Drop",
+    "UnitsLost": 0,
+    "ShuttleHealth": 132,
+    "BeforeSneak": 271.25,
+    "TravelTime": 52.5,
+    "TimeSpotted": 314.375,
+    "EnemyNearBase": 394.375,
+    "WorkersBuilt": 22,
+    "WorkersLost": 1,
+    "Won": false,
+    "EnemyRace": "Terran",
+    "MapPlayed": "(3)Aztec.scx"
 }]

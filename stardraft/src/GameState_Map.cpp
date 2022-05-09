@@ -34,7 +34,7 @@ GameState_Map::GameState_Map(GameEngine& game, const std::string & mapFile)
     m_bases = m_baseFinder.getBases();
 
     m_influence = m_influenceMap.compute(m_map, m_bases);
-    //loadInfluenceAndSneakFromFiles();
+    loadInfluenceAndSneakFromFiles();
 
 }
 
@@ -509,7 +509,7 @@ Grid2D<float> GameState_Map::loadFile(std::fstream& file)
             char* arr = &charVector[0];
             char* ptr = strtok(arr, ",");
             while (ptr != NULL)
-            {
+            {   
                 std::string idk = ptr;
                 map.set(y, x, std::stof(idk));
                 ptr = strtok(NULL, " , ");

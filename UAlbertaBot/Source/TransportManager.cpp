@@ -237,8 +237,8 @@ void TransportManager::moveTransport()
 
     // If I didn't finish unloading the troops, wait
     if (isUnloading() || unload) return;
-
-    if (sneak && Global::Map().getMapFrame() % 1000 == 0) {
+    /*
+    if (sneak && Global::Map().getMapFrame() % 1000 == 0 && Global::Map().getMapFrame() > m_frameOnSneak + 500) {
         const auto enemyBaseLocation = Global::Bases().getPlayerStartingBaseLocation(BWAPI::Broodwar->enemy());
         m_sneakPath = Global::Map().getSneakyPath(BWAPI::TilePosition(m_transportShip->getPosition()), enemyBaseLocation->getDepotPosition());
         m_indexInSneak = 0;
@@ -250,12 +250,15 @@ void TransportManager::moveTransport()
         m_indexInSneak = 0;
         inVision = true;
     }
+    /**/
     else if (!sneak && sneakInConfig) {
         sneak = true * sneakInConfig;
         const auto enemyBaseLocation = Global::Bases().getPlayerStartingBaseLocation(BWAPI::Broodwar->enemy());
         const auto ourBaseLocation = Global::Bases().getPlayerStartingBaseLocation(BWAPI::Broodwar->self());
         Global::Map().updateCommonPath(ourBaseLocation->getDepotPosition(), enemyBaseLocation->getDepotPosition());
         m_sneakPath = Global::Map().getSneakyPath(BWAPI::TilePosition(m_transportShip->getPosition()), enemyBaseLocation->getDepotPosition());
+        m_frameOnSneak = Global::Map().getMapFrame();
+        
         
     }
     else if (!sneakInConfig) {

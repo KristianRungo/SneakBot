@@ -548,8 +548,9 @@ void MapTools::setTransporterPosition(BWAPI::TilePosition pos) {
     m_transporterPosition = pos;
 }
 std::vector<BWAPI::TilePosition> MapTools::getSneakyPath(BWAPI::TilePosition start, BWAPI::TilePosition end) {
-    std::cout << "started pathfinding";
-    return m_influenceMap.getSneakyPath2(start, end);
+
+    return m_influenceMap.getSneakyPath(start, end);
+
 }
 int MapTools::getMapFrame(){
     return m_frame;

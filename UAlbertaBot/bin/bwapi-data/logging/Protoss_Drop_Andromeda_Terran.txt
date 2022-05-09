@@ -427,4 +427,30 @@
     "Won": false,
     "EnemyRace": "Terran",
     "MapPlayed": "(4)Andromeda.scx"
+},{
+    "Strategy": "Protoss_Drop",
+    "UnitsLost": 0,
+    "ShuttleHealth": 57,
+    "BeforeSneak": 290.625,
+    "TravelTime": 68.75,
+    "TimeSpotted": 92.5,
+    "EnemyNearBase": 0.0,
+    "WorkersBuilt": 24,
+    "WorkersLost": 22,
+    "Won": true,
+    "EnemyRace": "Terran",
+    "MapPlayed": "(4)Andromeda.scx"
+},{
+    "Strategy": "Protoss_Drop",
+    "UnitsLost": 4,
+    "ShuttleHealth": 0,
+    "BeforeSneak": 293.125,
+    "TravelTime": 50.0,
+    "TimeSpotted": 93.75,
+    "EnemyNearBase": 382.5,
+    "WorkersBuilt": 23,
+    "WorkersLost": 3,
+    "Won": false,
+    "EnemyRace": "Terran",
+    "MapPlayed": "(4)Andromeda.scx"
 }]

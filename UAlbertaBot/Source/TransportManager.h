@@ -15,7 +15,8 @@ class TransportManager : public MicroManager
     bool                            sneakInConfig                = false;
     bool                            inVision                     = false;
     int                             m_indexInSneak = 0;
-    int                             m_dropRange = 300;
+    int                             m_dropRange = 150;
+    float                           m_frameOnSneak = 0;
     std::vector<BWAPI::TilePosition> m_sneakPath;
     float                           transportShipTopSpeed        = 4.43;
     float                           percentageCutOff             = 0.3;
