@@ -20,7 +20,7 @@ class InfluenceMap
     bool                             m_drawCommonPath = true;
     DistanceMap                      m_distanceMap;
     Grid<int>                        m_dist;
-    Grid<float>                      m_influence;
+    Grid<float>                      m_commonpath;
     Grid<float>                      m_influenced;
     Grid<float>                      m_airDamageMap;
     Grid<float>                      m_groundDamageMap;

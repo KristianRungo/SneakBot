@@ -33,7 +33,7 @@ float InfluenceMap::getCommonInfluence(int tileX, int tileY) const
 {
     UAB_ASSERT(tileX < m_width&& tileY < m_height, "Index out of range: X = %d, Y = %d", tileX, tileY);
 
-    return m_influence.get(tileX, tileY);
+    return m_commonpath.get(tileX, tileY);
 }
 
 float UAlbertaBot::InfluenceMap::getVisionInfluence(int tileX, int tileY)
@@ -53,7 +53,7 @@ float InfluenceMap::getCommonInfluence(const BWAPI::Position& pos) const
 float InfluenceMap::getVisionAndInfluence(const BWAPI::TilePosition& pos) const {
     int x = pos.x;
     int y = pos.y;
-    return m_influence.get(x, y) + m_visionMap.get(x, y);
+    return m_commonpath.get(x, y) + m_visionMap.get(x, y);
 }
 
 void drawClosedQueue(std::vector<std::vector<std::tuple<BWAPI::TilePosition, BWAPI::TilePosition, float>>> closedQueue, BWAPI::TilePosition start, BWAPI::TilePosition end, BWAPI::TilePosition pos) {
@@ -394,13 +394,13 @@ float InfluenceMap::H(BWAPI::TilePosition start, BWAPI::TilePosition end) {
     const float h_diagonal = std::min(std::abs(start.x - end.x), std::abs(start.y - end.y));
     const float h_straight = std::abs(start.x - end.x) + std::abs(start.y - end.y);
     const float w_dist = (1 * h_straight + (std::sqrt(2) - 2 * 1) * h_diagonal);
-    if (w_dist > m_minDist) return w_dist * m_w + w_dist * m_influence.get(start.x, start.y);
+    if (w_dist > m_minDist) return w_dist * m_w + w_dist * m_commonpath.get(start.x, start.y);
     return w_dist;
 }
 float InfluenceMap::getInfluence(BWAPI::TilePosition pos) { //Returns highest value of all influence maps
     int x = pos.x;
     int y = pos.y;
-    float common = m_influence.get(x, y);
+    float common = m_commonpath.get(x, y);
     float vision = m_visionMap.get(x, y);
     float ground = m_groundDamageMap.get(x, y) * m_damageModifyer;
     float    air = m_airDamageMap.get(x, y) * m_damageModifyer;
@@ -415,7 +415,7 @@ float InfluenceMap::influence(float distance, float power) {
 }                  
 
 float InfluenceMap::calcInfluence(int x, int y) {
-    if (m_influence.get(x, y) == m_maxInfluence) return 0.0;
+    if (m_commonpath.get(x, y) == m_maxInfluence) return 0.0;
     const int minXi = std::max(x - m_viewDistance, 0);
     const int maxXi = std::min(x + m_viewDistance, m_width - 1);
     const int minYi = std::max(y - m_viewDistance, 0);
@@ -425,7 +425,7 @@ float InfluenceMap::calcInfluence(int x, int y) {
     for (int xi = minXi; xi < maxXi; xi++) {
         for (int yi = minYi; yi < maxYi; yi++) {
             if (x == xi && y == yi) continue;
-            else if (m_influence.get(xi, yi) == m_maxInfluence) {
+            else if (m_commonpath.get(xi, yi) == m_maxInfluence) {
                 const float dist = distance(x, xi, y, yi);
                 if (dist <= m_viewDistance) {
                     lowestDist = std::min(dist, lowestDist);
@@ -442,14 +442,16 @@ float InfluenceMap::calcInfluence(int x, int y) {
 void InfluenceMap::computeCommonPath(BWAPI::TilePosition end) {
     PROFILE_FUNCTION();
     BWAPI::TilePosition start = m_depotPosition;
-    m_influence = Grid<float>(m_width, m_height, 0);
-    m_influenced = Grid<float>(m_width, m_height, 0);
+
+    m_commonpath = Grid<float>(m_width, m_height, 0);
+    int dist = 10000;
 
     BWAPI::Position pos = BWAPI::Position(end.x, end.y);
-  
+    const int sightRange = 8;
+
     while (pos.x != start.x || pos.y != start.y) // While you have not reached your own base
     {
-        m_influence.set(pos.x, pos.y, m_maxInfluence);
+        //m_influence.set(pos.x, pos.y, m_maxInfluence);
 
         const int currentDistance = m_dist.get(pos.x, pos.y);
         int tempDistance = m_dist.get(pos.x, pos.y);
@@ -467,22 +469,27 @@ void InfluenceMap::computeCommonPath(BWAPI::TilePosition end) {
                 aa = a;   //If this tile is the best, remember its modifyers
             }
         }
-        pos = BWAPI::Position(pos.x + actionX[aa], pos.y + actionY[aa]); //Ready next iteration by moving to next tile
 
-    }
+        // Insert influence into grid
 
-    for (int x = 0; x < m_width; x++) {
-        for (int y = 0; y < m_height; y++) {
-            const float influence = calcInfluence(x, y);
-            if (influence > 0.0) {
-                m_influenced.set(x, y, influence);
+        m_commonpath.set(pos.x, pos.y, m_maxInfluence);
+
+        const int minXi = std::max(pos.x - sightRange, 0);
+        const int maxXi = std::min(pos.x + sightRange, m_width - 1);
+        const int minYi = std::max(pos.y - sightRange, 0);
+        const int maxYi = std::min(pos.y + sightRange, m_height - 1);
+
+        for (int xi = minXi; xi < maxXi; xi++) {
+            for (int yi = minYi; yi < maxYi; yi++) {
+                dist = distance(pos.x, xi, pos.y, yi);
+                if (dist <= sightRange) {
+                    m_commonpath.set(xi, yi, std::max(variableRangeInfluence(dist, sightRange, 0.9), m_commonpath.get(xi, yi)));
+                }
             }
         }
-    }
-    for (int x = 0; x < m_width; x++) {
-        for (int y = 0; y < m_height; y++) {
-            m_influence.set(x, y, std::max(m_influence.get(x, y), m_influenced.get(x, y)));
-        }
+
+        pos = BWAPI::Position(pos.x + actionX[aa], pos.y + actionY[aa]); //Ready next iteration by moving to next tile
+
     }
 }
 void InfluenceMap::init() 
@@ -495,7 +502,7 @@ void InfluenceMap::init()
     m_dist = m_distanceMap.getDistanceMap();
     m_width = BWAPI::Broodwar->mapWidth();
     m_height = BWAPI::Broodwar->mapHeight();
-    m_influence = Grid<float>(m_width, m_height, 0);
+    m_commonpath = Grid<float>(m_width, m_height, 0);
     m_influenced = Grid<float>(m_width, m_height, 0);
     m_visionMap = Grid<float>(m_width, m_height, 0);
     m_airDamageMap = Grid<float>(m_width, m_height, 0);
@@ -664,18 +671,18 @@ void InfluenceMap::draw() const
 {
     for (int x = 0; x < m_width; x++) {
         for (int y = 0; y < m_height; y++) {
-            if (m_influence.get(x, y) > 0 && m_drawCommonPath) { // TODO: Set back to 0
+            if (m_commonpath.get(x, y) > 0 && m_drawCommonPath) { // TODO: Set back to 0
                 Global::Map().drawTile(x, y, BWAPI::Color(
                     255,
-                    255 - (255 * (m_influence.get(x, y) / m_maxInfluence)),
-                    255 - (255 * (m_influence.get(x, y) / m_maxInfluence))));
+                    255 - (255 * (m_commonpath.get(x, y) / m_maxInfluence)),
+                    255 - (255 * (m_commonpath.get(x, y) / m_maxInfluence))));
             }
             if (m_visionMap.get(x, y) > 5) { // TODO: Set back to 0
-                /*Global::Map().drawTile(x, y, BWAPI::Color(
+                Global::Map().drawTile(x, y, BWAPI::Color(
                     255 - (255 * (m_visionMap.get(x, y) / m_maxInfluence)),
                     255 - (255 * (m_visionMap.get(x, y) / m_maxInfluence)),
                     255));
-                    */
+                    
 
 
                 Global::Map().drawTile(x, y, BWAPI::Color(
@@ -727,8 +734,8 @@ void InfluenceMap::storeInfluenceAndSneakyPath() {
 
     for (int x = 0; x < m_width; x++) {
         for (int y = 0; y < m_height; y++) {
-            if (y != m_height - 1)  foutCommon << m_influence.get(x, y) << ",";
-            else foutCommon << m_influence.get(x, y) << "";
+            if (y != m_height - 1)  foutCommon << m_commonpath.get(x, y) << ",";
+            else foutCommon << m_commonpath.get(x, y) << "";
         }
         foutCommon << "\n";
     }
