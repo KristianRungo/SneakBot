@@ -25,6 +25,7 @@ namespace UAlbertaBot
 		int			  m_workerslost;		// How many of our workers are alive after 
 		float		  m_enemynearbasetime;  // When did the enemy get close to our base
 		int			  m_dropUnitKills;
+		double		  m_distanceToEnemyBase;
 		std::string   m_enemyrace;			// Name of enemy race
 		std::string   m_map;				// Name of played map
 	
@@ -41,6 +42,7 @@ namespace UAlbertaBot
 		, m_workersbuilt(0)
 		, m_enemynearbasetime(0.0)
 		, m_dropUnitKills(0)
+		, m_distanceToEnemyBase(0.0)
 	{
 	}
 
@@ -65,7 +67,7 @@ namespace UAlbertaBot
 		void					onUnitCreate(BWAPI::Unit);
 		void					onUnitShow(BWAPI::Unit);
 		void					onUnitDestroy(BWAPI::Unit unit);
-		void					onFrame(bool, bool, int, BWAPI::Position, int,int);
+		void					onFrame(bool, bool, int, BWAPI::Position, int, int, double);
 		void					onEnd(bool);
 
 	};

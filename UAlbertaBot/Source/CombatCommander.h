@@ -46,6 +46,7 @@ public:
     bool                m_dropShipFull      = false;
     bool                m_dropSquadCreated  = false;
     bool                m_dropCompleted     = false;
+    double              m_distanceToDropLocation = 0;
     int                 m_dropUnitKills     = 0;
     int                 m_unitsLost         = 0;
     BWAPI::Position m_dropShipPosition = BWAPI::Position(0, 0);

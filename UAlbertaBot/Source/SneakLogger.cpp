@@ -43,6 +43,9 @@ rapidjson::Document UAlbertaBot::SneakLogger::generateJsonObject(Game game)
 	val.SetDouble(game.m_traveltime);
 	d.AddMember("TravelTime", val, allocator);
 
+	val.SetDouble(game.m_distanceToEnemyBase);
+	d.AddMember("DistanceToBase", val, allocator);
+
 	val.SetDouble(game.m_timespotted);
 	d.AddMember("TimeSpotted", val, allocator);
 
@@ -140,7 +143,7 @@ void UAlbertaBot::SneakLogger::onStart()
 	startingPosition = BWAPI::Position(BWAPI::Broodwar->self()->getStartLocation());
 }
 
-void UAlbertaBot::SneakLogger::onFrame(bool full, bool completed, int health, BWAPI::Position pos, int unitsLost, int unitsKilled)
+void UAlbertaBot::SneakLogger::onFrame(bool full, bool completed, int health, BWAPI::Position pos, int unitsLost, int unitsKilled, double distance)
 {
 	float time = (float)BWAPI::Broodwar->elapsedTime() * 0.625;
 
@@ -172,6 +175,8 @@ void UAlbertaBot::SneakLogger::onFrame(bool full, bool completed, int health, BW
 		}
 	}
 	m_game.m_dropUnitKills = unitsKilled;
+
+	m_game.m_distanceToEnemyBase = distance;
 	
 }
 
@@ -221,5 +226,6 @@ void UAlbertaBot::SneakLogger::onUnitDestroy(BWAPI::Unit unit) {
 		m_game.m_workerslost = m_game.m_workerslost + 1;
 	}
 }
+
 
 

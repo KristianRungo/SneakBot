@@ -145,6 +145,7 @@ void CombatCommander::monitorDrop() {
             if ((unit->getLoadedUnits().size() == 0 && m_dropShipFull && !m_dropCompleted)) {
                 m_dropCompleted = true;
                 m_dropShipHealth = (unit->getHitPoints() + unit->getShields());
+                m_distanceToDropLocation = std::max(unit->getTilePosition().getDistance(BWAPI::Broodwar->enemy()->getStartLocation()), m_distanceToDropLocation);
                 return;
             }
             m_dropShipPosition = unit->getPosition();
