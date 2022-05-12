@@ -55,6 +55,9 @@ rapidjson::Document UAlbertaBot::SneakLogger::generateJsonObject(Game game)
 	val.SetInt(game.m_workerslost);
 	d.AddMember("WorkersLost", val, allocator);
 
+	val.SetInt(game.m_dropUnitKills);
+	d.AddMember("unitsKilled", val, allocator);
+
 	val.SetBool(game.m_won);
 	d.AddMember("Won", val, allocator);
 
@@ -137,7 +140,7 @@ void UAlbertaBot::SneakLogger::onStart()
 	startingPosition = BWAPI::Position(BWAPI::Broodwar->self()->getStartLocation());
 }
 
-void UAlbertaBot::SneakLogger::onFrame(bool full, bool completed, int health, BWAPI::Position pos, int unitsLost)
+void UAlbertaBot::SneakLogger::onFrame(bool full, bool completed, int health, BWAPI::Position pos, int unitsLost, int unitsKilled)
 {
 	float time = (float)BWAPI::Broodwar->elapsedTime() * 0.625;
 
@@ -168,9 +171,8 @@ void UAlbertaBot::SneakLogger::onFrame(bool full, bool completed, int health, BW
 			}
 		}
 	}
+	m_game.m_dropUnitKills = unitsKilled;
 	
-
-
 }
 
 void UAlbertaBot::SneakLogger::onEnd(bool isWinner)

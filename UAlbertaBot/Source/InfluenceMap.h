@@ -45,6 +45,7 @@ class InfluenceMap
     std::vector<BWAPI::TilePosition> findShortestPathInClosedQueue(std::vector<std::vector<std::tuple<BWAPI::TilePosition, BWAPI::TilePosition, float>>> closedQueue, BWAPI::TilePosition start, BWAPI::TilePosition end);
     std::vector<BWAPI::TilePosition> findBestShortPath(std::vector<BWAPI::TilePosition> path1, std::vector<BWAPI::TilePosition> path2);
     std::vector<BWAPI::TilePosition> generateShortestPath(std::vector<std::vector<std::tuple<bool, BWAPI::TilePosition, float, bool>>> closedQueue, BWAPI::TilePosition start, BWAPI::TilePosition end);
+    BWAPI::TilePosition getBestTile(std::vector<std::vector<std::tuple<bool, BWAPI::TilePosition, float, bool>>> closedQueue, BWAPI::TilePosition tile);
     float distance(int x1, int x2, int y1, int y2);
     int getNumSurroundingTiles(std::vector<std::vector<std::tuple<BWAPI::TilePosition, BWAPI::TilePosition, float>>> closedQueue, BWAPI::TilePosition tile);
     float variableRangeInfluence(float distance, int sightRange, float power);

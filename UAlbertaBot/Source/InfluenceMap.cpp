@@ -83,9 +83,8 @@ int InfluenceMap::getNumSurroundingTiles(std::vector<std::vector<std::tuple<BWAP
     }
     return adjacentTiles;
 }
-
 std::vector<BWAPI::TilePosition>  InfluenceMap::findShortestPathInClosedQueue
-(std::vector<std::vector<std::tuple<BWAPI::TilePosition, BWAPI::TilePosition, float>>> closedQueue, BWAPI::TilePosition start, BWAPI::TilePosition end) { 
+(std::vector<std::vector<std::tuple<BWAPI::TilePosition, BWAPI::TilePosition, float>>> closedQueue, BWAPI::TilePosition start, BWAPI::TilePosition end) {
     std::vector<BWAPI::TilePosition> shortestTilePath;
     BWAPI::TilePosition currentTile = end;
     while (currentTile != start) {
@@ -126,21 +125,22 @@ std::vector<BWAPI::TilePosition>  InfluenceMap::findShortestPathInClosedQueue
             std::reverse(shortestPathInCluster.begin(), shortestPathInCluster.end());
             for (BWAPI::TilePosition tile : shortestPathInCluster) shortestTilePath.push_back(tile);
             currentTile = std::get<0>(closedQueue[clusterEndTile.x][clusterEndTile.y]);
-            if (currentTile == BWAPI::TilePositions::Unknown) continue; 
+            if (currentTile == BWAPI::TilePositions::Unknown) continue;
             shortestTilePath.push_back(currentTile);
 
         }
         else {
-            
+
             if (currentTile == BWAPI::TilePositions::Unknown) return shortestTilePath;
             currentTile = std::get<0>(closedQueue[currentTile.x][currentTile.y]);
             shortestTilePath.push_back(currentTile);
         }
     }
     return shortestTilePath;
-    
+
 
 }
+
 
 std::vector<BWAPI::TilePosition> InfluenceMap::getSneakyPathBad(BWAPI::TilePosition start, BWAPI::TilePosition end) { //This one works..Kinda, but man is it ugly... getSneakyPath2 is much easier to read and is better implemented
     std::cout << "Started pathfinding\n";
@@ -416,12 +416,28 @@ std::vector<BWAPI::TilePosition> InfluenceMap::getSneakyPath2(BWAPI::TilePositio
     std::cout << "Ended pathfinding";
     return { end }; //Open queue is empty, no viable path found, return only the endTile to B-line
 }
+BWAPI::TilePosition InfluenceMap::getBestTile(std::vector<std::vector<std::tuple<bool, BWAPI::TilePosition, float, bool>>> closedQueue, BWAPI::TilePosition tile) {
+    float bestC = std::numeric_limits<float>::max();
+    BWAPI::TilePosition bestTile;
+    for (size_t a = 0; a < LegalActions; ++a) {// for adjacentTiles find tile closest to goal
+        const int x = std::min(std::abs(tile.x + actionX[a]), m_width - 1);
+        const int y = std::min(std::abs(tile.y + actionY[a]), m_height - 1);
+        const BWAPI::TilePosition adjacentTile = BWAPI::TilePosition(x, y);
+        if (!getClosed(adjacentTile, closedQueue)) continue;
+        if (getC(adjacentTile, closedQueue) < bestC) {
+            bestTile = adjacentTile;
+            bestC = getC(adjacentTile, closedQueue);
+        }
+    }
+    return bestTile;
+}
 
 std::vector<BWAPI::TilePosition> InfluenceMap::generateShortestPath(std::vector<std::vector<std::tuple<bool, BWAPI::TilePosition, float, bool>>> closedQueue, BWAPI::TilePosition start, BWAPI::TilePosition end) {
     std::vector<BWAPI::TilePosition> shortestTilePath;
+    BWAPI::TilePosition tmp;
     shortestTilePath.push_back(end);
     while (shortestTilePath.back() != start) {
-        shortestTilePath.push_back(getParent(shortestTilePath.back(), closedQueue));
+            shortestTilePath.push_back(getBestTile( closedQueue, shortestTilePath.back()));
     }
     std::reverse(shortestTilePath.begin(), shortestTilePath.end());
     return shortestTilePath;
@@ -476,6 +492,9 @@ float InfluenceMap::distance(int x1, int x2, int y1, int y2) {
     return std::sqrt(std::pow((x2 - x1), 2) + std::pow((y2 - y1) * 1.0, 2));
 }
 
+
+
+
 void InfluenceMap::computeCommonPath(BWAPI::TilePosition end) {
     PROFILE_FUNCTION();
     BWAPI::TilePosition start = m_depotPosition;
@@ -529,52 +548,6 @@ void InfluenceMap::computeCommonPath(BWAPI::TilePosition end) {
 
     }
 }
-
-/*void InfluenceMap::computeCommonPath(BWAPI::TilePosition end) {
-    PROFILE_FUNCTION();
-    BWAPI::TilePosition start = m_depotPosition;
-    m_common = Grid<float>(m_width, m_height, 0);
-    m_influenced = Grid<float>(m_width, m_height, 0);
-
-    BWAPI::Position pos = BWAPI::Position(end.x, end.y);
-  
-    while (pos.x != start.x || pos.y != start.y) // While you have not reached your own base
-    {
-        m_common.set(pos.x, pos.y, m_maxInfluence);
-
-        const int currentDistance = m_dist.get(pos.x, pos.y);
-        int tempDistance = m_dist.get(pos.x, pos.y);
-
-        int aa = -1;
-
-        for (size_t a = 0; a < LegalActions; ++a) //Check all tiles surrounding current tile 
-        {
-            const BWAPI::Position nextTile = BWAPI::Position(pos.x + actionX[a], pos.y + actionY[a]);
-            if (m_dist.get(nextTile.x, nextTile.y) != -1) {
-                tempDistance = (std::min(m_dist.get(nextTile.x, nextTile.y), tempDistance));  //Store lowest distance 
-            }
-
-            if (tempDistance == m_dist.get(nextTile.x, nextTile.y)) {
-                aa = a;   //If this tile is the best, remember its modifyers
-            }
-        }
-        pos = BWAPI::Position(pos.x + actionX[aa], pos.y + actionY[aa]); //Ready next iteration by moving to next tile
-    }
-
-    for (int x = 0; x < m_width; x++) {
-        for (int y = 0; y < m_height; y++) {
-            const float influence = calcInfluence(x, y);
-            if (influence > 0.0) {
-                m_influenced.set(x, y, influence);
-            }
-        }
-    }
-    for (int x = 0; x < m_width; x++) {
-        for (int y = 0; y < m_height; y++) {
-            m_common.set(x, y, std::max(m_common.get(x, y), m_influenced.get(x, y)));
-        }
-    }
-}*/
 void InfluenceMap::init() 
 {
     PROFILE_FUNCTION();

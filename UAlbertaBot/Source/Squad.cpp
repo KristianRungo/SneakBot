@@ -463,3 +463,6 @@ const std::string & Squad::getName() const
 {
     return m_name;
 }
+BWAPI::Unitset Squad::getDropUnits() {
+    if (m_name == "Drop") return m_transportManager.getDropUnits(); 
+}

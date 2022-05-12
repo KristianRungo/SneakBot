@@ -16,6 +16,7 @@ class CombatCommander
     bool            m_transferDropUnits = false;
     bool            m_dropShipMoved     = false;
     bool            m_dropShipLoading   = false;
+    BWAPI::Unitset  m_dropUnits;
 
     void updateScoutDefenseSquad();
     void updateDefenseSquads();
@@ -33,6 +34,7 @@ class CombatCommander
     int  numZerglingsInOurBase();
     bool beingBuildingRushed();
     bool isSquadUpdateFrame();
+    void updateDropKills();
 
     BWAPI::Unit     findClosestDefender(const Squad & defenseSquad, BWAPI::Position pos, bool flyingDefender);
     BWAPI::Unit     findClosestWorkerToTarget(BWAPI::Unitset & unitsToAssign, BWAPI::Unit target);
@@ -44,10 +46,13 @@ public:
     bool                m_dropShipFull      = false;
     bool                m_dropSquadCreated  = false;
     bool                m_dropCompleted     = false;
+    int                 m_dropUnitKills     = 0;
     int                 m_unitsLost         = 0;
     BWAPI::Position m_dropShipPosition = BWAPI::Position(0, 0);
     int                 m_dropShipHealth    = 0;
     CombatCommander();
+
+
 
     void update(const BWAPI::Unitset & combatUnits);
 

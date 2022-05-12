@@ -14,6 +14,7 @@ class TransportManager : public MicroManager
     bool                            sneak                        = false;
     bool                            sneakInConfig                = false;
     bool                            inVision                     = false;
+    BWAPI::Unitset                  m_dropZealotsLocked;
     float                           minDistToBase = 8.0;
     int                             m_indexInSneak = 0;
     int                             m_dropRange = 150;
@@ -53,11 +54,11 @@ class TransportManager : public MicroManager
 public:
 
     TransportManager();
-
     void executeMicro(const BWAPI::Unitset & targets);
     void update(BWAPI::Unitset);
     void setTransportShip(BWAPI::UnitInterface * unit);
     void setFrom(BWAPI::Position from);
     void setTo(BWAPI::Position to);
+    BWAPI::Unitset getDropUnits();
 };
 }

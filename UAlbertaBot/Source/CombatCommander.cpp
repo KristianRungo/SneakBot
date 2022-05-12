@@ -62,9 +62,16 @@ void CombatCommander::update(const BWAPI::Unitset & combatUnits)
 {
     PROFILE_FUNCTION();
 
+    if (m_dropCompleted) updateDropKills();
+
     if (!Config::Modules::UsingCombatCommander)
     {
         return;
+    }
+
+    if (m_dropUnits.size() == 0 && m_dropShipFull) {
+        m_dropUnits = m_squadData.getSquad("Drop").getDropUnits();
+        //std::cout << m_dropUnits.size() << "\n";
     }
 
     if (!m_initialized)
@@ -736,4 +743,12 @@ bool CombatCommander::beingBuildingRushed()
     }
 
     return false;
+}
+void CombatCommander::updateDropKills() {
+    int killSum = 0;
+    for (BWAPI::Unit unit : m_dropUnits) {
+        killSum += unit->getKillCount();
+    }
+    //if (killSum > m_dropUnitKills) std::cout << m_dropUnitKills;
+    m_dropUnitKills = std::max(killSum, m_dropUnitKills);
 }

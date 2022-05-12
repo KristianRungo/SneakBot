@@ -64,5 +64,7 @@ public:
 
     const BWAPI::Unitset & getUnits() const;
     const SquadOrder & getSquadOrder()	const;
+
+    BWAPI::Unitset getDropUnits();
 };
 }

@@ -12,6 +12,10 @@ TransportManager::TransportManager()
     sneakInConfig = Config::Strategy::StrategyName == "Protoss_Drop";
 }
 
+BWAPI::Unitset TransportManager::getDropUnits() {
+    return m_dropZealotsLocked;
+}
+
 void TransportManager::executeMicro(const BWAPI::Unitset & targets)
 {
     const BWAPI::Unitset & transportUnits = getUnits();
@@ -248,16 +252,20 @@ void TransportManager::moveTransport()
     }
     /**/
     else if (!sneak && sneakInConfig) {
+
+        m_dropZealotsLocked = m_dropZealots;
         sneak = true * sneakInConfig;
         const auto enemyBaseLocation = Global::Bases().getPlayerStartingBaseLocation(BWAPI::Broodwar->enemy());
         const auto ourBaseLocation = Global::Bases().getPlayerStartingBaseLocation(BWAPI::Broodwar->self());
         Global::Map().updateCommonPath(ourBaseLocation->getDepotPosition(), enemyBaseLocation->getDepotPosition());
         m_sneakPath = Global::Map().getSneakyPath(BWAPI::TilePosition(m_transportShip->getPosition()), enemyBaseLocation->getDepotPosition());
         m_frameOnSneak = Global::Map().getMapFrame();
-        
+        m_dropZealotsLocked = m_dropZealots;
         
     }
     else if (!sneakInConfig) {
+
+        m_dropZealotsLocked = m_dropZealots;
         const auto enemyBaseLocation = Global::Bases().getPlayerStartingBaseLocation(BWAPI::Broodwar->enemy());
         m_transportShip->move(enemyBaseLocation->getPosition());
     }
@@ -285,17 +293,17 @@ void TransportManager::moveTroops()
     if (isUnloading()) return;
     //unload zealots if close enough or dying
     const int transportHP = m_transportShip->getHitPoints() + m_transportShip->getShields();
-    //const BWAPI::TilePosition transportTile = m_transportShip
+    const BWAPI::TilePosition transportTile = m_transportShip->getTilePosition();
     const auto& enemyBaseLocation = Global::Bases().getPlayerStartingBaseLocation(BWAPI::Broodwar->enemy());
     const bool closeEnough = m_transportShip->getDistance(enemyBaseLocation->getPosition()) < m_dropRange;
     const bool dying =  transportHP < 100;
     const bool canUnload = m_transportShip->canUnloadAtPosition(m_transportShip->getPosition());
+    const bool inBase = transportTile.getDistance(enemyBaseLocation->getDepotPosition()) <= minDistToBase;
 
-    if (enemyBaseLocation && (closeEnough || dying) && canUnload)
+    if (enemyBaseLocation && (closeEnough || dying) && canUnload && inBase)
     {
-        //unload troops 
-        //and return? 
-
+        // unload troops 
+        // and return? 
         // get the unit's current command
 
         if (!unload) {
