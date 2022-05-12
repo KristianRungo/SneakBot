@@ -237,17 +237,13 @@ void TransportManager::moveTransport()
 
     // If I didn't finish unloading the troops, wait
     if (isUnloading() || unload) return;
-    /*
-    if (sneak && Global::Map().getMapFrame() % 1000 == 0 && Global::Map().getMapFrame() > m_frameOnSneak + 500) {
-        const auto enemyBaseLocation = Global::Bases().getPlayerStartingBaseLocation(BWAPI::Broodwar->enemy());
-        m_sneakPath = Global::Map().getSneakyPath(BWAPI::TilePosition(m_transportShip->getPosition()), enemyBaseLocation->getDepotPosition());
-        m_indexInSneak = 0;
+    ///*
+    if (sneak && Global::Map().getMapFrame() % 48 == 0 && Global::Map().getMapFrame() > m_frameOnSneak + 500 && !inVision) {
+        getSneakPath();
 
     }
     if (sneak && Global::Map().inVision(m_transportShip->getTilePosition()) && !inVision) {
-        const auto enemyBaseLocation = Global::Bases().getPlayerStartingBaseLocation(BWAPI::Broodwar->enemy());
-        m_sneakPath = Global::Map().getSneakyPath(BWAPI::TilePosition(m_transportShip->getPosition()), enemyBaseLocation->getDepotPosition());
-        m_indexInSneak = 0;
+        getSneakPath();
         inVision = true;
     }
     /**/
@@ -268,6 +264,19 @@ void TransportManager::moveTransport()
 
 
 
+}
+
+void UAlbertaBot::TransportManager::getSneakPath()
+{
+    const auto enemyBaseLocation = Global::Bases().getPlayerStartingBaseLocation(BWAPI::Broodwar->enemy());
+    m_sneakPath = Global::Map().getSneakyPath(BWAPI::TilePosition(m_transportShip->getPosition()), enemyBaseLocation->getDepotPosition());
+    m_indexInSneak = 2;
+    /*
+    while (m_transportShip->getTilePosition() != m_sneakPath[m_indexInSneak++]) {
+        if (m_indexInSneak < m_sneakPath.size()) continue;
+        m_indexInSneak = 0;
+        break;
+    }/**/
 }
 
 void TransportManager::moveTroops()

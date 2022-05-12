@@ -427,4 +427,17 @@
     "Won": true,
     "EnemyRace": "Zerg",
     "MapPlayed": "(2)Destination.scx"
+},{
+    "Strategy": "Protoss_Drop",
+    "UnitsLost": 4,
+    "ShuttleHealth": 0,
+    "BeforeSneak": 284.375,
+    "TravelTime": 65.625,
+    "TimeSpotted": 340.625,
+    "EnemyNearBase": 0.0,
+    "WorkersBuilt": 37,
+    "WorkersLost": 1,
+    "Won": false,
+    "EnemyRace": "Zerg",
+    "MapPlayed": "(2)Destination.scx"
 }]

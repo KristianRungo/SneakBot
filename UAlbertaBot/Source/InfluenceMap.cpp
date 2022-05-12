@@ -268,6 +268,18 @@ float octDist(BWAPI::TilePosition start, BWAPI::TilePosition end) {
     const float h_straight = std::abs(start.x - end.x) + std::abs(start.y - end.y);
     return  (1 * h_straight + (std::sqrt(2) - 2 * 1) * h_diagonal);
 }
+std::vector<BWAPI::TilePosition> InfluenceMap::findBestShortPath(std::vector<BWAPI::TilePosition> path1, std::vector<BWAPI::TilePosition> path2) {
+    float totalVision1 = 0;
+    float totalVision2 = 0;
+    for (BWAPI::TilePosition tile : path1) {
+        totalVision1 += getInfluence(tile);
+    }
+    for (BWAPI::TilePosition tile : path2) {
+        totalVision2 += getInfluence(tile);
+    }
+    if (path2 < path1) return path2;
+    return path1;
+}
 std::tuple<bool, BWAPI::TilePosition, float, bool> setParent(BWAPI::TilePosition currentTile, std::vector<std::vector<std::tuple<bool, BWAPI::TilePosition, float, bool>>> closedQueue, BWAPI::TilePosition parent) {
     bool closed = std::get<0>(closedQueue[currentTile.x][currentTile.y]);
     float c = std::get<2>(closedQueue[currentTile.x][currentTile.y]);
@@ -334,17 +346,23 @@ BWAPI::TilePosition InfluenceMap::findNextAdjacentTile(BWAPI::TilePosition curre
     return BWAPI::TilePosition(x, y);
 }
 std::vector<BWAPI::TilePosition> InfluenceMap::getSneakyPath(BWAPI::TilePosition start, BWAPI::TilePosition end) {
+    
     std::vector<BWAPI::TilePosition> sneakyNormal = getSneakyPath2(start, end);
+    m_sneakyPath = sneakyNormal;
     if (m_doRev) {
         std::vector<BWAPI::TilePosition> sneakyRev = getSneakyPath2(end, start);
         std::reverse(sneakyRev.begin(), sneakyRev.end());
         m_sneakyPathRev = sneakyRev;
+        m_doRev = false;
+        m_firstPath = false;
+        if (m_firstPath && m_storePathAndInfluence) storeInfluenceAndSneakyPath();
+        return findBestShortPath(sneakyNormal, sneakyRev);
+
     }
-    m_sneakyPath =  sneakyNormal;
-    
+
     if (m_firstPath && m_storePathAndInfluence) storeInfluenceAndSneakyPath();
     m_firstPath = false;
-    return (m_sneakyPathRev.size() < m_sneakyPath.size()) ? m_sneakyPathRev : m_sneakyPath;
+    return m_sneakyPath;
 }
 std::vector<BWAPI::TilePosition> InfluenceMap::getSneakyPath2(BWAPI::TilePosition start, BWAPI::TilePosition end) {
     std::cout << "started pathfinding";
@@ -384,7 +402,10 @@ std::vector<BWAPI::TilePosition> InfluenceMap::getSneakyPath2(BWAPI::TilePositio
 
             if (adjacentTileC < adjacentOldC) {                                                                 //if adjacent tile cost < cost to currentParent 
                 if(getOpen(currentTile, closedGrid))   closedGrid[adjacentTile.x][adjacentTile.y] = setOpen(adjacentTile, closedGrid, false);   //Remove adjacent tile from open, if in open
-                if(getClosed(adjacentTile,closedGrid)) closedGrid[adjacentTile.x][adjacentTile.y] = setClosed(adjacentTile, closedGrid, false); //Remove adjacent tile from closed, if in closed
+                if (getClosed(adjacentTile, closedGrid)) { //Remove adjacent tile from closed, if in closed
+                    closedGrid[adjacentTile.x][adjacentTile.y] = setClosed(adjacentTile, closedGrid, false); 
+                    closedGrid[adjacentTile.x][adjacentTile.y] = setParent(adjacentTile, closedGrid, BWAPI::TilePositions::Unknown);
+                } 
 
             }
             if (!getClosed(adjacentTile, closedGrid) && !getOpen(currentTile, closedGrid)) {                     //if tile isn't in closed and open
@@ -433,7 +454,8 @@ float InfluenceMap::H(BWAPI::TilePosition start, BWAPI::TilePosition currentTile
     if (m_common.get(currentTile.x, currentTile.y) == 0) { 
         return w_dist * m_w + w_dist * (2 * getInfluence(currentTile)) + 200;
     }
-    return (w_dist*1.1) + getInfluence(currentTile) + 1000;
+    if (m_visionMap.get(currentTile.x, currentTile.y) == 0) return (w_dist * m_startWeight) + getInfluence(currentTile) + 1000;
+    return (w_dist * m_startWeight) + getNotCommon(currentTile) + 1000;
 }
 float InfluenceMap::getInfluence(BWAPI::TilePosition pos) { //Returns the sum of all influences
     int x = pos.x;
@@ -709,6 +731,7 @@ void InfluenceMap::computeGroundDamageMap() {
 }
 void InfluenceMap::draw() const
 {
+    return;
     for (int x = 0; x < m_width; x++) {
         for (int y = 0; y < m_height; y++) {
             if (m_common.get(x, y) > 0 && m_drawCommonPath) { // TODO: Set back to 0

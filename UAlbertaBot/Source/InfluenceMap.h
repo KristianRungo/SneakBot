@@ -16,6 +16,7 @@ class InfluenceMap
     float                            m_startDist = m_viewDistance + 2;
     float                            m_w = 2;
     float                            m_damageModifyer = 2;
+    float                            m_startWeight = 1.1;
     bool                             m_goStraight = false;
     float                            m_maxInfluence = 1;
     bool                             m_drawCommonPath = true;
@@ -40,6 +41,7 @@ class InfluenceMap
     std::vector<std::vector<std::tuple<bool, BWAPI::TilePosition, float, bool>>> pathingGridRev;
 
     std::vector<BWAPI::TilePosition> findShortestPathInClosedQueue(std::vector<std::vector<std::tuple<BWAPI::TilePosition, BWAPI::TilePosition, float>>> closedQueue, BWAPI::TilePosition start, BWAPI::TilePosition end);
+    std::vector<BWAPI::TilePosition> findBestShortPath(std::vector<BWAPI::TilePosition> path1, std::vector<BWAPI::TilePosition> path2);
     std::vector<BWAPI::TilePosition> generateShortestPath(std::vector<std::vector<std::tuple<bool, BWAPI::TilePosition, float, bool>>> closedQueue, BWAPI::TilePosition start, BWAPI::TilePosition end);
     float distance(int x1, int x2, int y1, int y2);
     int getNumSurroundingTiles(std::vector<std::vector<std::tuple<BWAPI::TilePosition, BWAPI::TilePosition, float>>> closedQueue, BWAPI::TilePosition tile);

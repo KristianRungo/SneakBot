@@ -427,4 +427,17 @@
     "Won": false,
     "EnemyRace": "Protoss",
     "MapPlayed": "(2)Destination.scx"
+},{
+    "Strategy": "Protoss_Drop",
+    "UnitsLost": 0,
+    "ShuttleHealth": 140,
+    "BeforeSneak": 291.875,
+    "TravelTime": 73.125,
+    "TimeSpotted": 352.5,
+    "EnemyNearBase": 343.75,
+    "WorkersBuilt": 21,
+    "WorkersLost": 21,
+    "Won": false,
+    "EnemyRace": "Protoss",
+    "MapPlayed": "(2)Destination.scx"
 }]

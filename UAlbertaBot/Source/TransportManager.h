@@ -33,6 +33,7 @@ class TransportManager : public MicroManager
     void calculateMapEdgeVertices();
     void drawTransportInformation(int x, int y);
     void moveTransport();
+    void getSneakPath();
     void moveTroops();
     void loadTroops();
     void followPerimeter(int clockwise=1);

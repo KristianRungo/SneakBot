@@ -505,4 +505,17 @@
     "Won": false,
     "EnemyRace": "Terran",
     "MapPlayed": "(2)Heartbreak Ridge.scx"
+},{
+    "Strategy": "Protoss_Drop",
+    "UnitsLost": 0,
+    "ShuttleHealth": 125,
+    "BeforeSneak": 290.0,
+    "TravelTime": 66.875,
+    "TimeSpotted": 345.625,
+    "EnemyNearBase": 0.0,
+    "WorkersBuilt": 21,
+    "WorkersLost": 1,
+    "Won": false,
+    "EnemyRace": "Terran",
+    "MapPlayed": "(2)Heartbreak Ridge.scx"
 }]

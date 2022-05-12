@@ -374,7 +374,7 @@ void GameState_Map::sRender()
                         float influence = m_loadedAir.get(x, y);
                         tile.setFillColor(sf::Color(255 - (255 * influence), 255 - (255 * influence), 255));
                     }
-                    else if (m_loadedGround.get(x, y) > 0) {
+                    /*else if (m_loadedGround.get(x, y) > 0) {
                         float influence = m_loadedGround.get(x, y);
                         tile.setFillColor(sf::Color(255 - (255 * influence), 255, 255 - (255 * influence)));
                     }
@@ -385,7 +385,7 @@ void GameState_Map::sRender()
                     else if (m_loadedCommonPath.get(x, y) > 0) {
                         float influence = m_loadedCommonPath.get(x, y);
                         tile.setFillColor(sf::Color(255, 128 + (127 * (1 - influence)), 255 - (255 * influence)));
-                    }
+                    }*/
                     else continue;
                     tile.setPosition((float)x * m_tileSize, (float)y * m_tileSize);
                     m_game.window().draw(tile);

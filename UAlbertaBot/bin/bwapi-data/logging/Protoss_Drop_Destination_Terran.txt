@@ -661,4 +661,56 @@
     "Won": false,
     "EnemyRace": "Terran",
     "MapPlayed": "(2)Destination.scx"
+},{
+    "Strategy": "Protoss_Drop",
+    "UnitsLost": 0,
+    "ShuttleHealth": 114,
+    "BeforeSneak": 285.0,
+    "TravelTime": 70.0,
+    "TimeSpotted": 339.375,
+    "EnemyNearBase": 0.0,
+    "WorkersBuilt": 37,
+    "WorkersLost": 1,
+    "Won": true,
+    "EnemyRace": "Terran",
+    "MapPlayed": "(2)Destination.scx"
+},{
+    "Strategy": "Protoss_Drop",
+    "UnitsLost": 0,
+    "ShuttleHealth": 140,
+    "BeforeSneak": 288.75,
+    "TravelTime": 82.5,
+    "TimeSpotted": 353.75,
+    "EnemyNearBase": 0.0,
+    "WorkersBuilt": 22,
+    "WorkersLost": 1,
+    "Won": false,
+    "EnemyRace": "Terran",
+    "MapPlayed": "(2)Destination.scx"
+},{
+    "Strategy": "Protoss_Drop",
+    "UnitsLost": 0,
+    "ShuttleHealth": 84,
+    "BeforeSneak": 276.25,
+    "TravelTime": 66.25,
+    "TimeSpotted": 322.5,
+    "EnemyNearBase": 0.0,
+    "WorkersBuilt": 31,
+    "WorkersLost": 1,
+    "Won": true,
+    "EnemyRace": "Terran",
+    "MapPlayed": "(2)Destination.scx"
+},{
+    "Strategy": "Protoss_Drop",
+    "UnitsLost": 0,
+    "ShuttleHealth": 86,
+    "BeforeSneak": 302.5,
+    "TravelTime": 66.25,
+    "TimeSpotted": 355.625,
+    "EnemyNearBase": 0.0,
+    "WorkersBuilt": 24,
+    "WorkersLost": 1,
+    "Won": false,
+    "EnemyRace": "Terran",
+    "MapPlayed": "(2)Destination.scx"
 }]

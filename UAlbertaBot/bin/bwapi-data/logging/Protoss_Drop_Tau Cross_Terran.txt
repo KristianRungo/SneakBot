@@ -453,4 +453,30 @@
     "Won": true,
     "EnemyRace": "Terran",
     "MapPlayed": "(3)Tau Cross.scx"
+},{
+    "Strategy": "Protoss_Drop",
+    "UnitsLost": 0,
+    "ShuttleHealth": 48,
+    "BeforeSneak": 293.125,
+    "TravelTime": 56.25,
+    "TimeSpotted": 339.375,
+    "EnemyNearBase": 418.125,
+    "WorkersBuilt": 26,
+    "WorkersLost": 1,
+    "Won": true,
+    "EnemyRace": "Terran",
+    "MapPlayed": "(3)Tau Cross.scx"
+},{
+    "Strategy": "Protoss_Drop",
+    "UnitsLost": 0,
+    "ShuttleHealth": 63,
+    "BeforeSneak": 291.875,
+    "TravelTime": 71.875,
+    "TimeSpotted": 343.125,
+    "EnemyNearBase": 0.0,
+    "WorkersBuilt": 27,
+    "WorkersLost": 23,
+    "Won": false,
+    "EnemyRace": "Terran",
+    "MapPlayed": "(3)Tau Cross.scx"
 }]
