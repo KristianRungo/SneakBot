@@ -308,8 +308,8 @@ void TransportManager::moveTroops()
         // get the unit's current command
 
         if (!unload) {
-            std::cout << "Dropped at distance " << transportTile.getDistance(enemyBaseLocation->getDepotPosition());
-            std::cout << "Dropped at distance2 " << m_transportShip->getDistance(enemyBaseLocation->getPosition());
+            std::cout << "Dropped at distance " << transportTile.getDistance(enemyBaseLocation->getDepotPosition()) << "\n";
+            std::cout << "Dropped at distance2 " << m_transportShip->getDistance(enemyBaseLocation->getPosition()) << "\n";
             unloadAtPosition(m_transportShip->getPosition());
         }
     }
