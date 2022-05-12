@@ -299,14 +299,17 @@ void TransportManager::moveTroops()
     const bool dying =  transportHP < 100;
     const bool canUnload = m_transportShip->canUnloadAtPosition(m_transportShip->getPosition());
     const bool inBase = transportTile.getDistance(enemyBaseLocation->getDepotPosition()) <= minDistToBase;
+    //std::cout << transportTile.getDistance(enemyBaseLocation->getDepotPosition()) << "\n";
 
-    if (enemyBaseLocation && (closeEnough || dying) && canUnload && inBase)
+    if (enemyBaseLocation && ((inBase && dying) || closeEnough) && canUnload)
     {
         // unload troops 
         // and return? 
         // get the unit's current command
 
         if (!unload) {
+            std::cout << "Dropped at distance " << transportTile.getDistance(enemyBaseLocation->getDepotPosition());
+            std::cout << "Dropped at distance2 " << m_transportShip->getDistance(enemyBaseLocation->getPosition());
             unloadAtPosition(m_transportShip->getPosition());
         }
     }

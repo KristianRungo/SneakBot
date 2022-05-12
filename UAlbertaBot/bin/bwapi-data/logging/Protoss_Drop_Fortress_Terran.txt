@@ -494,4 +494,32 @@
     "Won": false,
     "EnemyRace": "Terran",
     "MapPlayed": "(4)Fortress.scx"
+},{
+    "Strategy": "Protoss_Drop",
+    "UnitsLost": 0,
+    "ShuttleHealth": 48,
+    "BeforeSneak": 290.0,
+    "TravelTime": 39.375,
+    "TimeSpotted": 314.375,
+    "EnemyNearBase": 361.875,
+    "WorkersBuilt": 21,
+    "WorkersLost": 21,
+    "unitsKilled": 4,
+    "Won": false,
+    "EnemyRace": "Terran",
+    "MapPlayed": "(4)Fortress.scx"
+},{
+    "Strategy": "Protoss_Drop",
+    "UnitsLost": 0,
+    "ShuttleHealth": 41,
+    "BeforeSneak": 301.875,
+    "TravelTime": 45.0,
+    "TimeSpotted": 330.625,
+    "EnemyNearBase": 0.0,
+    "WorkersBuilt": 27,
+    "WorkersLost": 1,
+    "unitsKilled": 6,
+    "Won": false,
+    "EnemyRace": "Terran",
+    "MapPlayed": "(4)Fortress.scx"
 }]
