@@ -14,6 +14,7 @@ class TransportManager : public MicroManager
     bool                            sneak                        = false;
     bool                            sneakInConfig                = false;
     bool                            inVision                     = false;
+    float                           minDistToBase = 8.0;
     int                             m_indexInSneak = 0;
     int                             m_dropRange = 150;
     float                           m_frameOnSneak = 0;

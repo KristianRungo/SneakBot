@@ -22,6 +22,7 @@ class InfluenceMap
     bool                             m_drawCommonPath = true;
     bool                             m_drawExploredTiles = false;
     bool                             m_doRev = true;
+    bool                             m_drawMaps = true;
     DistanceMap                      m_distanceMap;
     Grid<int>                        m_dist;
     Grid<float>                      m_common;
@@ -37,6 +38,7 @@ class InfluenceMap
     BWAPI::Unitset                   m_enemyUnits;
     bool                             m_firstPath;
     bool                             m_storePathAndInfluence = false;
+    bool                             m_drawSneaky = false;
     std::vector<std::vector<std::tuple<bool, BWAPI::TilePosition, float, bool>>> pathingGrid;
     std::vector<std::vector<std::tuple<bool, BWAPI::TilePosition, float, bool>>> pathingGridRev;
 
@@ -45,8 +47,6 @@ class InfluenceMap
     std::vector<BWAPI::TilePosition> generateShortestPath(std::vector<std::vector<std::tuple<bool, BWAPI::TilePosition, float, bool>>> closedQueue, BWAPI::TilePosition start, BWAPI::TilePosition end);
     float distance(int x1, int x2, int y1, int y2);
     int getNumSurroundingTiles(std::vector<std::vector<std::tuple<BWAPI::TilePosition, BWAPI::TilePosition, float>>> closedQueue, BWAPI::TilePosition tile);
-    float influence(float distance, float power);
-    float calcInfluence(int x, int y);
     float variableRangeInfluence(float distance, int sightRange, float power);
     float weightedDist(BWAPI::TilePosition start, BWAPI::TilePosition end);
     float cVal(float prevC, int a, BWAPI::TilePosition tile);

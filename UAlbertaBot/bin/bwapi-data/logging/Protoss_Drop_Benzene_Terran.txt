@@ -856,4 +856,17 @@
     "Won": true,
     "EnemyRace": "Terran",
     "MapPlayed": "(2)Benzene.scx"
+},{
+    "Strategy": "Protoss_Drop",
+    "UnitsLost": 0,
+    "ShuttleHealth": 140,
+    "BeforeSneak": 285.0,
+    "TravelTime": 68.75,
+    "TimeSpotted": 344.375,
+    "EnemyNearBase": 0.0,
+    "WorkersBuilt": 25,
+    "WorkersLost": 22,
+    "Won": false,
+    "EnemyRace": "Terran",
+    "MapPlayed": "(2)Benzene.scx"
 }]

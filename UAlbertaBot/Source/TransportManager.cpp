@@ -261,9 +261,6 @@ void TransportManager::moveTransport()
         const auto enemyBaseLocation = Global::Bases().getPlayerStartingBaseLocation(BWAPI::Broodwar->enemy());
         m_transportShip->move(enemyBaseLocation->getPosition());
     }
-
-
-
 }
 
 void UAlbertaBot::TransportManager::getSneakPath()
@@ -288,7 +285,7 @@ void TransportManager::moveTroops()
     if (isUnloading()) return;
     //unload zealots if close enough or dying
     const int transportHP = m_transportShip->getHitPoints() + m_transportShip->getShields();
-
+    //const BWAPI::TilePosition transportTile = m_transportShip
     const auto& enemyBaseLocation = Global::Bases().getPlayerStartingBaseLocation(BWAPI::Broodwar->enemy());
     const bool closeEnough = m_transportShip->getDistance(enemyBaseLocation->getPosition()) < m_dropRange;
     const bool dying =  transportHP < 100;

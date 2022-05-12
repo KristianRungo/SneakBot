@@ -367,12 +367,9 @@ std::vector<BWAPI::TilePosition> InfluenceMap::getSneakyPath(BWAPI::TilePosition
 std::vector<BWAPI::TilePosition> InfluenceMap::getSneakyPath2(BWAPI::TilePosition start, BWAPI::TilePosition end) {
     std::cout << "started pathfinding";
     std::priority_queue<std::tuple<float, float, BWAPI::TilePosition>> openQueue;
-
     std::vector<std::vector<std::tuple<bool, BWAPI::TilePosition, float, bool>>> closedGrid(
         m_width, std::vector <std::tuple<bool, BWAPI::TilePosition, float, bool>>
         (m_height, std::make_tuple(false, BWAPI::TilePositions::Unknown, std::numeric_limits<float>::max(),false)));
-
-
     openQueue.push(std::make_tuple((-1) * (H(start, start, end) ), 0, start));                             //add start to open and closed
     closedGrid[start.x][start.y] = setC(start, closedGrid, 0);
     closedGrid[start.x][start.y] = setOpen(start, closedGrid, true);
@@ -479,36 +476,61 @@ float InfluenceMap::distance(int x1, int x2, int y1, int y2) {
     return std::sqrt(std::pow((x2 - x1), 2) + std::pow((y2 - y1) * 1.0, 2));
 }
 
-float InfluenceMap::influence(float distance, float power) {
-    return (m_maxInfluence - std::pow((m_maxInfluence * (distance / m_viewDistance)), power));
-}                  
+void InfluenceMap::computeCommonPath(BWAPI::TilePosition end) {
+    PROFILE_FUNCTION();
+    BWAPI::TilePosition start = m_depotPosition;
 
-float InfluenceMap::calcInfluence(int x, int y) {
-    if (m_common.get(x, y) == m_maxInfluence) return 0.0;
-    const int minXi = std::max(x - m_viewDistance, 0);
-    const int maxXi = std::min(x + m_viewDistance, m_width - 1);
-    const int minYi = std::max(y - m_viewDistance, 0);
-    const int maxYi = std::min(y + m_viewDistance, m_height - 1);
-        
-    float lowestDist = m_viewDistance + 1.0;
-    for (int xi = minXi; xi < maxXi; xi++) {
-        for (int yi = minYi; yi < maxYi; yi++) {
-            if (x == xi && y == yi) continue;
-            else if (m_common.get(xi, yi) == m_maxInfluence) {
-                const float dist = distance(x, xi, y, yi);
-                if (dist <= m_viewDistance) {
-                    lowestDist = std::min(dist, lowestDist);
+    m_common = Grid<float>(m_width, m_height, 0);
+    int dist = 10000;
+
+    BWAPI::Position pos = BWAPI::Position(end.x, end.y);
+    const int sightRange = m_viewDistance;
+
+    while (pos.x != start.x || pos.y != start.y) // While you have not reached your own base
+    {
+        //m_influence.set(pos.x, pos.y, m_maxInfluence);
+
+        const int currentDistance = m_dist.get(pos.x, pos.y);
+        int tempDistance = m_dist.get(pos.x, pos.y);
+
+        int aa = -1;
+
+        for (size_t a = 0; a < LegalActions; ++a) //Check all tiles surrounding current tile 
+        {
+            const BWAPI::Position nextTile = BWAPI::Position(pos.x + actionX[a], pos.y + actionY[a]);
+            if (m_dist.get(nextTile.x, nextTile.y) != -1) {
+                tempDistance = (std::min(m_dist.get(nextTile.x, nextTile.y), tempDistance));  //Store lowest distance 
+            }
+
+            if (tempDistance == m_dist.get(nextTile.x, nextTile.y)) {
+                aa = a;   //If this tile is the best, remember its modifyers
+            }
+        }
+
+        // Insert influence into grid
+
+        m_common.set(pos.x, pos.y, m_maxInfluence);
+
+        const int minXi = std::max(pos.x - sightRange, 0);
+        const int maxXi = std::min(pos.x + sightRange, m_width - 1);
+        const int minYi = std::max(pos.y - sightRange, 0);
+        const int maxYi = std::min(pos.y + sightRange, m_height - 1);
+
+        for (int xi = minXi; xi < maxXi; xi++) {
+            for (int yi = minYi; yi < maxYi; yi++) {
+                dist = distance(pos.x, xi, pos.y, yi);
+                if (dist <= sightRange) {
+                    m_common.set(xi, yi, std::max(variableRangeInfluence(dist, sightRange, 0.9), m_common.get(xi, yi)));
                 }
             }
         }
+
+        pos = BWAPI::Position(pos.x + actionX[aa], pos.y + actionY[aa]); //Ready next iteration by moving to next tile
+
     }
-    if (lowestDist <= 8.0) {
-        return (m_maxInfluence - std::pow((m_maxInfluence * (lowestDist / m_viewDistance)), 4));
-    }
-    else return 0.0;
 }
 
-void InfluenceMap::computeCommonPath(BWAPI::TilePosition end) {
+/*void InfluenceMap::computeCommonPath(BWAPI::TilePosition end) {
     PROFILE_FUNCTION();
     BWAPI::TilePosition start = m_depotPosition;
     m_common = Grid<float>(m_width, m_height, 0);
@@ -552,7 +574,7 @@ void InfluenceMap::computeCommonPath(BWAPI::TilePosition end) {
             m_common.set(x, y, std::max(m_common.get(x, y), m_influenced.get(x, y)));
         }
     }
-}
+}*/
 void InfluenceMap::init() 
 {
     PROFILE_FUNCTION();
@@ -730,9 +752,10 @@ void InfluenceMap::computeGroundDamageMap() {
     }
 }
 void InfluenceMap::draw() const
-{
-    return;
+{   
+    
     for (int x = 0; x < m_width; x++) {
+        if (m_drawMaps) break;
         for (int y = 0; y < m_height; y++) {
             if (m_common.get(x, y) > 0 && m_drawCommonPath) { // TODO: Set back to 0
                 Global::Map().drawTile(x, y, BWAPI::Color(
@@ -786,6 +809,7 @@ void InfluenceMap::draw() const
             }
         }
     }
+    if (m_drawSneaky) return;
     for (BWAPI::TilePosition tile : m_sneakyPath) {
         Global::Map().drawTile(tile.x, tile.y, BWAPI::Color(
             128,
