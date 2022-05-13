@@ -346,9 +346,10 @@ BWAPI::TilePosition InfluenceMap::findNextAdjacentTile(BWAPI::TilePosition curre
     return BWAPI::TilePosition(x, y);
 }
 std::vector<BWAPI::TilePosition> InfluenceMap::getSneakyPath(BWAPI::TilePosition start, BWAPI::TilePosition end) {
-    
     std::vector<BWAPI::TilePosition> sneakyNormal = getSneakyPath2(start, end);
+    if (sneakyNormal.size() > m_sneakyPath.size() && m_pathCounter > 4) return m_sneakyPath;
     m_sneakyPath = sneakyNormal;
+    m_pathCounter++;
     if (m_doRev) {
         std::vector<BWAPI::TilePosition> sneakyRev = getSneakyPath2(end, start);
         std::reverse(sneakyRev.begin(), sneakyRev.end());

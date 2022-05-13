@@ -1,7 +1,7 @@
 Protoss_DTRush 0 0
-Protoss_DirectDrop 171 32
+Protoss_DirectDrop 351 59
 Protoss_DragoonRush 0 0
-Protoss_Drop 209 44
+Protoss_Drop 418 84
 Protoss_ZealotRush 275 18
 Terran_4RaxMarines 0 0
 Terran_MarineRush 2 0

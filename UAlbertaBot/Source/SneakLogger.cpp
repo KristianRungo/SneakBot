@@ -49,6 +49,9 @@ rapidjson::Document UAlbertaBot::SneakLogger::generateJsonObject(Game game)
 	val.SetDouble(game.m_timespotted);
 	d.AddMember("TimeSpotted", val, allocator);
 
+	val.SetInt(game.m_framesInVision);
+	d.AddMember("framesInVision", val, allocator);
+
 	val.SetDouble(game.m_enemynearbasetime);
 	d.AddMember("EnemyNearBase", val, allocator);
 
@@ -143,9 +146,10 @@ void UAlbertaBot::SneakLogger::onStart()
 	startingPosition = BWAPI::Position(BWAPI::Broodwar->self()->getStartLocation());
 }
 
-void UAlbertaBot::SneakLogger::onFrame(bool full, bool completed, int health, BWAPI::Position pos, int unitsLost, int unitsKilled, double distance)
+void UAlbertaBot::SneakLogger::onFrame(bool full, bool completed, int health, BWAPI::Unit dropship, int unitsLost, int unitsKilled, double distance)
 {
 	float time = (float)BWAPI::Broodwar->elapsedTime() * 0.625;
+
 
 	if (!(Config::Strategy::StrategyName == "Protoss_Drop" || Config::Strategy::StrategyName == "Protoss_DirectDrop")) return;
 
@@ -158,10 +162,7 @@ void UAlbertaBot::SneakLogger::onFrame(bool full, bool completed, int health, BW
 		m_game.m_shuttlehealth = health;
 	}
 
-	if (Global::Map().m_influenceMap.getVisionInfluence(pos.x / 32, pos.y / 32) > 0.0 && m_game.m_timespotted == 0.0) {
-		m_game.m_timespotted = time;
-	}
-	
+
 	if (unitsLost != 0) {
 		m_game.m_unitslost = unitsLost;
 	}
@@ -177,6 +178,14 @@ void UAlbertaBot::SneakLogger::onFrame(bool full, bool completed, int health, BW
 	m_game.m_dropUnitKills = unitsKilled;
 
 	m_game.m_distanceToEnemyBase = distance;
+
+	
+	if (dropship == nullptr || completed) return;
+	
+	if (Global::Map().inVision(dropship->getTilePosition()) && full) {
+		if (m_game.m_timespotted == 0.0) m_game.m_timespotted = time;
+		m_game.m_framesInVision++;
+	}
 	
 }
 

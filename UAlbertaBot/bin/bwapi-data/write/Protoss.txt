@@ -1,7 +1,7 @@
 Protoss_DTRush 0 0
-Protoss_DirectDrop 40 192
+Protoss_DirectDrop 86 362
 Protoss_DragoonRush 0 0
-Protoss_Drop 58 262
+Protoss_Drop 95 462
 Protoss_ZealotRush 287 4
 Terran_4RaxMarines 0 0
 Terran_MarineRush 0 1
@@ -11,4 +11,4 @@ Zerg_2HatchHydra 0 0
 Zerg_3HatchMuta 0 0
 Zerg_3HatchScourge 0 0
 Zerg_9Pool 0 0
-Zerg_ZerglingRush 0 0
+Zerg_ZerglingRush 1 0

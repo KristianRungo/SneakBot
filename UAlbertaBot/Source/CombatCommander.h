@@ -49,7 +49,7 @@ public:
     double              m_distanceToDropLocation = 0;
     int                 m_dropUnitKills     = 0;
     int                 m_unitsLost         = 0;
-    BWAPI::Position m_dropShipPosition = BWAPI::Position(0, 0);
+    BWAPI::Unit m_dropShipPosition = nullptr;
     int                 m_dropShipHealth    = 0;
     CombatCommander();
 

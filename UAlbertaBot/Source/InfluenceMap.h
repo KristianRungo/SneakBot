@@ -23,6 +23,7 @@ class InfluenceMap
     bool                             m_drawExploredTiles = false;
     bool                             m_doRev = true;
     bool                             m_drawMaps = true;
+    int                              m_pathCounter = 0;
     DistanceMap                      m_distanceMap;
     Grid<int>                        m_dist;
     Grid<float>                      m_common;

@@ -71,7 +71,7 @@ void CombatCommander::update(const BWAPI::Unitset & combatUnits)
 
     if (m_dropUnits.size() == 0 && m_dropShipFull) {
         m_dropUnits = m_squadData.getSquad("Drop").getDropUnits();
-        //std::cout << m_dropUnits.size() << "\n";
+        std::cout << "dropUnitsChanged" << "\n";
     }
 
     if (!m_initialized)
@@ -131,30 +131,26 @@ void CombatCommander::monitorDrop() {
         }
 
 
-        for (auto & unit : m_squadData.getSquad("Drop").getUnits()) {
+        for (auto& unit : m_squadData.getSquad("Drop").getUnits()) {
 
 
             if ((unit->getType() == BWAPI::UnitTypes::Protoss_Zealot)) continue;
 
 
+            m_dropShipPosition = unit;
 
             if (unit->getLoadedUnits().size() == 4 && !m_dropShipFull) {
                 m_dropShipFull = true;
                 return;
             }
+            if (m_dropShipFull && !m_dropCompleted && unit->getHitPoints() > 0) {
+                const auto& enemyBaseLocation = Global::Bases().getPlayerStartingBaseLocation(BWAPI::Broodwar->enemy());
+                m_distanceToDropLocation = unit->getTilePosition().getDistance(enemyBaseLocation->getDepotPosition());
+            }
             if ((unit->getLoadedUnits().size() == 0 && m_dropShipFull && !m_dropCompleted)) {
                 m_dropCompleted = true;
                 m_dropShipHealth = (unit->getHitPoints() + unit->getShields());
-                const auto& enemyBaseLocation = Global::Bases().getPlayerStartingBaseLocation(BWAPI::Broodwar->enemy());
-                m_distanceToDropLocation = unit->getTilePosition().getDistance(enemyBaseLocation->getDepotPosition());
-                //std::cout << m_distanceToDropLocation << "\n";
-                return;
             }
-            if (unit->getLoadedUnits().size() < 4 && m_dropShipFull && !m_dropCompleted) {
-                const auto& enemyBaseLocation = Global::Bases().getPlayerStartingBaseLocation(BWAPI::Broodwar->enemy());
-                m_distanceToDropLocation = unit->getTilePosition().getDistance(enemyBaseLocation->getDepotPosition());
-            }
-            m_dropShipPosition = unit->getPosition();
         }
     }
 }

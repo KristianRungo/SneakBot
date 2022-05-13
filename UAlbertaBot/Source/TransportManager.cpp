@@ -248,6 +248,9 @@ void TransportManager::moveTransport()
     }
     if (sneak && Global::Map().inVision(m_transportShip->getTilePosition()) && !inVision) {
         getSneakPath();
+        const auto enemyBaseLocation = Global::Bases().getPlayerStartingBaseLocation(BWAPI::Broodwar->enemy());
+        const BWAPI::TilePosition transportTile = m_transportShip->getTilePosition();
+        const bool inBase = transportTile.getDistance(enemyBaseLocation->getDepotPosition()) <= 12;
         inVision = true;
     }
     /**/
@@ -274,7 +277,9 @@ void TransportManager::moveTransport()
 void UAlbertaBot::TransportManager::getSneakPath()
 {
     const auto enemyBaseLocation = Global::Bases().getPlayerStartingBaseLocation(BWAPI::Broodwar->enemy());
-    m_sneakPath = Global::Map().getSneakyPath(BWAPI::TilePosition(m_transportShip->getPosition()), enemyBaseLocation->getDepotPosition());
+    std::vector<BWAPI::TilePosition> tmp = Global::Map().getSneakyPath(BWAPI::TilePosition(m_transportShip->getPosition()), enemyBaseLocation->getDepotPosition());
+    if (m_sneakPath.size() == tmp.size()) return;
+    m_sneakPath = tmp;
     m_indexInSneak = 2;
     /*
     while (m_transportShip->getTilePosition() != m_sneakPath[m_indexInSneak++]) {
