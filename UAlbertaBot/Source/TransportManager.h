@@ -18,6 +18,8 @@ class TransportManager : public MicroManager
     float                           minDistToBase = 8.0;
     int                             m_indexInSneak = 0;
     int                             m_dropRange = 150;
+    int                             m_minHp = 100;
+    int                             m_sneakFreq = 48;
     float                           m_frameOnSneak = 0;
     std::vector<BWAPI::TilePosition> m_sneakPath;
     float                           transportShipTopSpeed        = 4.43;

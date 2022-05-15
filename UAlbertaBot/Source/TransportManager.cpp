@@ -242,7 +242,7 @@ void TransportManager::moveTransport()
     // If I didn't finish unloading the troops, wait
     if (isUnloading() || unload) return;
     ///*
-    if (sneak && Global::Map().getMapFrame() % 48 == 0 && Global::Map().getMapFrame() > m_frameOnSneak + 500 && !inVision) {
+    if (sneak && Global::Map().getMapFrame() % m_sneakFreq == 0 && Global::Map().getMapFrame() > m_frameOnSneak + 500 && !inVision) {
         getSneakPath();
 
     }
@@ -301,7 +301,7 @@ void TransportManager::moveTroops()
     const BWAPI::TilePosition transportTile = m_transportShip->getTilePosition();
     const auto& enemyBaseLocation = Global::Bases().getPlayerStartingBaseLocation(BWAPI::Broodwar->enemy());
     const bool closeEnough = m_transportShip->getDistance(enemyBaseLocation->getPosition()) < m_dropRange;
-    const bool dying =  transportHP < 100;
+    const bool dying =  transportHP < m_minHp;
     const bool canUnload = m_transportShip->canUnloadAtPosition(m_transportShip->getPosition());
     const bool inBase = transportTile.getDistance(enemyBaseLocation->getDepotPosition()) <= minDistToBase;
     //std::cout << transportTile.getDistance(enemyBaseLocation->getDepotPosition()) << "\n";

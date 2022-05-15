@@ -157,7 +157,7 @@ const MetaPairVector StrategyManager::getProtossBuildOrderGoal() const
         }
         else
         {
-            goal.push_back(MetaPair(BWAPI::UnitTypes::Protoss_Dragoon, numDragoons + 4));
+            if (numNexusAll >= 2) goal.push_back(MetaPair(BWAPI::UnitTypes::Protoss_Dragoon, numDragoons + 4));
             goal.push_back(MetaPair(BWAPI::UnitTypes::Protoss_Zealot, numZealots + 8));
         }
     }

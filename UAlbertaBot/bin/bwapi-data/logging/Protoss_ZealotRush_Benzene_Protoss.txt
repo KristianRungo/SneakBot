@@ -1,1 +1,33 @@
-[]
+[{
+    "Strategy": "Protoss_ZealotRush",
+    "UnitsLost": 0,
+    "ShuttleHealth": 0,
+    "BeforeSneak": 0.0,
+    "TravelTime": 0.0,
+    "DistanceToBase": 0.0,
+    "TimeSpotted": 0.0,
+    "framesInVision": 0,
+    "EnemyNearBase": 0.0,
+    "WorkersBuilt": 29,
+    "WorkersLost": 1,
+    "unitsKilled": 0,
+    "Won": true,
+    "EnemyRace": "Protoss",
+    "MapPlayed": "(2)Benzene.scx"
+},{
+    "Strategy": "Protoss_ZealotRush",
+    "UnitsLost": 0,
+    "ShuttleHealth": 0,
+    "BeforeSneak": 0.0,
+    "TravelTime": 0.0,
+    "DistanceToBase": 0.0,
+    "TimeSpotted": 0.0,
+    "framesInVision": 0,
+    "EnemyNearBase": 0.0,
+    "WorkersBuilt": 16,
+    "WorkersLost": 0,
+    "unitsKilled": 0,
+    "Won": false,
+    "EnemyRace": "Protoss",
+    "MapPlayed": "(2)Benzene.scx"
+}]

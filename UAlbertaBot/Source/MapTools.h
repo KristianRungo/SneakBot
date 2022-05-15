@@ -18,8 +18,10 @@ class MapTools
     int     m_width = 0;
     int     m_height = 0;
     int     m_frame = 0;
+    bool    m_dropStrat = false;
     BWAPI::TilePosition m_transporterPosition = BWAPI::TilePositions::Unknown;
 
+    InfluenceMap m_influenceMap;
 
     
     // a cache of already computed distance maps, which is mutable since it only acts as a cache
@@ -44,7 +46,6 @@ class MapTools
 
 public:
     
-    InfluenceMap m_influenceMap;
     void    onStart();
     void    onFrame();
     void    draw() const;

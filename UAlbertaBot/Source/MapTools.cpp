@@ -33,6 +33,7 @@ void MapTools::onStart()
     m_lastSeen       = Grid<int>(m_width, m_height, 0);
     m_sectorNumber   = Grid<int>(m_width, m_height, 0);
     m_influenceMap   = InfluenceMap();
+    m_dropStrat = (Config::Strategy::StrategyName == "Protoss_Drop" || Config::Strategy::StrategyName == "Protoss_DirectDrop");
     // Set the boolean grid data from the Map
     for (int x(0); x < m_width; ++x)
     {
@@ -99,17 +100,20 @@ void MapTools::onFrame()
             }
         }
     }
-    if (m_frame == 0) {
+    if (m_frame == 0 && m_dropStrat) {
 
 
         m_influenceMap.init();
     }
-    m_influenceMap.computeVisionMap();
-    m_influenceMap.computeAirDamageMap();
-    m_influenceMap.computeGroundDamageMap();
+    if (m_dropStrat) {
+        m_influenceMap.computeVisionMap();
+        m_influenceMap.computeAirDamageMap();
+        m_influenceMap.computeGroundDamageMap();
+    }
+
     
     draw();
-    m_influenceMap.draw();
+    if (m_dropStrat) m_influenceMap.draw();
     m_frame++;
 }
 
